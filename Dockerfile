@@ -7,21 +7,22 @@ FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION} as extbuild
 # Switch to the root user
 USER root
 
-# Install any system packages necessary to build extensions
+# Install common build tools and upgrade pip
 RUN set -ex && \
-  apk add --no-cache --virtual .build-deps \
+  apk add --no-cache --virtual .build-deps-common \
     python3-dev && \
-    pip install --upgrade pip
+    pip install -U pip
 
-# Fetch and build the custom CKAN extensions
-# RUN pip wheel --wheel-dir=/wheels git+https://github.com/acmecorp/ckanext-acme@0.0.1#egg=ckanext-acme
+# Example extension build #####################################################
 
+# Install build deps
 RUN set -ex && \
-  mkdir -p /wheels && \
-  pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-hierarchy.git#egg=ckanext-hierarchy && \
-  pip wheel --wheel-dir=/wheels git+https://github.com/tum-gis/ckanext-grouphierarchy-sddi.git#egg=ckanext-grouphierarchy && \
-  pip wheel --wheel-dir=/wheels git+https://github.com/tum-gis/ckanext-scheming-sddi.git#egg=ckanext-scheming && \
-  ls -lah /wheels
+   mkdir -p /wheels
+#    && \
+#   pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-hierarchy.git#egg=ckanext-hierarchy && \
+#   pip wheel --wheel-dir=/wheels git+https://github.com/tum-gis/ckanext-grouphierarchy-sddi.git#egg=ckanext-grouphierarchy && \
+#   pip wheel --wheel-dir=/wheels git+https://github.com/tum-gis/ckanext-scheming-sddi.git#egg=ckanext-scheming && \
+#   ls -lah /wheels
 
 
 ############
@@ -31,9 +32,7 @@ ARG CKAN_VERSION=2.9.5
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION} as runtime
 
 # Add the custom extensions to the plugins list
-ENV CKAN__PLUGINS hierarchy grouphierarchy-sddi scheming-sddi
-
-# envvars image_view text_view recline_view datastore datapusher
+ENV CKAN__PLUGINS envvars image_view text_view recline_view datastore datapusher
 
 # Switch to the root user
 USER root
@@ -41,14 +40,20 @@ USER root
 COPY --from=extbuild /wheels /srv/app/ext_wheels
 
 # Install and enable the custom extensions
-RUN set -ex 66 \
-  pip install --no-index --find-links=/srv/app/ext_wheels ckanext-hierarchy ckanext-grouphierarchy ckanext-scheming && \
-    chown -R ckan:ckan /srv/app
-
+RUN set -ex && \
+  # Upgrade pip
+  pip install --no-cache-dir -U pip && \
+  # Install additional pip packages for runtime
+  pip install --no-cache-dir -U ckanapi
+  # Install ckan extension wheels from build stage
+  # pip install --no-index --find-links=/srv/app/ext_wheels ckanext-hierarchy ckanext-grouphierarchy ckanext-scheming && \
+  # chown -R ckan:ckan /srv/app && \
+  # rm -rf /srv/app/ext_wheels && \
   # ckan -c ${APP_DIR}/production.ini config-tool "ckan.plugins = ${CKAN__PLUGINS}" && \
 
-# Remove wheels
-RUN rm -rf /srv/app/ext_wheels
+# Setup SDDI CKAN styling
+COPY --chown=ckan:ckan afterinit.d/02_create_groups.sh ${APP_DIR}/docker-afterinit.d/
+COPY --chown=ckan:ckan webassets/ ${DATA_DIR}/webassets/
 
 # Switch to the ckan user
 USER ckan
