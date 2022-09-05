@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# ckan_url="http://localhost:5000"
-
 echo "Create categories ..."
 ckan -c /srv/app/production.ini api action group_create title='Hauptkategorien' name='main-categories'
 ckan -c /srv/app/production.ini api action group_create title='Datensatz und Dokumente' name='dataset' image_url="$CKAN_SITE_URL/webassets/images/group_icons/dataset.jpg" groups:'[{"capacity":"public","name":"main-categories"}]'
