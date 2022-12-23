@@ -1,7 +1,8 @@
 # ckan-docker
 Docker image for CKAN
 
-# Extensions required for SDDI
+# Extensions used for SDDI
+The catalog platform uses several extensions to provide the functionality needed for the SDDI. Below is a list of all the used extensions. 
 
 | Extension | Description |
 |-----|-------------|
