@@ -1,7 +1,7 @@
 # ckan-docker
 Docker image for CKAN
 
-# Extensions required for SDDI Catalog
+# Extensions required for SDDI
 
 | Extension | Description |
 |-----|-------------|
