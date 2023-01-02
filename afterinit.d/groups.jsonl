@@ -1,0 +1,6 @@
+{"action": "group_create", "data": {"title": "Hauptkategorien", "name": "main-categories"}}
+{"action": "group_create", "data": {"title": "Datensatz und Dokumente", "name": "dataset"}, "image_url": "$CKAN_SITE_URL/webassets/images/group_icons/dataset.jpg", "groups": [{"capacity":"public","name":"main-categories"}]}
+{"action": "group_create", "data": {"title": "Themen", "name": "topics"}}
+{"action": "group_create", "data": {"title": "Verwaltung", "name": "administration"}, "image_url": "$CKAN_SITE_URL/webassets/images/group_icons/administration.svg", "groups": [{"capacity":"public","name":"topics"}]}
+{"action": "organization_create", "data": {"title": "Technische Universität München (TUM)", "name": "technische-universitat-munchen"}}
+{"action": "organization_create", "data": {"title": "Lehrstuhl für Geoinformatik", "name": "lehrstuhl-fur-geoinformatik", "groups": [{"capacity":"public","name":"technische-universitat-munchen"}]}}

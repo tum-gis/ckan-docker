@@ -21,7 +21,7 @@ RUN set -ex && \
   # ckan -c ${APP_DIR}/production.ini config-tool "ckan.plugins = ${CKAN__PLUGINS}" && \
 
 # Setup SDDI CKAN styling
-COPY --chown=ckan:ckan afterinit.d/02_create_groups.sh ${APP_DIR}/docker-afterinit.d/
+COPY --chown=ckan:ckan afterinit.d/ ${APP_DIR}/docker-afterinit.d/
 COPY --chown=ckan:ckan webassets/ ${DATA_DIR}/webassets/
 
 # Switch to the ckan user
