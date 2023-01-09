@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 echo "Create categories, and topics ..."
-ckanapi batch -c "${APP_DIR}/production.ini" -I "$APP_DIR/docker-afterinit.d/groups.jsonl"
+envsubst < "$APP_DIR/docker-afterinit.d/groups.jsonl" > "$APP_DIR/docker-afterinit.d/groups_subst.jsonl"
+ckanapi batch -c "${APP_DIR}/production.ini" -I "$APP_DIR/docker-afterinit.d/groups_subst.jsonl"
 echo "Create categories, and topics ...done!"
 
 # ckan -c ${APP_DIR}/production.ini api action group_create title='Hauptkategorien' name='main-categories'
