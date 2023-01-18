@@ -13,5 +13,6 @@ RUN set -ex && \
 # Copy webassets and init scripts
 COPY --chown=ckan:ckan afterinit.d/ ${APP_DIR}/docker-afterinit.d/
 COPY --chown=ckan:ckan webassets/ ${DATA_DIR}/webassets/
+COPY --chown=ckan:ckan template/ $CKAN_DIR/ckan/templates
 
 USER ckan
