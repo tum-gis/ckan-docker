@@ -22,9 +22,31 @@
 
 * `sddi-base`: Pure CKAN image with image with SDDI styling, groups, topics, and base
   organizations. This is used as base image for the other images.
+
+  ```text
+  reg.gitlab.brunowillenborg.de/ckan/sddi-base
+  ```
+
 * `sddi-spatial`: `sddi-base` + CKAN spatial extension.
-* `sddi-lite`: `sddi-spatial` + CKAN extension that are requried to support SDDI.
-* `sddi`: `sddi-lite` + optinal CKAN extension for e.g., social media features.
+
+  ```text
+  reg.gitlab.brunowillenborg.de/ckan/sddi-spatial
+  ```
+
+* `sddi-lite`: `sddi-spatial` + CKAN extension that are required to support SDDI.
+
+  ```text
+  reg.gitlab.brunowillenborg.de/ckan/sddi-lite
+  ```
+
+* `sddi`: `sddi-lite` + optional CKAN extension for e.g., social media features.
+
+  ```text
+  reg.gitlab.brunowillenborg.de/ckan/sddi
+  ```
+
+Image tags are the CKAN version. Images are available for CKAN `>=2.9.5`.
+The `latest` tag points to the latest supported CKAN version: `2.9.7`.
 
 ## :question: Getting started
 
