@@ -1,8 +1,43 @@
-# ckan-docker
-Docker image for CKAN
+<h1 align="center">SDDI CKAN Docker</h1>
 
-# Extensions used for SDDI
-The catalog platform uses several extensions to provide the functionality needed for the SDDI. Below is a list of all the used extensions. 
+<p align="center">
+    <em>
+    <a title="Smart District Data Infrastructure" href="https://www.asg.ed.tum.de/gis/projekte/sddi/">Smart District Data Infrastructure (SDDI)</a>
+    enabled Docker images for
+    <a title="ckan.org" href="https://ckan.org/">CKAN</a>
+    </em>
+    <br />
+    <br />
+    <a href="https://github.com/tum-gis/sddi-ckan-k8s/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/tum-gis/sddi-ckan-k8s/issues">Request Feature</a>
+    <br />
+    <br />
+    <a href="https://github.com/tum-gis/ckan-docker/releases" title="Latest release">
+    <img src="https://img.shields.io/github/v/release/tum-gis/ckan-docker?logo=docker&sort=semver&style=for-the-badge">
+  </a>
+</p>
+
+## :inbox_tray: Components
+
+* `sddi-base`: Pure CKAN image with image with SDDI styling, groups, topics, and base
+  organizations. This is used as base image for the other images.
+* `sddi-spatial`: `sddi-base` + CKAN spatial extension.
+* `sddi-lite`: `sddi-spatial` + CKAN extension that are requried to support SDDI.
+* `sddi`: `sddi-lite` + optinal CKAN extension for e.g., social media features.
+
+## :question: Getting started
+
+## :grey_exclamation: Requirements
+
+## :rocket: Usage
+
+## :book: Documentation
+
+### Extensions used for SDDI
+
+The catalog platform uses several extensions to provide the functionality needed for
+the SDDI. Below is a list of all the used extensions.
 
 | Extension | Description |
 |-----|-------------|
@@ -15,3 +50,19 @@ The catalog platform uses several extensions to provide the functionality needed
 | [Restricted](https://github.com/MarijaKnezevic/ckanext-restricted) | CKAN extension to restrict the accessibility to the resources of a dataset. This way the package metadata is accesible but not the data itself (resource). The resource access restriction level can be individualy defined for every package.|
 | [Repeating](https://github.com/MarijaKnezevic/ckanext-repeating) | This extension provides a way to store repeating fields in CKAN datasets, resources, organizations and groups.|
 | [Disqus](https://github.com/ckan/ckanext-disqus) | The Disqus extension allows site visitors to comment on individual packages using an AJAX-based commenting system. The downsides of this plugin are that comments are not stored locally and user information is not shared between CKAN and the commenting system.|
+
+## :hammer_and_wrench: Contributing
+
+Bug fixes, issue reports and contributions are greatly appreciated.
+
+### Contributors
+
+<a href="https://github.com/tum-gis/ckan-docker/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=tum-gis/ckan-docker" />
+</a>
+
+## :handshake: Thanks
+
+* This repo is based on the CKAN
+  [Docker images](https://github.com/keitaroinc/docker-ckan) of
+  [Keitaro](https://github.com/keitaroinc). Many thank's for your great work!
