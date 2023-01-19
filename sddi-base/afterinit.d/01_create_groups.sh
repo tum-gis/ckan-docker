@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Create categories, and topics ..."
+echo "Create SDDI categories, topics, groups, and organizations ..."
 envsubst < "$APP_DIR/docker-afterinit.d/groups.jsonl" > "$APP_DIR/docker-afterinit.d/groups_subst.jsonl"
 ckanapi batch -c "${APP_DIR}/production.ini" -I "$APP_DIR/docker-afterinit.d/groups_subst.jsonl"
-echo "Create categories, and topics ...done!"
+echo "Create SDDI categories, topics, groups, and organizations ...done!"
