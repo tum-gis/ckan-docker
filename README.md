@@ -88,3 +88,10 @@ Bug fixes, issue reports and contributions are greatly appreciated.
 * This repo is based on the CKAN
   [Docker images](https://github.com/keitaroinc/docker-ckan) of
   [Keitaro](https://github.com/keitaroinc). Many thank's for your great work!
+
+## :hammer_and_wrench: Build images
+
+* Switch to the image folder, e.g. `cd sddi-base`
+* Run `./build.sh` to the image. Run `./build.sh 2.9.7` to build* using
+  a specific CKAN version.
+* Use `./build-push.sh` to build and push the image.
