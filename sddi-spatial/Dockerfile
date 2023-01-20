@@ -1,7 +1,7 @@
 ###############################################################################
 # Build stage
 ###############################################################################
-ARG CKAN_VERSION=2.9.7-focal
+ARG CKAN_VERSION="2.9.7-focal"
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION} as extbuild
 # FROM ckan/ckan:${CKAN_VERSION} as extbuild
 
@@ -14,22 +14,21 @@ USER root
 # Install any system packages necessary to build extensions
 RUN set -ex && \
   apt-get update && \
-  apt-get install python-dev libxml2-dev libxslt1-dev libgeos-c1v5 -y
+  apt-get install python3-dev libxml2-dev libxslt1-dev libgeos-c1v5 -y
 
  RUN set -ex && \
   pip install -U pip && \
   pip install -r https://raw.githubusercontent.com/ckan/ckanext-spatial/${CKAN_SPATIAL_VERSION}/requirements.txt
 
 RUN set -ex && \
-  pip wheel --wheel-dir=/wheels && \
-  git+ https://github.com/ckan/ckanext-spatial.git@${CKAN_SPATIAL_VERSION}#egg=ckanext-spatial
+  pip wheel --wheel-dir=/wheels \
+  git+https://github.com/ckan/ckanext-spatial.git@${CKAN_SPATIAL_VERSION}#egg=ckanext-spatial
 
 ###############################################################################
 # Runtime stage
 ###############################################################################
-
 ARG CKAN_VERSION=2.9.7
-FROM reg.gitlab.brunowillenborg.de/ckan:sddi-base:${CKAN_VERSION} as runtime
+FROM reg.gitlab.brunowillenborg.de/ckan/sddi-base:${CKAN_VERSION} as runtime
 
 # List all extensions here
 ENV CKAN__PLUGINS envvars image_view text_view recline_view datastore datapusher spatial_metadata spatial_query
@@ -39,6 +38,7 @@ USER root
 
 # Copy python wheels from build stage
 COPY --from=extbuild /wheels /srv/app/ext_wheels
+COPY --chown=ckan:ckan template/ $CKAN_DIR/ckan/templates
 
 # Install and enable the custom extensions, remove wheels
 RUN set -ex && \
