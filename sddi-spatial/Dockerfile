@@ -27,7 +27,6 @@ RUN set -ex && \
 ###############################################################################
 # Runtime stage
 ###############################################################################
-# ARG CKAN_VERSION=2.9.7
 FROM reg.gitlab.brunowillenborg.de/ckan/sddi-base:${CKAN_VERSION} as runtime
 
 # List all extensions here
