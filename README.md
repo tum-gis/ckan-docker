@@ -45,8 +45,14 @@
   reg.gitlab.brunowillenborg.de/ckan/sddi
   ```
 
-Image tags are the CKAN version. Images are available for CKAN `>=2.9.5`.
-The `latest` tag points to the latest supported CKAN version: `2.9.7`.
+Image tags are the CKAN version. Images are available for CKAN `>=2.9.5`, `>=2.9.5-focal`.
+The `latest` tag is (for now) not available.
+
+## :eye_speech_bubble: Requirements
+
+* Due to required dependencies, the `sddi-spatial` image is only available based on
+  Debian images (`reg.gitlab.brunowillenborg.de/ckan/sddi-spatial:CKAN_VERSION-focal`).
+  Thus, `sddi-lite` and `sddi` are only available as Debian-based images too.
 
 ## :question: Getting started
 
