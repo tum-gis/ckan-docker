@@ -1,8 +1,8 @@
 ###############################################################################
 # Build stage
 ###############################################################################
-ARG CKAN_VERSION="2.9.7-focal"
-FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION} as extbuild
+ARG CKAN_VERSION=2.9.7
+FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION}-focal as extbuild
 # FROM ckan/ckan:${CKAN_VERSION} as extbuild
 
 ARG CKAN_SPATIAL_VERSION=master
@@ -27,7 +27,7 @@ RUN set -ex && \
 ###############################################################################
 # Runtime stage
 ###############################################################################
-ARG CKAN_VERSION=2.9.7
+# ARG CKAN_VERSION=2.9.7
 FROM reg.gitlab.brunowillenborg.de/ckan/sddi-base:${CKAN_VERSION} as runtime
 
 # List all extensions here
