@@ -1,7 +1,7 @@
 ###############################################################################
 # Build stage
 ###############################################################################
-ARG CKAN_VERSION="2.9.7-focal"
+ARG CKAN_VERSION=2.9.7
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION} as extbuild
 # FROM ckan/ckan:${CKAN_VERSION} as extbuild
 
@@ -18,16 +18,14 @@ RUN set -ex && \
 
  RUN set -ex && \
   pip install -U pip && \
-  pip install -r https://raw.githubusercontent.com/ckan/ckanext-spatial/${CKAN_SPATIAL_VERSION}/requirements.txt
-
-RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
-  git+https://github.com/ckan/ckanext-spatial.git@${CKAN_SPATIAL_VERSION}#egg=ckanext-spatial
+  git+https://github.com/ckan/ckanext-spatial.git@${CKAN_SPATIAL_VERSION}#egg=ckanext-spatial && \
+  pip install -r https://raw.githubusercontent.com/ckan/ckanext-spatial/${CKAN_SPATIAL_VERSION}/requirements.txt && \
+  curl -o /wheels/ckanext-spatial.txt https://raw.githubusercontent.com/ckan/ckanext-spatial/${CKAN_SPATIAL_VERSION}/requirements.txt
 
 ###############################################################################
 # Runtime stage
 ###############################################################################
-ARG CKAN_VERSION=2.9.7
 FROM reg.gitlab.brunowillenborg.de/ckan/sddi-base:${CKAN_VERSION} as runtime
 
 # List all extensions here
@@ -42,6 +40,7 @@ COPY --chown=ckan:ckan template/ $CKAN_DIR/ckan/templates
 
 # Install and enable the custom extensions, remove wheels
 RUN set -ex && \
+  pip install -U -r /srv/app/ext_wheels/ckanext-spatial.txt && \
   pip install --no-index --find-links=/srv/app/ext_wheels ckanext-spatial && \
   ckan config-tool "${APP_DIR}/production.ini" "ckan.plugins = ${CKAN__PLUGINS}" && \
   ckan config-tool "${APP_DIR}/production.ini" "ckanext.spatial.use_postgis_sorting=true" && \
