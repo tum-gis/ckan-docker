@@ -46,8 +46,8 @@ COPY --from=extbuild /wheels /srv/app/ext_wheels
 RUN set -ex && \
   pip install --no-index --find-links=/srv/app/ext_wheels ckanext-spatial && \
   ckan config-tool "${APP_DIR}/production.ini" "ckan.plugins = ${CKAN__PLUGINS}" && \
-  ckan config-tool "${APP_DIR}/production.ini" "ckanext.spatial.use_postgis_sorting=true" && \
-  ckan config-tool "${APP_DIR}/production.ini" "ckanext.spatial.search_backend = solr" && \
+#  ckan config-tool "${APP_DIR}/production.ini" "ckanext.spatial.use_postgis_sorting=true" && \
+# ckan config-tool "${APP_DIR}/production.ini" "ckanext.spatial.search_backend = solr" && \
   ckan config-tool "${APP_DIR}/production.ini" "ckan.spatial.srid = 4326" && \
   chown -R ckan:ckan /srv/app && \
   rm -rf /srv/app/ext_wheels
