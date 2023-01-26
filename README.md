@@ -76,6 +76,7 @@ the SDDI. Below is a list of all the used extensions.
 | [GeoView](https://github.com/pduchesne/ckanext-geoview) | This extension contains view plugins to display geospatial files and services in CKAN.|
 | [Composite](https://github.com/EnviDat/ckanext-composite) | The extension allows to store structured dataset metadata, single or multiple fields. Only one level of subfields is possible. The subfields can be basic text, date type o choice dropboxes. |
 | [Restricted](https://github.com/MarijaKnezevic/ckanext-restricted) | CKAN extension to restrict the accessibility to the resources of a dataset. This way the package metadata is accesible but not the data itself (resource). The resource access restriction level can be individualy defined for every package.|
+| [Spatial](https://github.com/ckan/ckanext-spatials) | Provides the ability to search for datasets according to a given spatial extent.|
 | [Repeating](https://github.com/MarijaKnezevic/ckanext-repeating) | This extension provides a way to store repeating fields in CKAN datasets, resources, organizations and groups.|
 | [Disqus](https://github.com/ckan/ckanext-disqus) | The Disqus extension allows site visitors to comment on individual packages using an AJAX-based commenting system. The downsides of this plugin are that comments are not stored locally and user information is not shared between CKAN and the commenting system.|
 
