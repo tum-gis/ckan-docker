@@ -19,6 +19,9 @@ ENV CKAN_EXT_RESTRICTED_VERSION=${CKAN_EXT_RESTRICTED_VERSION}
 ARG CKAN_EXT_SCHEMING_VERSION=0.3-(without_composite_und_repeating)
 ENV CKAN_EXT_SCHEMING_VERSION=${CKAN_EXT_SCHEMING_VERSION}
 
+ARG CKAN_EXT_GEOVIEW_VERSION=master
+ENV CKAN_EXT_GEOVIEW_VERSION=${CKAN_EXT_GEOVIEW_VERSION}
+
 # Switch to the root user
 USER root
 
@@ -59,7 +62,12 @@ RUN pip wheel --wheel-dir=/wheels -r https://raw.githubusercontent.com/MarijaKne
 RUN curl -o /wheels/ckanext-scheming.txt https://raw.githubusercontent.com/MarijaKnezevic/ckanext-scheming/${CKAN_EXT_SCHEMING_VERSION}/test-requirements.txt
 RUN pip wheel --wheel-dir=/wheels -r https://raw.githubusercontent.com/MarijaKnezevic/ckanext-scheming/${CKAN_EXT_SCHEMING_VERSION}/test-requirements-py2.txt
 RUN curl -o /wheels/ckanext-scheming.txt https://raw.githubusercontent.com/MarijaKnezevic/ckanext-scheming/${CKAN_EXT_SCHEMING_VERSION}/test-requirements-py2.txt
- 
+
+############################## geoview ############################## 
+RUN pip install -r https://raw.githubusercontent.com/ckan/ckanext-geoview/${CKAN_EXT_GEOVIEW_VERSION}/dev-requirements.txt
+
+RUN pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-geoview.git@${CKAN_EXT_GEOVIEW_VERSION}#egg=ckanext-geoview
+
 
 ############
 ### MAIN ###
@@ -74,7 +82,7 @@ RUN set -ex && \
   
   
 # List all extensions here
-ENV CKAN__PLUGINS envvars image_view text_view recline_view datastore datapusher scheming_datasets hierarchy_display hierarchy_form hierarchy_group_form  repeating composite restricted 
+ENV CKAN__PLUGINS envvars image_view text_view recline_view datastore datapusher scheming_datasets hierarchy_display hierarchy_form hierarchy_group_form  repeating composite restricted geo_view geojson_view wmts_view shp_view
 
 # Switch to the root user
 USER root
@@ -104,6 +112,13 @@ RUN set -ex && \
   ckan config-tool "${APP_DIR}/production.ini" "scheming.presets = ckanext.scheming:presets.json" && \
   ckan config-tool "${APP_DIR}/production.ini" "scheming.dataset_fallback = false" && \
 
+############################## geoview ############################## 
+  pip install --no-index --find-links=/srv/app/ext_wheels ckanext-geoview && \
+  ckan config-tool "${APP_DIR}/production.ini" "ckan.plugins = ${CKAN__PLUGINS}" && \
+  ckan config-tool "${APP_DIR}/production.ini" "ckan.views.default_views = geo_view geojson_view wmts_view shp_view" && \
+  ckan config-tool "${APP_DIR}/production.ini" "ckanext.geoview.ol_viewer.formats = wms kml" && \
+  ckan config-tool "${APP_DIR}/production.ini" "ckanext.geoview.shp_viewer.srid = 4326" && \
+  ckan config-tool "${APP_DIR}/production.ini" "ckanext.geoview.shp_viewer.encoding = UTF-8" && \
   
   ckan config-tool "${APP_DIR}/production.ini" "ckan.plugins = ${CKAN__PLUGINS}" && \
   chown -R ckan:ckan /srv/app && \
