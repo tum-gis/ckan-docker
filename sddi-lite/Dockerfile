@@ -1,6 +1,6 @@
-###################
-### Extensions ####
-###################
+###############################################################################
+# Build stage
+###############################################################################
 ARG CKAN_VERSION=2.9.7
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION} as extbuild
 
@@ -26,7 +26,6 @@ ENV CKAN_EXT_GEOVIEW_VERSION=${CKAN_EXT_GEOVIEW_VERSION}
 USER root
 
 # Install any system packages necessary to build extensions
-
 ############################## hierarchy ##############################
 RUN set -ex && \
   apk add --no-cache --virtual .build-deps \
@@ -69,18 +68,12 @@ RUN pip install -r https://raw.githubusercontent.com/ckan/ckanext-geoview/${CKAN
 RUN pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-geoview.git@${CKAN_EXT_GEOVIEW_VERSION}#egg=ckanext-geoview
 
 
-############
-### MAIN ###
-############
+###############################################################################
+# Runtime stage
+###############################################################################
 ARG CKAN_VERSION=2.9.7
-FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION} as runtime
+FROM reg.gitlab.brunowillenborg.de/ckan/sddi-base:${CKAN_VERSION} as runtime
 
-# Install and enable the custom extensions
-############################## repeating ##############################
-RUN set -ex && \
-  pip install --no-cache-dir -U ckanapi
-  
-  
 # List all extensions here
 ENV CKAN__PLUGINS envvars image_view text_view recline_view datastore datapusher scheming_datasets hierarchy_display hierarchy_form hierarchy_group_form  repeating composite restricted geo_view geojson_view wmts_view shp_view
 
@@ -91,30 +84,39 @@ USER root
 COPY --from=extbuild /wheels /srv/app/ext_wheels
 
 # Install and enable the custom extensions, remove wheels
+
 ############################## hierarchy ##############################
 RUN set -ex && \
   pip install --no-index --find-links=/srv/app/ext_wheels ckanext-hierarchy && \
+RUN set -ex && \
   pip install --no-index --find-links=/srv/app/ext_wheels -r /srv/app/ext_wheels/ckanext-hierarchy.txt && \
   
 ############################## repeating ##############################  
+RUN set -ex && \
+  pip install --no-cache-dir -U ckanapi
+RUN set -ex && \
   pip install --no-index --find-links=/srv/app/ext_wheels ckanext-repeating  && \ 
   
 ############################## composite ##############################
+RUN set -ex && \
   pip install --no-index --find-links=/srv/app/ext_wheels ckanext-composite  && \
 
 ############################## restricted ##############################
+RUN set -ex && \
   pip install --no-index --find-links=/srv/app/ext_wheels ckanext-restricted  && \
 
 ############################## scheming ##############################
+RUN set -ex && \
   pip install --no-index --find-links=/srv/app/ext_wheels ckanext-scheming && \
+RUN set -ex && \
   pip install --no-index --find-links=/srv/app/ext_wheels -r /srv/app/ext_wheels/ckanext-scheming.txt && \
   ckan config-tool "${APP_DIR}/production.ini" "scheming.dataset_schemas = ckanext.scheming:ckan_dataset.yaml" && \
   ckan config-tool "${APP_DIR}/production.ini" "scheming.presets = ckanext.scheming:presets.json" && \
   ckan config-tool "${APP_DIR}/production.ini" "scheming.dataset_fallback = false" && \
 
 ############################## geoview ############################## 
+RUN set -ex && \
   pip install --no-index --find-links=/srv/app/ext_wheels ckanext-geoview && \
-  ckan config-tool "${APP_DIR}/production.ini" "ckan.plugins = ${CKAN__PLUGINS}" && \
   ckan config-tool "${APP_DIR}/production.ini" "ckan.views.default_views = geo_view geojson_view wmts_view shp_view" && \
   ckan config-tool "${APP_DIR}/production.ini" "ckanext.geoview.ol_viewer.formats = wms kml" && \
   ckan config-tool "${APP_DIR}/production.ini" "ckanext.geoview.shp_viewer.srid = 4326" && \
