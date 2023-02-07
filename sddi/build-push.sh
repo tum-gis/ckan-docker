@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-REPO="reg.gitlab.brunowillenborg.de/ckan/sddi"
-CKAN_VERSION=${1:-2.9.5}
+REPO="ghcr.io/tum-gis/ckan-sddi-base"
+CKAN_VERSION=${1:-2.9.7}
 
 # Build with verbose output
 docker build . \

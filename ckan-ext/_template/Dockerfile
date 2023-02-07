@@ -2,6 +2,7 @@
 # Build stage
 ###############################################################################
 ARG CKAN_VERSION=2.9.7
+ARG BASEIMAGE_VERSION=latest
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION} as extbuild
 # FROM ckan/ckan:${CKAN_VERSION} as extbuild
 
@@ -20,8 +21,7 @@ RUN pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-spatial.gi
 ###############################################################################
 # Runtime stage
 ###############################################################################
-ARG CKAN_VERSION=2.9.7
-FROM reg.gitlab.brunowillenborg.de/ckan/sddi-base:${CKAN_VERSION} as runtime
+FROM ghcr.io/tum-gis/ckan-sddi-base:${BASEIMAGE_VERSION} as runtime
 
 # List all extensions here
 ENV CKAN__PLUGINS envvars image_view text_view recline_view datastore datapusher spatial_metadata spatial_query

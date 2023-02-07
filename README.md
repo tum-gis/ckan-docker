@@ -20,39 +20,27 @@
 
 ## :inbox_tray: Components
 
-* `sddi-base`: Pure CKAN image with image with SDDI styling, groups, topics, and base
-  organizations. This is used as base image for the other images.
+* `sddi-base`: CKAN base image with all extensions required for SDDI styling. Default SDDI groups,
+  topics, and base organizations are preinstalled. This image is used as base image for the other images.
 
   ```text
-  reg.gitlab.brunowillenborg.de/ckan/sddi-base
+  ghcr.io/tum-gis/ckan-sddi-base
   ```
 
-* `sddi-spatial`: `sddi-base` + CKAN spatial extension.
+* `sddi`: `sddi-base` + all required CKAN extensions to support SDDI.
 
   ```text
-  reg.gitlab.brunowillenborg.de/ckan/sddi-spatial
+  ghcr.io/tum-gis/ckan-sddi
   ```
 
-* `sddi-lite`: `sddi-spatial` + CKAN extension that are required to support SDDI.
+* `sddi-social`: `sddi` + optional CKAN extension for social media features, that may require staff
+  for moderation of social media content.
 
   ```text
-  reg.gitlab.brunowillenborg.de/ckan/sddi-lite
+  ghcr.io/tum-gis/ckan-sddi-social
   ```
-
-* `sddi`: `sddi-lite` + optional CKAN extension for e.g., social media features.
-
-  ```text
-  reg.gitlab.brunowillenborg.de/ckan/sddi
-  ```
-
-Image tags are the CKAN version. Images are available for CKAN `>=2.9.5`, `>=2.9.5-focal`.
-The `latest` tag is (for now) not available.
 
 ## :eye_speech_bubble: Requirements
-
-* Due to required dependencies, the `sddi-spatial` image is only available based on
-  Debian images (`reg.gitlab.brunowillenborg.de/ckan/sddi-spatial:CKAN_VERSION-focal`).
-  Thus, `sddi-lite` and `sddi` are only available as Debian-based images too.
 
 ## :question: Getting started
 

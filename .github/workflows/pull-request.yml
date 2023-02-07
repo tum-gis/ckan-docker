@@ -1,0 +1,42 @@
+name: Test Docker image build
+on:
+  pull_request:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build image sddi-base
+        uses: docker/build-push-action@v4
+        with:
+          context: sddi-base
+          push: false
+          tags: ghcr.io/tum-gis/ckan-sddi-base:pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Build image sddi
+        uses: docker/build-push-action@v4
+        with:
+          context: sddi
+          push: false
+          tags: ghcr.io/tum-gis/ckan-sddi:pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
+          build-args: |
+            BASEIMAGE_VERSION=pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Build image sddi-social
+        uses: docker/build-push-action@v4
+        with:
+          context: sddi-social
+          push: false
+          tags: ghcr.io/tum-gis/ckan-sddi-social:pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
+          build-args: |
+            BASEIMAGE_VERSION=pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
