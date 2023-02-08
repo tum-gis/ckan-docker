@@ -4,12 +4,9 @@
 ARG CKAN_VERSION=2.9.7
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION} as runtime
 
-USER root
+ENV CKAN__PLUGINS image_view text_view recline_view datastore datapusher envvars
 
-# Install runtime dependencies
-RUN set -ex && \
-  pip install --no-cache-dir -U pip && \
-  pip install --no-cache-dir -U ckanapi
+USER root
 
 # Copy webassets and init scripts
 COPY --chown=ckan:ckan afterinit.d/ ${APP_DIR}/docker-afterinit.d/
