@@ -16,6 +16,3 @@ COPY --chown=ckan:ckan afterinit.d/ ${APP_DIR}/docker-afterinit.d/
 COPY --chown=ckan:ckan webassets/ ${DATA_DIR}/webassets/
 
 USER ckan
-
-
-
