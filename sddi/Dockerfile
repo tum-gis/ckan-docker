@@ -1,8 +1,8 @@
 # ###############################################################################
 # # Build stage
 # ###############################################################################
-# ARG CKAN_VERSION=2.9.7
-# ARG BASEIMAGE_VERSION=latest
+ARG CKAN_VERSION=2.9.7
+ARG BASEIMAGE_VERSION=latest
 # FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION} as extbuild
 
 # ARG CKAN_EXT_HIERARCHY_VERSION=master
@@ -72,8 +72,8 @@
 # ###############################################################################
 # # Runtime stage
 # ###############################################################################
-# ARG CKAN_VERSION=2.9.7
-# FROM ghcr.io/tum-gis/ckan-sddi-base:${BASEIMAGE_VERSION} as runtime
+ARG CKAN_VERSION=2.9.7
+FROM ghcr.io/tum-gis/ckan-sddi-base:${BASEIMAGE_VERSION} as runtime
 
 # # List all extensions here
 # ENV CKAN__PLUGINS envvars image_view text_view recline_view datastore datapusher scheming_datasets hierarchy_display hierarchy_form hierarchy_group_form  repeating composite restricted geo_view geojson_view wmts_view shp_view
