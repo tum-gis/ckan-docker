@@ -1,0 +1,18 @@
+{% set intro = g.site_intro_text %}
+
+<div class="module-promotion card box">
+  <div>
+    {% if intro %}
+      {{ h.render_markdown(intro) }}
+    {% else %}
+      <h1 class="page-heading">{{ _("Willkommen auf der SDDI-Katalogplattform") }}</h1>
+      <p>
+        {% trans %}Ihre Informationsdrehscheibe rund um das Thema Smarte Städte und Regionen mit Informationen zu Daten, Services, Anwendungen und Projekten in den Modellregionen Bayerns.
+        {% endtrans %}
+      </p>
+    {% endif %}
+  </div>
+
+  {% block home_image %}
+  {% endblock %}
+</div>
