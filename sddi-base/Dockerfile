@@ -67,8 +67,6 @@ USER root
 ARG CKAN_EXT_SDDI_VERSION="2.9-support"
 COPY --from=extbuild /wheels /srv/app/ext_wheels
 COPY --chown=ckan:ckan afterinit.d/ ${APP_DIR}/docker-afterinit.d/
-ADD https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/${CKAN_EXT_SDDI_VERSION}/ckanext/grouphierarchy/init_data.json \
-  /usr/lib/python3.8/site-packages/ckanext/grouphierarchy/init_data.json
 
 # Install runtime dependencies
 RUN set -ex && \
@@ -93,7 +91,6 @@ RUN set -ex && \
 RUN set -ex && \
   ckan config-tool "${APP_DIR}/production.ini" "ckan.plugins = ${CKAN__PLUGINS}" && \
   chown -R ckan:ckan /srv/app && \
-  chown -Rv ckan:ckan /usr/lib/python3.8/site-packages/ckanext/grouphierarchy/init_data.json && \
   # Remove wheels
   rm -rf /srv/app/ext_wheels
 
