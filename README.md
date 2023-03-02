@@ -18,29 +18,41 @@
   </a>
 </p>
 
-## :inbox_tray: Components
+## :book: Table of content
 
-* `sddi-base`: CKAN base image with all extensions required for SDDI styling. Default SDDI groups,
+- [:book: Table of content](#book-table-of-content)
+- [:inbox\_tray: Images overview](#inbox_tray-images-overview)
+- [:question: Getting started](#question-getting-started)
+- [:grey\_exclamation: Requirements](#grey_exclamation-requirements)
+- [:rocket: Usage](#rocket-usage)
+- [:book: Documentation](#book-documentation)
+  - [Extensions used for SDDI](#extensions-used-for-sddi)
+- [:hammer\_and\_wrench: Contributing](#hammer_and_wrench-contributing)
+  - [Contributors](#contributors)
+- [:handshake: Thanks](#handshake-thanks)
+- [:hammer\_and\_wrench: Build images](#hammer_and_wrench-build-images)
+
+## :inbox_tray: Images overview
+
+- `sddi-base`: CKAN base image with all extensions required for SDDI styling. Default SDDI groups,
   topics, and base organizations are preinstalled. This image is used as base image for the other images.
 
   ```text
   ghcr.io/tum-gis/ckan-sddi-base
   ```
 
-* `sddi`: `sddi-base` + all required CKAN extensions to support SDDI.
+- `sddi`: `sddi-base` + all required CKAN extensions to support SDDI.
 
   ```text
   ghcr.io/tum-gis/ckan-sddi
   ```
 
-* `sddi-social`: `sddi` + optional CKAN extension for social media features, that may require staff
+- `sddi-social`: `sddi` + optional CKAN extension for social media features, that may require staff
   for moderation of social media content.
 
   ```text
   ghcr.io/tum-gis/ckan-sddi-social
   ```
-
-## :eye_speech_bubble: Requirements
 
 ## :question: Getting started
 
