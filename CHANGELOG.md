@@ -8,9 +8,13 @@ For releases `< 1.0.0` minor version step indicate breaking changes.
 
 ## [0.0.3] - 2023-03-02
 
-### Added+
+### Added
 
 - Workflow to build `edge` images from latest commit to `main` branch
+
+### Changed
+
+- Apapt `sddi-base` Dockerfile for new extensions
 
 ## [0.0.2] - 2023-02-09
 
