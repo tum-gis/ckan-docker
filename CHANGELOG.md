@@ -14,7 +14,7 @@ For releases `< 1.0.0` minor version step indicate breaking changes.
 
 ### Changed
 
-- Apapt `sddi-base` Dockerfile for new extensions
+- Adapt `sddi-base` Dockerfile for new extensions
 
 ## [0.0.2] - 2023-02-09
 
