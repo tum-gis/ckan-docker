@@ -48,4 +48,4 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            BASEIMAGE_VERSION=${{ github.event.release.tag_name }}
+            BASEIMAGE_VERSION=edge
