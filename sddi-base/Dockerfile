@@ -61,8 +61,6 @@ FROM ckan/ckan-base:${CKAN_VERSION} as runtime
 
 ENV CKAN__PLUGINS image_view text_view recline_view datastore datapusher hierarchy_display hierarchy_form display_group relation envvars
 
-USER root
-
 # Copy python wheels from build stage
 ARG CKAN_EXT_SDDI_VERSION="2.9-support"
 COPY --from=extbuild /wheels /srv/app/ext_wheels
@@ -90,6 +88,7 @@ RUN set -ex && \
 
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
+  echo "UTC" >  /etc/timezone && \
   chown -R ckan:ckan /srv/app && \
   # Remove wheels
   rm -rf /srv/app/ext_wheels
