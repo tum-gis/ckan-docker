@@ -1,9 +1,9 @@
 # ###############################################################################
 # # Build stage
 # ###############################################################################
-ARG CKAN_VERSION=2.9.7
+ARG CKAN_VERSION=2.9.7-dev
 
-FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION} as extbuild
+FROM ckan/ckan-base:${CKAN_VERSION} as extbuild
 
 # ckanext-hierarchy ###########################################################
 ARG CKAN_EXT_HIERARCHY_VERSION=master
@@ -57,7 +57,7 @@ RUN set -ex && \
 # Runtime stage
 ###############################################################################
 ARG CKAN_VERSION=2.9.7
-FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION} as runtime
+FROM ckan/ckan-base:${CKAN_VERSION} as runtime
 
 ENV CKAN__PLUGINS image_view text_view recline_view datastore datapusher hierarchy_display hierarchy_form display_group relation envvars
 
