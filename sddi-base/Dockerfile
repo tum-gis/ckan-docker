@@ -66,7 +66,7 @@ USER root
 # Copy python wheels from build stage
 ARG CKAN_EXT_SDDI_VERSION="2.9-support"
 COPY --from=extbuild /wheels /srv/app/ext_wheels
-COPY --chown=ckan:ckan afterinit.d/ ${APP_DIR}/docker-afterinit.d/
+COPY --chown=ckan:ckan /docker-entrypoint.d /docker-entrypoint.d
 
 # Install runtime dependencies
 RUN set -ex && \
