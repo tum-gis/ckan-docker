@@ -12,10 +12,6 @@ ENV CKAN_EXT_HIERARCHY_VERSION=${CKAN_EXT_HIERARCHY_VERSION}
 USER root
 
 RUN set -ex && \
-  apk update && \
-  apk add --no-cache --virtual .build-deps \
-    python3-dev && \
-    pip install --upgrade pip \
     pip install -r https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKAN_EXT_HIERARCHY_VERSION}/dev-requirements.txt
 
 RUN set -ex && \
@@ -62,7 +58,7 @@ ENV CKAN__PLUGINS image_view text_view recline_view datastore datapusher hierarc
 
 # Copy python wheels from build stage
 ARG CKAN_EXT_SDDI_VERSION="2.9-support"
-COPY --from=extbuild /wheels /srv/app/ext_wheels
+COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
 COPY --chown=ckan:ckan /docker-entrypoint.d /docker-entrypoint.d
 
 # Install runtime dependencies
@@ -72,22 +68,22 @@ RUN set -ex && \
 
 # ckanext-hierarchy ###########################################################
 RUN set -ex && \
-  pip install --no-index --find-links=/srv/app/ext_wheels ckanext-hierarchy && \
-  pip install --no-index --find-links=/srv/app/ext_wheels -r /srv/app/ext_wheels/ckanext-hierarchy.txt
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-hierarchy && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-hierarchy.txt
 
 # ckanext-hierarchy ###########################################################
 RUN set -ex && \
-  pip install --no-index --find-links=/srv/app/ext_wheels ckanext-grouphierarchy && \
-  pip install --no-index --find-links=/srv/app/ext_wheels -r /srv/app/ext_wheels/ckanext-grouphierarchy.txt
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-grouphierarchy && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-grouphierarchy.txt
 
 # ckanext-hierarchy ###########################################################
 RUN set -ex && \
-  pip install --no-index --find-links=/srv/app/ext_wheels ckanext-relation && \
-  pip install --no-index --find-links=/srv/app/ext_wheels -r /srv/app/ext_wheels/ckanext-relation.txt
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-relation && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-relation.txt
 
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
   echo "UTC" >  /etc/timezone && \
-  chown -R ckan:ckan /srv/app && \
+  chown -R ckan:ckan ${APP_DIR} && \
   # Remove wheels
-  rm -rf /srv/app/ext_wheels
+  rm -rf ${APP_DIR}/ext_wheels
