@@ -1,9 +1,9 @@
 # ###############################################################################
 # # Build stage
 # ###############################################################################
-ARG CKAN_VERSION=2.9.7-dev
-
-FROM ckan/ckan-base:${CKAN_VERSION} as extbuild
+ARG CKAN_VERSION_BUILD_STAGE=2.9.7-dev
+ARG CKAN_VERSION_RUNTIME_STAGE=2.9.7
+FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
 
 # ckanext-hierarchy ###########################################################
 ARG CKAN_EXT_HIERARCHY_VERSION=master
@@ -56,9 +56,8 @@ RUN set -ex && \
 ###############################################################################
 # Runtime stage
 ###############################################################################
-ARG CKAN_VERSION=2.9.7
-FROM ckan/ckan-base:${CKAN_VERSION} as runtime
-
+ARG CKAN_VERSION_RUNTIME_STAGE=2.9.7
+FROM ckan/ckan-base:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 ENV CKAN__PLUGINS image_view text_view recline_view datastore datapusher hierarchy_display hierarchy_form display_group relation envvars
 
 # Copy python wheels from build stage
@@ -92,5 +91,3 @@ RUN set -ex && \
   chown -R ckan:ckan /srv/app && \
   # Remove wheels
   rm -rf /srv/app/ext_wheels
-
-USER ckan
