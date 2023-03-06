@@ -89,7 +89,7 @@ RUN set -ex && \
   pip install --no-index --find-links=/srv/app/ext_wheels -r /srv/app/ext_wheels/ckanext-relation.txt
 
 RUN set -ex && \
-  ckan config-tool "${APP_DIR}/production.ini" "ckan.plugins = ${CKAN__PLUGINS}" && \
+  ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
   chown -R ckan:ckan /srv/app && \
   # Remove wheels
   rm -rf /srv/app/ext_wheels
