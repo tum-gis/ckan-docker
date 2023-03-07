@@ -3,7 +3,7 @@
 ###############################################################################
 ARG CKAN_VERSION_BUILD_STAGE=2.9.7-dev
 ARG CKAN_VERSION_BUILD_SPATIAL=2.9.7-focal
-ARG CKAN_VERSION_RUNTIME_STAGE=2.9.7
+ARG CKAN_VERSION_RUNTIME_STAGE=2.9.7-focal
 
 FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
 
@@ -83,40 +83,48 @@ RUN set -ex && \
 ###############################################################################
 # Runtime stage
 ###############################################################################
-FROM ckan/ckan-base:${CKAN_VERSION_RUNTIME_STAGE} as runtime
+FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 
 ENV CKAN__PLUGINS image_view text_view recline_view datastore datapusher hierarchy_display hierarchy_form display_group relation spatial_metadata spatial_query envvars
+ENV CKAN_INI=${APP_DIR}/production.ini
 
 # Copy python wheels from build stage
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
 COPY --from=extbuild-spatial /wheels ${APP_DIR}/ext_wheels
 COPY --chown=ckan:ckan /docker-entrypoint.d /docker-entrypoint.d
 
+USER root
+
 # Install runtime dependencies
+# Install any system packages necessary to build extensions
 RUN set -ex && \
+ apt-get update && \
+ apt-get install -y --no-install-recommends \
+  libxml2-dev libxslt1-dev libgeos-c1v5 && \
   ls -lah /${APP_DIR}/ext_wheels && \
-  pip install --no-cache-dir -U pip && \
-  pip install --no-cache-dir -U ckanapi
+  pip install --no-cache-dir -U pip
+
+  # pip install --no-cache-dir -U ckanapi ckantoolkit shapely==1.8.5 pyproj==2.6.1 OWSLib==0.18.0
 
 # ckanext-hierarchy ###########################################################
 RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-hierarchy && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-hierarchy.txt
+  pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-hierarchy.txt && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-hierarchy
 
 # ckanext-hierarchy ###########################################################
 RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-grouphierarchy && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-grouphierarchy.txt
+  pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-grouphierarchy.txt && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-grouphierarchy
 
 # ckanext-hierarchy ###########################################################
 RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-relation && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-relation.txt
+  pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-relation.txt && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-relation
 
 # ckanext-spatial #############################################################
 RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-spatial.txt && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-spatial-postgis.txt && \
+  pip install -r ${APP_DIR}/ext_wheels/ckanext-spatial.txt && \
+  pip install -r ${APP_DIR}/ext_wheels/ckanext-spatial-postgis.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-spatial
 
 RUN set -ex && \
@@ -126,3 +134,5 @@ RUN set -ex && \
   chown -R ckan:ckan ${APP_DIR} && \
   # Remove wheels
   rm -rf ${APP_DIR}/ext_wheels
+
+USER ckan
