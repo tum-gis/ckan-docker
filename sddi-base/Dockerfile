@@ -2,7 +2,9 @@
 # # Build stage
 # ###############################################################################
 ARG CKAN_VERSION_BUILD_STAGE=2.9.7-dev
+ARG CKAN_VERSION_BUILD_SPATIAL=2.9.7-focal
 ARG CKAN_VERSION_RUNTIME_STAGE=2.9.7
+
 FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
 
 # ckanext-hierarchy ###########################################################
@@ -12,16 +14,16 @@ ENV CKAN_EXT_HIERARCHY_VERSION=${CKAN_EXT_HIERARCHY_VERSION}
 USER root
 
 RUN set -ex && \
+    mkdir -p /wheels && \
     pip install -r https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKAN_EXT_HIERARCHY_VERSION}/dev-requirements.txt
 
 RUN set -ex && \
-  mkdir -p /wheels && \
-  pip wheel --wheel-dir=/wheels git+https://github.com/davidread/ckanext-hierarchy.git@${CKAN_EXT_HIERARCHY_VERSION}#egg=ckanext-hierarchy && \
   pip wheel --wheel-dir=/wheels -r https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKAN_EXT_HIERARCHY_VERSION}/requirements.txt && \
+  pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-hierarchy.git@${CKAN_EXT_HIERARCHY_VERSION}#egg=ckanext-hierarchy && \
   curl -o /wheels/ckanext-hierarchy.txt https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKAN_EXT_HIERARCHY_VERSION}/requirements.txt && \
   ls -lah /wheels
 
-# ckanext-hierarchy ###########################################################
+# ckanext-grouphierarchy ######################################################
 ARG CKAN_EXT_SDDI_VERSION="2.9-support"
 ENV CKAN_EXT_SDDI_VERSION=${CKAN_EXT_SDDI_VERSION}
 
@@ -35,7 +37,7 @@ RUN set -ex && \
     https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/${CKAN_EXT_SDDI_VERSION}/requirements.txt && \
   ls -lah /wheels
 
-# ckanext-hierarchy ###########################################################
+# ckanext-relation ############################################################
 ARG CKAN_EXT_RELATION_VERSION="ckan-2.9"
 ENV CKAN_EXT_RELATION_VERSION=${CKAN_EXT_RELATION_VERSION}
 
@@ -49,20 +51,50 @@ RUN set -ex && \
     https://raw.githubusercontent.com/tum-gis/ckanext-relation-sddi/${CKAN_EXT_RELATION_VERSION}/requirements.txt && \
   ls -lah /wheels
 
+# ckanext-spatial #############################################################
+FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_BUILD_SPATIAL} as extbuild-spatial
+
+ARG CKANEXT_SPATIAL_VERSION="v2.0.0"
+ENV CKANEXT_SPATIAL_VERSION=${CKANEXT_SPATIAL_VERSION}
+
+USER root
+
+# Install any system packages necessary to build extensions
+RUN set -ex && \
+ apt-get update && \
+ apt-get install -y --no-install-recommends \
+  python3-dev python3-pip libxml2-dev libxslt1-dev libgeos-c1v5 python-is-python3 && \
+  mkdir -p /wheels && \
+  pip install -U pip
+
+RUN set -ex && \
+  pip install -r https://raw.githubusercontent.com/ckan/ckanext-spatial/${CKANEXT_SPATIAL_VERSION}/requirements.txt && \
+  curl -o /wheels/ckanext-spatial.txt \
+    https://raw.githubusercontent.com/ckan/ckanext-spatial/${CKANEXT_SPATIAL_VERSION}/requirements.txt && \
+  pip install -r https://raw.githubusercontent.com/ckan/ckanext-spatial/${CKANEXT_SPATIAL_VERSION}/requirements-postgis.txt && \
+  curl -o /wheels/ckanext-spatial-postgis.txt \
+    https://raw.githubusercontent.com/ckan/ckanext-spatial/${CKANEXT_SPATIAL_VERSION}/requirements-postgis.txt && \
+    ls -lah /wheels
+
+RUN set -ex && \
+ pip wheel --wheel-dir=/wheels \
+  git+https://github.com/ckan/ckanext-spatial.git@${CKANEXT_SPATIAL_VERSION}#egg=ckanext-spatial
+
 ###############################################################################
 # Runtime stage
 ###############################################################################
-ARG CKAN_VERSION_RUNTIME_STAGE=2.9.7
 FROM ckan/ckan-base:${CKAN_VERSION_RUNTIME_STAGE} as runtime
-ENV CKAN__PLUGINS image_view text_view recline_view datastore datapusher hierarchy_display hierarchy_form display_group relation envvars
+
+ENV CKAN__PLUGINS image_view text_view recline_view datastore datapusher hierarchy_display hierarchy_form display_group relation spatial_metadata spatial_query envvars
 
 # Copy python wheels from build stage
-ARG CKAN_EXT_SDDI_VERSION="2.9-support"
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
+COPY --from=extbuild-spatial /wheels ${APP_DIR}/ext_wheels
 COPY --chown=ckan:ckan /docker-entrypoint.d /docker-entrypoint.d
 
 # Install runtime dependencies
 RUN set -ex && \
+  ls -lah /${APP_DIR}/ext_wheels && \
   pip install --no-cache-dir -U pip && \
   pip install --no-cache-dir -U ckanapi
 
@@ -81,8 +113,15 @@ RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-relation && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-relation.txt
 
+# ckanext-spatial #############################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-spatial.txt && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-spatial-postgis.txt && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-spatial
+
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
+  ckan config-tool "${CKAN_INI}" "ckan.spatial.srid = 4326" && \
   echo "UTC" >  /etc/timezone && \
   chown -R ckan:ckan ${APP_DIR} && \
   # Remove wheels
