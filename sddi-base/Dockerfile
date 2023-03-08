@@ -95,8 +95,10 @@ RUN set -ex && \
 ###############################################################################
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 
-ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher hierarchy_display hierarchy_form \
-  display_group relation spatial_metadata spatial_query scheming_datasets envvars"
+ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
+  hierarchy_display hierarchy_form display_group relation \
+  spatial_metadata spatial_query scheming_datasets envvars"
+
 # Extra env for compatibility with ckan/base Docker images for downstream k8s
 ENV CKAN_INI=${APP_DIR}/production.ini
 ENV CKAN_STORAGE_PATH=/var/lib/ckan
@@ -122,7 +124,7 @@ RUN set -ex && \
   pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-hierarchy.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-hierarchy
 
-# ckanext-hierarchy ###########################################################
+# ckanext-grouphierarchy ######################################################
 RUN set -ex && \
   pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-grouphierarchy.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-grouphierarchy
@@ -138,7 +140,7 @@ RUN set -ex && \
   pip install -r ${APP_DIR}/ext_wheels/ckanext-spatial-postgis.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-spatial
 
-# ckanext-spatial #############################################################
+# ckanext-scheming #############################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-scheming
 
