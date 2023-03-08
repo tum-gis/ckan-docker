@@ -86,7 +86,10 @@ RUN set -ex && \
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 
 ENV CKAN__PLUGINS image_view text_view recline_view datastore datapusher hierarchy_display hierarchy_form display_group relation spatial_metadata spatial_query envvars
+# Extra env for compatibility with ckan/base Docker images for downstream k8s
 ENV CKAN_INI=${APP_DIR}/production.ini
+ENV CKAN_STORAGE_PATH=/var/lib/ckan
+ENV TZ="UTC"
 
 # Copy python wheels from build stage
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
@@ -102,9 +105,8 @@ RUN set -ex && \
  apt-get install -y --no-install-recommends \
   libxml2-dev libxslt1-dev libgeos-c1v5 && \
   ls -lah /${APP_DIR}/ext_wheels && \
-  pip install --no-cache-dir -U pip
-
-  # pip install --no-cache-dir -U ckanapi ckantoolkit shapely==1.8.5 pyproj==2.6.1 OWSLib==0.18.0
+  pip install --no-cache-dir -U pip && \
+  rm -rf /var/lib/apt/lists/*
 
 # ckanext-hierarchy ###########################################################
 RUN set -ex && \
@@ -130,7 +132,7 @@ RUN set -ex && \
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
   ckan config-tool "${CKAN_INI}" "ckan.spatial.srid = 4326" && \
-  echo "UTC" >  /etc/timezone && \
+  echo "${TZ}" >  /etc/timezone && \
   chown -R ckan:ckan ${APP_DIR} && \
   # Remove wheels
   rm -rf ${APP_DIR}/ext_wheels
