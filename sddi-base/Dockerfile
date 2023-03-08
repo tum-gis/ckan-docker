@@ -51,6 +51,16 @@ RUN set -ex && \
     https://raw.githubusercontent.com/tum-gis/ckanext-relation-sddi/${CKAN_EXT_RELATION_VERSION}/requirements.txt && \
   ls -lah /wheels
 
+# ckanext-scheming ############################################################
+ARG CKAN_EXT_SCHEMING_VERSION="release-3.0.0"
+ENV CKAN_EXT_SCHEMING_VERSION=${CKAN_EXT_SCHEMING_VERSION}
+ENV CKANEXT_SCHEMING_GITHUB_URL="https://github.com/ckan/ckanext-scheming"
+
+RUN set -ex && \
+  mkdir -p /wheels && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_SCHEMING_GITHUB_URL}.git@${CKAN_EXT_SCHEMING_VERSION}#egg=ckanext-scheming
+
 # ckanext-spatial #############################################################
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_BUILD_SPATIAL} as extbuild-spatial
 
@@ -77,15 +87,16 @@ RUN set -ex && \
     ls -lah /wheels
 
 RUN set -ex && \
- pip wheel --wheel-dir=/wheels \
-  git+https://github.com/ckan/ckanext-spatial.git@${CKANEXT_SPATIAL_VERSION}#egg=ckanext-spatial
+  pip wheel --wheel-dir=/wheels \
+    git+https://github.com/ckan/ckanext-spatial.git@${CKANEXT_SPATIAL_VERSION}#egg=ckanext-spatial
 
 ###############################################################################
 # Runtime stage
 ###############################################################################
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 
-ENV CKAN__PLUGINS image_view text_view recline_view datastore datapusher hierarchy_display hierarchy_form display_group relation spatial_metadata spatial_query envvars
+ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher hierarchy_display hierarchy_form \
+  display_group relation spatial_metadata spatial_query scheming_datasets envvars"
 # Extra env for compatibility with ckan/base Docker images for downstream k8s
 ENV CKAN_INI=${APP_DIR}/production.ini
 ENV CKAN_STORAGE_PATH=/var/lib/ckan
@@ -127,9 +138,16 @@ RUN set -ex && \
   pip install -r ${APP_DIR}/ext_wheels/ckanext-spatial-postgis.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-spatial
 
+# ckanext-spatial #############################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-scheming
+
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
   ckan config-tool "${CKAN_INI}" "ckan.spatial.srid = 4326" && \
+  ckan config-tool "${APP_DIR}/production.ini" "scheming.dataset_schemas = ckanext.scheming:ckan_dataset.yaml" && \
+  ckan config-tool "${APP_DIR}/production.ini" "scheming.presets = ckanext.scheming:presets.json" && \
+  ckan config-tool "${APP_DIR}/production.ini" "scheming.dataset_fallback = false" && \
   echo "${TZ}" >  /etc/timezone && \
   chown -R ckan:ckan ${APP_DIR} && \
   # Remove wheels
