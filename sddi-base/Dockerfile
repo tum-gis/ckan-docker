@@ -98,15 +98,13 @@ COPY --chown=ckan:ckan /docker-entrypoint.d /docker-entrypoint.d
 
 USER root
 
-# Install runtime dependencies
 # Install any system packages necessary to build extensions
 RUN set -ex && \
- apt-get update && \
- apt-get install -y --no-install-recommends \
-  libxml2-dev libxslt1-dev libgeos-c1v5 && \
-  ls -lah /${APP_DIR}/ext_wheels && \
-  pip install --no-cache-dir -U pip && \
-  rm -rf /var/lib/apt/lists/*
+  apt-get update && \
+  apt-get install -y --no-install-recommends \
+    libxml2-dev libxslt1-dev libgeos-c1v5 && \
+    pip install --no-cache-dir -U pip && \
+    rm -rf /var/lib/apt/lists/*
 
 # ckanext-hierarchy ###########################################################
 RUN set -ex && \
