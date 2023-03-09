@@ -52,14 +52,14 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-scheming ############################################################
-ARG CKAN_EXT_SCHEMING_VERSION="release-3.0.0"
-ENV CKAN_EXT_SCHEMING_VERSION=${CKAN_EXT_SCHEMING_VERSION}
+ARG CKANEXT_SCHEMING_VERSION="release-3.0.0"
+ENV CKANEXT_SCHEMING_VERSION=${CKAN_EXTSCHEMING_VERSION}
 ENV CKANEXT_SCHEMING_GITHUB_URL="https://github.com/ckan/ckanext-scheming"
 
 RUN set -ex && \
   mkdir -p /wheels && \
   pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_SCHEMING_GITHUB_URL}.git@${CKAN_EXT_SCHEMING_VERSION}#egg=ckanext-scheming
+    git+${CKANEXT_SCHEMING_GITHUB_URL}.git@${CKANEXT_SCHEMING_VERSION}#egg=ckanext-scheming
 
 # ckanext datesearch ##########################################################
 ARG CKANEXT_DATESEARCH_VERSION=master
