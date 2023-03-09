@@ -154,10 +154,6 @@ ENV CKAN_INI=${APP_DIR}/production.ini
 ENV CKAN_STORAGE_PATH=/var/lib/ckan
 ENV TZ="UTC"
 
-# Copy python wheels from build stage
-COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
-COPY --from=extbuild-spatial /wheels ${APP_DIR}/ext_wheels
-
 USER root
 
 # Install any system packages necessary to build extensions
@@ -167,6 +163,10 @@ RUN set -ex && \
     libxml2-dev libxslt1-dev libgeos-c1v5 && \
     pip install --no-cache-dir -U pip && \
     rm -rf /var/lib/apt/lists/*
+
+# Copy python wheels from build stage
+COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
+COPY --from=extbuild-spatial /wheels ${APP_DIR}/ext_wheels
 
 # ckanext-hierarchy ###########################################################
 RUN set -ex && \
