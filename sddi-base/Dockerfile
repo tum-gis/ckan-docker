@@ -116,7 +116,6 @@ ENV TZ="UTC"
 # Copy python wheels from build stage
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
 COPY --from=extbuild-spatial /wheels ${APP_DIR}/ext_wheels
-COPY --chown=ckan:ckan /docker-entrypoint.d /docker-entrypoint.d
 
 USER root
 
@@ -156,6 +155,10 @@ RUN set -ex && \
 # ckanext-datesearch ###########################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-datesearch
+
+# Copy init scripts and additional files
+COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
+COPY --chown=ckan:ckan templates/ ${CKAN_DIR}/ckan/templates/package
 
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
