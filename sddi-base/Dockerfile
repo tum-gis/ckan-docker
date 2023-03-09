@@ -28,7 +28,6 @@ ARG CKAN_EXT_SDDI_VERSION="2.9-support"
 ENV CKAN_EXT_SDDI_VERSION=${CKAN_EXT_SDDI_VERSION}
 
 RUN set -ex && \
-  mkdir -p /wheels && \
   pip wheel --wheel-dir=/wheels \
     git+https://github.com/tum-gis/ckanext-grouphierarchy-sddi.git@${CKAN_EXT_SDDI_VERSION}#egg=ckanext-grouphierarchy && \
   pip wheel --wheel-dir=/wheels -r \
@@ -42,7 +41,6 @@ ARG CKAN_EXT_RELATION_VERSION="ckan-2.9"
 ENV CKAN_EXT_RELATION_VERSION=${CKAN_EXT_RELATION_VERSION}
 
 RUN set -ex && \
-  mkdir -p /wheels && \
   pip wheel --wheel-dir=/wheels \
     git+https://github.com/tum-gis/ckanext-relation-sddi.git@${CKAN_EXT_RELATION_VERSION}#egg=ckanext-relation && \
   pip wheel --wheel-dir=/wheels -r \
@@ -53,11 +51,10 @@ RUN set -ex && \
 
 # ckanext-scheming ############################################################
 ARG CKANEXT_SCHEMING_VERSION="release-3.0.0"
-ENV CKANEXT_SCHEMING_VERSION=${CKAN_EXTSCHEMING_VERSION}
+ENV CKANEXT_SCHEMING_VERSION=${CKANEXT_SCHEMING_VERSION}
 ENV CKANEXT_SCHEMING_GITHUB_URL="https://github.com/ckan/ckanext-scheming"
 
 RUN set -ex && \
-  mkdir -p /wheels && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_SCHEMING_GITHUB_URL}.git@${CKANEXT_SCHEMING_VERSION}#egg=ckanext-scheming
 
@@ -68,7 +65,49 @@ ENV CKANEXT_DATESEARCH_VERSION_GITHUB_URL="https://github.com/MarijaKnezevic/cka
 
 RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
-  git+${CKANEXT_DATESEARCH_VERSION_GITHUB_URL}.git@${CKANEXT_DATESEARCH_VERSION}#egg=ckanext-datesearch
+    git+${CKANEXT_DATESEARCH_VERSION_GITHUB_URL}.git@${CKANEXT_DATESEARCH_VERSION}#egg=ckanext-datesearch
+
+# ckanext-composite ###########################################################
+ARG CKANEXT_COMPOSITE_VERSION="master"
+ENV CKANEXT_COMPOSITE_VERSION=${CKANEXT_COMPOSITE_VERSION}
+ENV CKANEXT_COMPOSITE_GITHUB_URL="https://github.com/EnviDat/ckanext-composite"
+
+RUN set -ex && \
+  pip install -r \
+    https://raw.githubusercontent.com/EnviDat/ckanext-composite/${CKANEXT_COMPOSITE_VERSION}/dev-requirements.txt && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_COMPOSITE_GITHUB_URL}.git@${CKANEXT_COMPOSITE_VERSION}#egg=ckanext-composite
+
+# ckanext-repeating ###########################################################
+ARG CKANEXT_REPEATING_VERSION="master"
+ENV CKANEXT_REPEATING_VERSION=${CKANEXT_REPEATING_VERSION}
+ENV CKANEXT_REPEATING_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-repeating"
+
+RUN set -ex && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_REPEATING_GITHUB_URL}.git@${CKANEXT_REPEATING_VERSION}#egg=ckanext-repeating
+
+# ckanext-geoview #############################################################
+ARG CKANEXT_GEOVIEW_VERSION="master"
+ENV CKANEXT_GEOVIEW_VERSION=${CKANEXT_GEOVIEW_VERSION}
+ENV CKANEXT_GEOVIEW_GITHUB_URL="https://github.com/ckan/ckanext-geoview"
+
+RUN set -ex && \
+  pip install -r \
+    https://raw.githubusercontent.com/ckan/ckanext-geoview/${CKAN_EXT_GEOVIEW_VERSION}/dev-requirements.txt && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_GEOVIEW_GITHUB_URL}.git@${CKANEXT_GEOVIEW_VERSION}#egg=ckanext-geoview
+
+# ckanext-restricted ##########################################################
+ARG CKANEXT_RESTRICTED_VERSION="master"
+ENV CKANEXT_RESTRICTED_VERSION=${CKANEXT_RESTRICTED_VERSION}
+ENV CKANEXT_RESTRICTED_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-restricted"
+
+RUN set -ex && \
+  pip install -r \
+    https://raw.githubusercontent.com/MarijaKnezevic/ckanext-restricted/${CKANEXT_RESTRICTED_VERSION}/dev-requirements.txt && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_RESTRICTED_GITHUB_URL}.git@${CKANEXT_RESTRICTED_VERSION}#egg=ckanext-restricted
 
 # ckanext-spatial #############################################################
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_BUILD_SPATIAL} as extbuild-spatial
@@ -106,7 +145,9 @@ FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 
 ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
   hierarchy_display hierarchy_form display_group relation \
-  spatial_metadata spatial_query scheming_datasets datesearch envvars"
+  spatial_metadata spatial_query scheming_datasets datesearch repeating composite \
+  resource_proxy geo_view geojson_view wmts_view shp_view \
+  restricted envvars"
 
 # Extra env for compatibility with ckan/base Docker images for downstream k8s
 ENV CKAN_INI=${APP_DIR}/production.ini
@@ -148,13 +189,29 @@ RUN set -ex && \
   pip install -r ${APP_DIR}/ext_wheels/ckanext-spatial-postgis.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-spatial
 
-# ckanext-scheming #############################################################
+# ckanext-scheming ############################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-scheming
 
-# ckanext-datesearch ###########################################################
+# ckanext-datesearch ##########################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-datesearch
+
+# ckanext-composite ###########################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-composite
+
+# ckanext-repeating ###########################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-repeating
+
+# ckanext-geoview ############################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-geoview
+
+# ckanext-restricted ##########################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-restricted
 
 # Copy init scripts and additional files
 COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
@@ -163,10 +220,14 @@ COPY --chown=ckan:ckan templates/ ${CKAN_DIR}/ckan/templates/package
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
   ckan config-tool "${CKAN_INI}" "ckan.spatial.srid = 4326" && \
-  ckan config-tool "${APP_DIR}/production.ini" "scheming.dataset_schemas = ckanext.scheming:ckan_dataset.yaml" && \
-  ckan config-tool "${APP_DIR}/production.ini" "scheming.presets = ckanext.scheming:presets.json" && \
-  ckan config-tool "${APP_DIR}/production.ini" "scheming.dataset_fallback = false" && \
-  echo "${TZ}" >  /etc/timezone && \
+  ckan config-tool "${CKAN_INI}" "scheming.dataset_schemas = ckanext.scheming:ckan_dataset.yaml" && \
+  ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json" && \
+  ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
+  ckan config-tool "${CKAN_INI}" "ckan.views.default_views = geo_view geojson_view wmts_view shp_view" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.geoview.ol_viewer.formats = wms kml" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.geoview.shp_viewer.srid = 4326" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.geoview.shp_viewer.encoding = UTF-8" && \
+  echo "${TZ}" > /etc/timezone && \
   chown -R ckan:ckan ${APP_DIR} && \
   # Remove wheels
   rm -rf ${APP_DIR}/ext_wheels
