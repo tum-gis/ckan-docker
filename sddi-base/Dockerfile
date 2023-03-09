@@ -24,7 +24,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-grouphierarchy ######################################################
-ARG CKAN_EXT_SDDI_VERSION="2.9-support"
+ARG CKAN_EXT_SDDI_VERSION="spatial_search"
 ENV CKAN_EXT_SDDI_VERSION=${CKAN_EXT_SDDI_VERSION}
 
 RUN set -ex && \
@@ -215,7 +215,6 @@ RUN set -ex && \
 
 # Copy init scripts and additional files
 COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
-COPY --chown=ckan:ckan templates/ ${CKAN_DIR}/ckan/templates/package
 
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
