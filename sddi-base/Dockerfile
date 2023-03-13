@@ -8,45 +8,45 @@ ARG CKAN_VERSION_RUNTIME_STAGE=2.9.7-focal
 FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
 
 # ckanext-hierarchy ###########################################################
-ARG CKAN_EXT_HIERARCHY_VERSION=master
-ENV CKAN_EXT_HIERARCHY_VERSION=${CKAN_EXT_HIERARCHY_VERSION}
+ARG CKANEXT_HIERARCHY_VERSION=master
+ENV CKANEXT_HIERARCHY_VERSION=${CKANEXT_HIERARCHY_VERSION}
 
 USER root
 
 RUN set -ex && \
     mkdir -p /wheels && \
-    pip install -r https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKAN_EXT_HIERARCHY_VERSION}/dev-requirements.txt
+    pip install -r https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKANEXT_HIERARCHY_VERSION}/dev-requirements.txt
 
 RUN set -ex && \
-  pip wheel --wheel-dir=/wheels -r https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKAN_EXT_HIERARCHY_VERSION}/requirements.txt && \
-  pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-hierarchy.git@${CKAN_EXT_HIERARCHY_VERSION}#egg=ckanext-hierarchy && \
-  curl -o /wheels/ckanext-hierarchy.txt https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKAN_EXT_HIERARCHY_VERSION}/requirements.txt && \
+  pip wheel --wheel-dir=/wheels -r https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKANEXT_HIERARCHY_VERSION}/requirements.txt && \
+  pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-hierarchy.git@${CKANEXT_HIERARCHY_VERSION}#egg=ckanext-hierarchy && \
+  curl -o /wheels/ckanext-hierarchy.txt https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKANEXT_HIERARCHY_VERSION}/requirements.txt && \
   ls -lah /wheels
 
 # ckanext-grouphierarchy ######################################################
-ARG CKAN_EXT_SDDI_VERSION="scheming"
-ENV CKAN_EXT_SDDI_VERSION=${CKAN_EXT_SDDI_VERSION}
+ARG CKANEXT_SDDI_VERSION="scheming"
+ENV CKANEXT_SDDI_VERSION=${CKANEXT_SDDI_VERSION}
 
 RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
-    git+https://github.com/tum-gis/ckanext-grouphierarchy-sddi.git@${CKAN_EXT_SDDI_VERSION}#egg=ckanext-grouphierarchy && \
+    git+https://github.com/tum-gis/ckanext-grouphierarchy-sddi.git@${CKANEXT_SDDI_VERSION}#egg=ckanext-grouphierarchy && \
   pip wheel --wheel-dir=/wheels -r \
-    https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/${CKAN_EXT_SDDI_VERSION}/requirements.txt && \
+    https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/${CKANEXT_SDDI_VERSION}/requirements.txt && \
   curl -o /wheels/ckanext-grouphierarchy.txt \
-    https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/${CKAN_EXT_SDDI_VERSION}/requirements.txt && \
+    https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/${CKANEXT_SDDI_VERSION}/requirements.txt && \
   ls -lah /wheels
 
 # ckanext-relation ############################################################
-ARG CKAN_EXT_RELATION_VERSION="ckan-2.9"
-ENV CKAN_EXT_RELATION_VERSION=${CKAN_EXT_RELATION_VERSION}
+ARG CKANEXT_RELATION_VERSION="ckan-2.9"
+ENV CKANEXT_RELATION_VERSION=${CKANEXT_RELATION_VERSION}
 
 RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
-    git+https://github.com/tum-gis/ckanext-relation-sddi.git@${CKAN_EXT_RELATION_VERSION}#egg=ckanext-relation && \
+    git+https://github.com/tum-gis/ckanext-relation-sddi.git@${CKANEXT_RELATION_VERSION}#egg=ckanext-relation && \
   pip wheel --wheel-dir=/wheels -r \
-    https://raw.githubusercontent.com/tum-gis/ckanext-relation-sddi/${CKAN_EXT_RELATION_VERSION}/requirements.txt && \
+    https://raw.githubusercontent.com/tum-gis/ckanext-relation-sddi/${CKANEXT_RELATION_VERSION}/requirements.txt && \
   curl -o /wheels/ckanext-relation.txt \
-    https://raw.githubusercontent.com/tum-gis/ckanext-relation-sddi/${CKAN_EXT_RELATION_VERSION}/requirements.txt && \
+    https://raw.githubusercontent.com/tum-gis/ckanext-relation-sddi/${CKANEXT_RELATION_VERSION}/requirements.txt && \
   ls -lah /wheels
 
 # ckanext-scheming ############################################################
