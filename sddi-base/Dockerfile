@@ -24,7 +24,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-grouphierarchy ######################################################
-ARG CKAN_EXT_SDDI_VERSION="spatial_search"
+ARG CKAN_EXT_SDDI_VERSION="scheming"
 ENV CKAN_EXT_SDDI_VERSION=${CKAN_EXT_SDDI_VERSION}
 
 RUN set -ex && \
@@ -157,11 +157,12 @@ RUN set -ex && \
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 
 ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
-  hierarchy_display hierarchy_form display_group relation \
   spatial_metadata spatial_query datesearch repeating composite \
   resource_proxy geo_view geojson_view wmts_view shp_view \
   dcat dcat_json_interface structured_data \
-  restricted scheming_datasets envvars"
+  restricted \
+  hierarchy_display hierarchy_form display_group relation \
+  scheming_datasets envvars"
 
 # Extra env for compatibility with ckan/base Docker images for downstream k8s
 ENV CKAN_INI=${APP_DIR}/production.ini
@@ -238,7 +239,7 @@ COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
   ckan config-tool "${CKAN_INI}" "ckan.spatial.srid = 4326" && \
-  ckan config-tool "${CKAN_INI}" "scheming.dataset_schemas = ckanext.scheming:ckan_dataset.yaml" && \
+  ckan config-tool "${CKAN_INI}" "scheming.dataset_schemas = ckanext.grouphierarchy:ckan_dataset.yaml" && \
   ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
   ckan config-tool "${CKAN_INI}" "ckan.views.default_views = geo_view geojson_view wmts_view shp_view" && \
