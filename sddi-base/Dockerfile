@@ -109,19 +109,6 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_RESTRICTED_GITHUB_URL}.git@${CKANEXT_RESTRICTED_VERSION}#egg=ckanext-restricted
 
-# ckanext-dcat ################################################################
-ARG CKANEXT_DCAT_VERSION="v1.4.0"
-ENV CKANEXT_DCAT_VERSION=${CKANEXT_DCAT_VERSION}
-ENV CKANEXT_DCAT_GITHUB_URL="https://github.com/ckan/ckanext-dcat"
-
-RUN set -ex && \
-  pip install -r \
-    https://raw.githubusercontent.com/ckan/ckanext-dcat/${CKANEXT_DCAT_VERSION}/dev-requirements.txt && \
-  curl -o /wheels/ckanext-dcat.txt \
-    https://raw.githubusercontent.com/ckan/ckanext-dcat/${CKANEXT_DCAT_VERSION}/requirements.txt && \
-  pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_DCAT_GITHUB_URL}.git@${CKANEXT_DCAT_VERSION}#egg=ckanext-dcat
-
 # ckanext-spatial #############################################################
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_BUILD_SPATIAL} as extbuild-spatial
 
@@ -160,7 +147,6 @@ ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
   hierarchy_display hierarchy_form display_group relation \
   spatial_metadata spatial_query datesearch repeating composite \
   resource_proxy geo_view geojson_view wmts_view shp_view \
-  dcat dcat_json_interface structured_data \
   restricted scheming_datasets envvars"
 
 # Extra env for compatibility with ckan/base Docker images for downstream k8s
@@ -227,10 +213,6 @@ RUN set -ex && \
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-restricted
 
-# ckanext-spatial #############################################################
-RUN set -ex && \
-  pip install -r ${APP_DIR}/ext_wheels/ckanext-dcat.txt && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-dcat
 
 # Copy init scripts and additional files
 COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
@@ -241,7 +223,6 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_schemas = ckanext.scheming:ckan_dataset.yaml" && \
   ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
-  ckan config-tool "${CKAN_INI}" "ckan.views.default_views = geo_view geojson_view wmts_view shp_view" && \
   ckan config-tool "${CKAN_INI}" "ckanext.geoview.ol_viewer.formats = wms kml" && \
   ckan config-tool "${CKAN_INI}" "ckanext.geoview.shp_viewer.srid = 4326" && \
   ckan config-tool "${CKAN_INI}" "ckanext.geoview.shp_viewer.encoding = UTF-8" && \
