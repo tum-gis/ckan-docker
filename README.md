@@ -22,10 +22,8 @@
 
 - [:book: Table of content](#book-table-of-content)
 - [:inbox\_tray: Images overview](#inbox_tray-images-overview)
-- [:question: Getting started](#question-getting-started)
-- [:grey\_exclamation: Requirements](#grey_exclamation-requirements)
 - [:rocket: Usage](#rocket-usage)
-- [:book: Documentation](#book-documentation)
+- [:book: Configuration an documentation](#book-configuration-an-documentation)
   - [Extensions used for SDDI](#extensions-used-for-sddi)
 - [:hammer\_and\_wrench: Contributing](#hammer_and_wrench-contributing)
   - [Contributors](#contributors)
@@ -54,13 +52,18 @@
   ghcr.io/tum-gis/ckan-sddi-social
   ```
 
-## :question: Getting started
-
-## :grey_exclamation: Requirements
-
 ## :rocket: Usage
 
-## :book: Documentation
+The images provided in this repo are designed for the
+[`sddi-ckan-k8s`](https://github.com/tum-gis/sddi-ckan-k8s) Helm chart. Go to the Helm chart repository
+to find examples an how to run the images.
+
+## :book: Configuration an documentation
+
+The configuration of the Docker images is mainly done using environment variables using the
+naming convention of [`ckanext-envvars`](https://github.com/okfn/ckanext-envvars).
+Refer to the documentation of [`ckan`](https://docs.ckan.org/en/latest/maintaining/configuration.html)
+and the extensions listed below to find the available configuration options.
 
 ### Extensions used for SDDI
 
@@ -92,7 +95,7 @@ Bug fixes, issue reports and contributions are greatly appreciated.
 ### Contributors
 
 <a href="https://github.com/tum-gis/ckan-docker/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=tum-gis/ckan-docker" />
+  <img height="40" src="https://contrib.rocks/image?repo=tum-gis/ckan-docker" />
 </a>
 
 ## :handshake: Thanks
