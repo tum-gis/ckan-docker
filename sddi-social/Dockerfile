@@ -1,6 +1,7 @@
 # #############################################################################
 # # Build stage
 # #############################################################################
+ARG BASEIMAGE_REPOSITORY=ghcr.io/tum-gis/ckan-sddi
 ARG BASEIMAGE_VERSION=latest
 ARG CKAN_VERSION_BUILD_STAGE=2.9.7-dev
 
@@ -21,7 +22,7 @@ RUN set -ex && \
 # ###############################################################################
 # # Runtime stage
 # ###############################################################################
-FROM ghcr.io/tum-gis/ckan-sddi:${BASEIMAGE_VERSION} as runtime
+FROM ${BASEIMAGE_REPOSITORY}:${BASEIMAGE_VERSION} as runtime
 
 USER root
 
