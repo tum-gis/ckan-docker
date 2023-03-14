@@ -16,7 +16,7 @@ ENV CKANEXT_DISQUS_GITHUB_URL="https://github.com/ckan/ckanext-disqus"
 RUN set -ex && \
   mkdir -p /wheels && \
   pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_DISQUS_GITHUB_URL}.git@${CKANEXT_DISQUS_VERSION}#egg=ckanext-disqus
+    git+${CKANEXT_DISQUS_GITHUB_URL}.git@${CKANEXT_DISQUS_VERSION}#egg=disqus
 
 # ###############################################################################
 # # Runtime stage
@@ -39,7 +39,7 @@ COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
 
 # ckanext-dcat ################################################################
 RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-disqus
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels disqus
 
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
