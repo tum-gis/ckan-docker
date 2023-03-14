@@ -24,7 +24,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-grouphierarchy ######################################################
-ARG CKANEXT_SDDI_VERSION="63289a8"
+ARG CKANEXT_SDDI_VERSION="7fb932b"
 ENV CKANEXT_SDDI_VERSION=${CKANEXT_SDDI_VERSION}
 
 RUN set -ex && \
@@ -79,13 +79,13 @@ RUN set -ex && \
     git+${CKANEXT_COMPOSITE_GITHUB_URL}.git@${CKANEXT_COMPOSITE_VERSION}#egg=ckanext-composite
 
 # ckanext-repeating ###########################################################
-ARG CKANEXT_REPEATING_VERSION="f09ed71"
-ENV CKANEXT_REPEATING_VERSION=${CKANEXT_REPEATING_VERSION}
-ENV CKANEXT_REPEATING_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-repeating"
+# ARG CKANEXT_REPEATING_VERSION="f09ed71"
+# ENV CKANEXT_REPEATING_VERSION=${CKANEXT_REPEATING_VERSION}
+# ENV CKANEXT_REPEATING_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-repeating"
 
-RUN set -ex && \
-  pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_REPEATING_GITHUB_URL}.git@${CKANEXT_REPEATING_VERSION}#egg=ckanext-repeating
+# RUN set -ex && \
+#   pip wheel --wheel-dir=/wheels \
+#     git+${CKANEXT_REPEATING_GITHUB_URL}.git@${CKANEXT_REPEATING_VERSION}#egg=ckanext-repeating
 
 # ckanext-spatial #############################################################
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_BUILD_SPATIAL} as extbuild-spatial
@@ -123,7 +123,7 @@ FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 
 ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
   hierarchy_display hierarchy_form display_group relation \
-  spatial_metadata spatial_query datesearch repeating composite scheming_datasets \
+  spatial_metadata spatial_query datesearch composite scheming_datasets \
   envvars"
 
 # Extra env for compatibility with ckan/base Docker images for downstream k8s
@@ -179,8 +179,8 @@ RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-composite
 
 # ckanext-repeating ###########################################################
-RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-repeating
+# RUN set -ex && \
+#   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-repeating
 
 # Copy init scripts and additional files
 COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
@@ -188,8 +188,9 @@ COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
   ckan config-tool "${CKAN_INI}" "ckan.spatial.srid = 4326" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.spatial.search_backend = solr-bbox" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_schemas = ckanext.scheming:ckan_dataset.yaml" && \
-  ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json ckanext.repeating:presets.json ckanext.composite:presets.json" && \
+  ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json ckanext.composite:presets.json" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
   echo "${TZ}" > /etc/timezone && \
   chown -R ckan:ckan ${APP_DIR} && \
