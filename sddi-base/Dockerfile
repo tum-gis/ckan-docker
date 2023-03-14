@@ -122,9 +122,9 @@ RUN set -ex && \
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 
 ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
-  hierarchy_display hierarchy_form display_group relation \
+  hierarchy_display hierarchy_form display_group relation scheming_datasets \
   spatial_metadata spatial_query datesearch repeating composite \
-  restricted scheming_datasets envvars"
+  envvars"
 
 # Extra env for compatibility with ckan/base Docker images for downstream k8s
 ENV CKAN_INI=${APP_DIR}/production.ini
