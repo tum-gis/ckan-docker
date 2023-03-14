@@ -1,7 +1,6 @@
 # #############################################################################
 # # Build stage
 # #############################################################################
-
 ARG BASEIMAGE_VERSION=latest
 ARG CKAN_VERSION_BUILD_STAGE=2.9.7-dev
 
@@ -15,6 +14,7 @@ ENV CKANEXT_GEOVIEW_VERSION=${CKANEXT_GEOVIEW_VERSION}
 ENV CKANEXT_GEOVIEW_GITHUB_URL="https://github.com/ckan/ckanext-geoview"
 
 RUN set -ex && \
+  mkdir -p /wheels && \
   pip install -r \
     https://raw.githubusercontent.com/ckan/ckanext-geoview/${CKANEXT_GEOVIEW_VERSION}/dev-requirements.txt && \
   pip wheel --wheel-dir=/wheels \
@@ -26,7 +26,6 @@ ENV CKANEXT_DCAT_VERSION=${CKANEXT_DCAT_VERSION}
 ENV CKANEXT_DCAT_GITHUB_URL="https://github.com/ckan/ckanext-dcat"
 
 RUN set -ex && \
-  mkdir -p /wheels && \
   pip install -r \
     https://raw.githubusercontent.com/ckan/ckanext-dcat/${CKANEXT_DCAT_VERSION}/dev-requirements.txt && \
   curl -o /wheels/ckanext-dcat.txt \
@@ -53,11 +52,12 @@ FROM ghcr.io/tum-gis/ckan-sddi-base:${BASEIMAGE_VERSION} as runtime
 USER root
 
 ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
-  hierarchy_display hierarchy_form display_group relation \
+  hierarchy_display hierarchy_form display_group relation scheming_datasets \
   spatial_metadata spatial_query datesearch repeating composite \
   resource_proxy geo_view geojson_view wmts_view shp_view \
   dcat dcat_json_interface structured_data \
-  restricted scheming_datasets envvars"
+  restricted \
+  envvars"
 
 # Copy python wheels from build stage
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
