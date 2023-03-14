@@ -8,7 +8,7 @@ ARG CKAN_VERSION_RUNTIME_STAGE=2.9.7-focal
 FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
 
 # ckanext-hierarchy ###########################################################
-ARG CKANEXT_HIERARCHY_VERSION=master
+ARG CKANEXT_HIERARCHY_VERSION="207e3d3"
 ENV CKANEXT_HIERARCHY_VERSION=${CKANEXT_HIERARCHY_VERSION}
 
 USER root
@@ -88,7 +88,7 @@ RUN set -ex && \
     git+${CKANEXT_REPEATING_GITHUB_URL}.git@${CKANEXT_REPEATING_VERSION}#egg=ckanext-repeating
 
 # ckanext-geoview #############################################################
-ARG CKANEXT_GEOVIEW_VERSION="master"
+ARG CKANEXT_GEOVIEW_VERSION="v0.0.20"
 ENV CKANEXT_GEOVIEW_VERSION=${CKANEXT_GEOVIEW_VERSION}
 ENV CKANEXT_GEOVIEW_GITHUB_URL="https://github.com/ckan/ckanext-geoview"
 
