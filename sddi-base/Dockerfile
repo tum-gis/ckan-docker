@@ -24,7 +24,6 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-grouphierarchy ######################################################
-#ARG CKANEXT_SDDI_VERSION="9e6b51c"
 ARG CKANEXT_SDDI_VERSION="scheming"
 ENV CKANEXT_SDDI_VERSION=${CKANEXT_SDDI_VERSION}
 
