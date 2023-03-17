@@ -50,7 +50,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-scheming ############################################################
-ARG CKANEXT_SCHEMING_VERSION="group-hierarchy-scheming"
+ARG CKANEXT_SCHEMING_VERSION="spatial-composite-repeating"
 ENV CKANEXT_SCHEMING_VERSION=${CKANEXT_SCHEMING_VERSION}
 ENV CKANEXT_SCHEMING_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-scheming"
 
