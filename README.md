@@ -102,19 +102,23 @@ All available tags are listed in the packages of each image:
 CKAN version: `2.9.7`
 CKAN base image: `ghcr.io/keitaroinc/ckan:2.9.7-focal`
 
-The CKAN catalog platform uses several extensions to provide the functionality needed for the SDDI concept.
-The table below lists the included extensions with the currently used version.
-Depending of the version of the upstream repository of the individual extensions,
-the version refers either to a *release version*, *commit hash* or *branch name* -> *commit hash*.
+The CKAN catalog platform uses several extensions to provide the functionality
+needed for the SDDI concept. The table below lists the included extensions with
+the currently used version. Depending of the version of the upstream repository
+of the individual extensions, the version refers either to a *release version*
+or *commit hash*.
 
-To ensure stable versioning for the images, the versions in the `Dockerfiles` are alway pinned
-to a stable release number or commit hash. The branch names are listed here for convenience.
+To ensure stable versioning for the images, the versions in the `Dockerfiles`
+are alway pinned to a stable release number or commit hash.
+
+> **Note:** Version pinning is only applied for release versions. The `edge`
+> image may depend on upstream branches instead.
 
 | Extension | Version | `sddi-base` | `sddi` | `sddi-social` | Description |
 |---|---|:---:|:---:|:---:|---|
 | [`scheming`](https://github.com/MarijaKnezevic/ckanext-scheming) | `0dda2be` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Configure and share CKAN dataset metadata forms. |
 | [`hierarchy`](https://github.com/ckan/ckanext-hierarchy) | `v1.2.0` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Allows to organize organizations and groups in a hierarchy tree (nested groups/orgs). |
-| [`grouphierarchysddi`](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) | `spatial-search` -> `63289a8` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Extends `hierarchy` with pre-defined groups and topics of the SDDI concept. |
+| [`grouphierarchysddi`](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) |  `63289a8` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Extends `hierarchy` with pre-defined groups and topics of the SDDI concept. |
 | [`relation`](https://github.com/tum-gis/ckanext-relation-sddi) | `1.0.0` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Enables to create and visualize different types of relations (*realated_to*, *depends_on*, *part_of*) between catalog entries. |
 | [`spatial`](https://github.com/ckan/ckanext-spatial) | `v2.0.0` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Provides the ability to search for datasets according to a given spatial extent. |
 | [`datesearch`](https://github.com/MarijaKnezevic/ckanext-datesearch) | `a01061a` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Provides the ability to search for datasets according to a given time frame. The search includes all datasets, in which the time of validity overlaps in at least one second with the search time frame. |
