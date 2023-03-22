@@ -1,5 +1,2 @@
-# Ignore local helper scripts
-/*.sh
-
 # VScode
 .vscode/
