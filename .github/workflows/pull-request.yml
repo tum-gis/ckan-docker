@@ -27,7 +27,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: sddi-base
-          file: Dockerfile.debug
+          file: sddi-base/Dockerfile.debug
           push: false
           tags: ghcr.io/tum-gis/ckan-sddi-base:pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}-debug
 
@@ -44,8 +44,8 @@ jobs:
       - name: Build image sddi debug
         uses: docker/build-push-action@v4
         with:
-          context: sddi-base
-          file: Dockerfile.debug
+          context: sddi
+          file: sddi/Dockerfile.debug
           push: false
           tags: ghcr.io/tum-gis/ckan-sddi:pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}-debug
           build-args: |
@@ -65,8 +65,8 @@ jobs:
       - name: Build image sddi-social debug
         uses: docker/build-push-action@v4
         with:
-          context: sddi-base
-          file: Dockerfile.debug
+          context: sddi-social
+          file: sddi-social/Dockerfile.debug
           push: false
           tags: ghcr.io/tum-gis/ckan-sddi-social:pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}-debug
           build-args: |
