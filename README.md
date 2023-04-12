@@ -91,6 +91,12 @@ The `latest` tag points to the latest release number. The `edge` version is buil
 latest commit to the `main` branch of this repo.
 The CKAN and CKAN extension versions used for each image are listed in the table below.
 
+> **Tip**: For development and debugging we provide a *debug* version for each image version too.
+> These images are indicated by the `-debug` suffix on the image tag, e.g. `latest-debug` or `0.0.6-debug`.
+> The debug images have the FLASK debug toolbar enabled and all required debugging dependencies installed.
+> Read more on CKAN's debug mode in the
+> [official docs](https://docs.ckan.org/en/latest/maintaining/configuration.html#debug).
+
 All available tags are listed in the packages of each image:
 
 - [`sddi-base`](https://github.com/tum-gis/ckan-docker/pkgs/container/ckan-sddi-base)
