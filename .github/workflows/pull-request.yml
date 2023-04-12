@@ -23,6 +23,17 @@ jobs:
           push: false
           tags: ghcr.io/tum-gis/ckan-sddi-base:pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
 
+      - name: Build image sddi-base debug
+        uses: docker/build-push-action@v4
+        with:
+          context: sddi-base
+          file: sddi-base/Dockerfile.debug
+          push: false
+          tags: ghcr.io/tum-gis/ckan-sddi-base:pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}-debug
+          build-args: |
+            BASEIMAGE_REPOSITORY=ghcr.io/tum-gis/ckan-sddi-base
+            BASEIMAGE_VERSION=pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
+
       - name: Build image sddi
         uses: docker/build-push-action@v4
         with:
@@ -30,6 +41,18 @@ jobs:
           push: false
           tags: ghcr.io/tum-gis/ckan-sddi:pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
           build-args: |
+            BASEIMAGE_REPOSITORY=ghcr.io/tum-gis/ckan-sddi-base
+            BASEIMAGE_VERSION=pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Build image sddi debug
+        uses: docker/build-push-action@v4
+        with:
+          context: sddi
+          file: sddi/Dockerfile.debug
+          push: false
+          tags: ghcr.io/tum-gis/ckan-sddi:pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}-debug
+          build-args: |
+            BASEIMAGE_REPOSITORY=ghcr.io/tum-gis/ckan-sddi
             BASEIMAGE_VERSION=pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Build image sddi-social
@@ -39,4 +62,16 @@ jobs:
           push: false
           tags: ghcr.io/tum-gis/ckan-sddi-social:pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
           build-args: |
+            BASEIMAGE_REPOSITORY=ghcr.io/tum-gis/ckan-sddi
+            BASEIMAGE_VERSION=pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Build image sddi-social debug
+        uses: docker/build-push-action@v4
+        with:
+          context: sddi-social
+          file: sddi-social/Dockerfile.debug
+          push: false
+          tags: ghcr.io/tum-gis/ckan-sddi-social:pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}-debug
+          build-args: |
+            BASEIMAGE_REPOSITORY=ghcr.io/tum-gis/ckan-sddi-social
             BASEIMAGE_VERSION=pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}

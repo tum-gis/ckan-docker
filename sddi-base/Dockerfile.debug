@@ -3,9 +3,12 @@ ARG BASEIMAGE_VERSION=edge
 
 FROM ${BASEIMAGE_REPOSITORY}:${BASEIMAGE_VERSION}
 
+ARG CKAN_VERSION=2.9.7
+ENV CKAN_VERSION=${CKAN_VERSION}
+
 USER root
 
-ADD https://raw.githubusercontent.com/ckan/ckan/ckan-2.9.7/dev-requirements.txt /dev-requirements.txt
+ADD https://raw.githubusercontent.com/ckan/ckan/ckan-${CKAN_VERSION}/dev-requirements.txt /dev-requirements.txt
 RUN set -ex && \
   pip install -r /dev-requirements.txt && \
   rm /dev-requirements.txt

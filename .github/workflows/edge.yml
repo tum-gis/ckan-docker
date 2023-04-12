@@ -31,7 +31,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
+      - name: Extract metadata (tags, labels) for docker image
         id: meta
         uses: docker/metadata-action@v4
         with:
@@ -51,5 +51,29 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BASEIMAGE_VERSION=edge
+
+      - name: Extract metadata (tags, labels) for debug docker image
+        id: meta-debug
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ${{ env.REGISTRY }}/tum-gis/ckan-${{ matrix.context }}
+          tags: |
+            type=edge,branch=main,suffix=-debug
+          labels: |
+            maintainer=Chair of Geoinformatics, Technical University of Munich (TUM)
+            org.opencontainers.image.vendor=Chair of Geoinformatics, Technical University of Munich (TUM)
+            org.opencontainers.image.title=ckan-sddi-docker
+
+      - name: Build and publish ${{ env.REGISTRY }}/tum-gis/ckan-${{ matrix.context }}
+        uses: docker/build-push-action@v4
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.context }}/Dockerfile.debug
+          push: true
+          tags: ${{ steps.meta-debug.outputs.tags }}
+          labels: ${{ steps.meta-debug.outputs.labels }}
           build-args: |
             BASEIMAGE_VERSION=edge
