@@ -193,6 +193,7 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json ckanext.repeating:presets.json ckanext.composite:presets.json" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
   echo "${TZ}" > /etc/timezone && \
+  mkdir -p ${CKAN_STORAGE_PATH} && \
   chown -R ckan:ckan ${APP_DIR} ${CKAN_STORAGE_PATH} && \
   # Remove wheels
   rm -rf ${APP_DIR}/ext_wheels
