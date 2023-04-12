@@ -96,6 +96,7 @@ These images are indicated by the `-debug` suffix on the image tag, e.g. `latest
 The debug images have the FLASK debug toolbar enabled and all required debugging dependencies installed.
 Read more on CKAN's debug mode in the
 [official docs](https://docs.ckan.org/en/latest/maintaining/configuration.html#debug).
+Debug images are available starting from `v0.0.6`.
 
 > **Warning**: The debug image versions should not be used in a production environment!
 > With debug mode enabled, a visitor to your site could execute malicious commands.
