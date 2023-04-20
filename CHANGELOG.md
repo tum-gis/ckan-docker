@@ -13,6 +13,8 @@ For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 - Added *debug* images with CKAN FLASK Debug Toolbar enabled, see
   [here](https://github.com/tum-gis/ckan-docker#1234-image-versioning)
 
+- Added *devel* images built form latest commit to `devel` branch.
+
 ### Changed
 
 ### Removed

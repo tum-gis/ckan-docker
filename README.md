@@ -90,6 +90,7 @@ The images in this repo are versioned and tagged according to the
 The `latest` tag points to the latest release number. The `edge` version is built from the
 latest commit to the `main` branch of this repo.
 For development purposes the `devel` images, which are build from the latest commit to the `devel` branch are published.
+The `devel` images are used for testing and may contain errors.
 The CKAN and CKAN extension versions used for each image are listed in the table below.
 
 For development and debugging we provide a *debug* version for each image version.
