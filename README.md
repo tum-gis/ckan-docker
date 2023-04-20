@@ -89,10 +89,11 @@ The images in this repo are versioned and tagged according to the
 [releases](https://github.com/tum-gis/ckan-docker/releases) of this repository.
 The `latest` tag points to the latest release number. The `edge` version is built from the
 latest commit to the `main` branch of this repo.
+For development purposes the `devel` images, which are build from the latest commit to the `devel` branch are published.
 The CKAN and CKAN extension versions used for each image are listed in the table below.
 
 For development and debugging we provide a *debug* version for each image version.
-These images are indicated by the `-debug` suffix on the image tag, e.g. `latest-debug` or `0.0.6-debug`.
+These images are indicated by the `-debug` suffix on the image tag, e.g. `latest-debug`, `0.0.6-debug`, `edge-debug` or `devel-debug`.
 The debug images have the FLASK debug toolbar enabled and all required debugging dependencies installed.
 Read more on CKAN's debug mode in the
 [official docs](https://docs.ckan.org/en/latest/maintaining/configuration.html#debug).
