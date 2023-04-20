@@ -185,6 +185,8 @@ RUN set -ex && \
 # Copy init scripts and additional files
 COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
 
+COPY __init__.py ${APP_DIR}/src/ckan/ckan/logic/__init__.py
+
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
   ckan config-tool "${CKAN_INI}" "ckan.spatial.srid = 4326" && \
