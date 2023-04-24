@@ -35,7 +35,7 @@ RUN set -ex && \
     git+${CKANEXT_DCAT_GITHUB_URL}.git@${CKANEXT_DCAT_VERSION}#egg=ckanext-dcat
 
 # ckanext-restricted ##########################################################
-ARG CKANEXT_RESTRICTED_VERSION="02e7e14"
+ARG CKANEXT_RESTRICTED_VERSION="remove-user-create"
 ENV CKANEXT_RESTRICTED_VERSION=${CKANEXT_RESTRICTED_VERSION}
 ENV CKANEXT_RESTRICTED_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-restricted"
 
