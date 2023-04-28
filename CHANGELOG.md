@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 
-## [Unreleased] - YYYY-MM-DD
+## [1.0.0] - 2023-04-28
 
 ### Added
 
@@ -14,16 +14,12 @@ For releases `< 1.0.0` minor version steps may indicate breaking changes too.
   [here](https://github.com/tum-gis/ckan-docker#1234-image-versioning)
 
 - Added *devel* images built form latest commit to `devel` branch.
+- Various docs additions.
+- Added Zenodo DOI.
 
 ### Changed
 
-### Removed
-
-### Fixed
-
-### Security
-
-### Deprecated
+- Various extension updates.
 
 ## [0.0.5] - 2023-03-30
 
@@ -101,7 +97,26 @@ for production environments.**
 
 ### Deprecated
 
+### Known issues
+
+## [Unreleased] - YYYY-MM-DD
+
+### Added
+
+### Changed
+
+### Removed
+
+### Fixed
+
+### Security
+
+### Deprecated
+
+### Known issues
+
 [Unreleased]: https://github.com/tum-gis/ckan-docker/compare/0.0.5...HEAD
+[1.0.0]: https://github.com/tum-gis/ckan-docker/compare/0.0.5...1.0.0
 [0.0.5]: https://github.com/tum-gis/ckan-docker/compare/0.0.4...0.0.5
 [0.0.4]: https://github.com/tum-gis/ckan-docker/compare/0.0.3...0.0.4
 [0.0.3]: https://github.com/tum-gis/ckan-docker/compare/0.0.2...0.0.3
