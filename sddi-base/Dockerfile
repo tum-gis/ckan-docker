@@ -24,7 +24,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-grouphierarchy ######################################################
-ARG CKANEXT_SDDI_VERSION="2.9-support"
+ARG CKANEXT_SDDI_VERSION="1.0.0"
 ENV CKANEXT_SDDI_VERSION=${CKANEXT_SDDI_VERSION}
 
 RUN set -ex && \
@@ -50,7 +50,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-scheming ############################################################
-ARG CKANEXT_SCHEMING_VERSION="scheming_all_plugins"
+ARG CKANEXT_SCHEMING_VERSION="c4f65c6"
 ENV CKANEXT_SCHEMING_VERSION=${CKANEXT_SCHEMING_VERSION}
 ENV CKANEXT_SCHEMING_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-scheming"
 
@@ -59,7 +59,7 @@ RUN set -ex && \
     git+${CKANEXT_SCHEMING_GITHUB_URL}.git@${CKANEXT_SCHEMING_VERSION}#egg=ckanext-scheming
 
 # ckanext datesearch ##########################################################
-ARG CKANEXT_DATESEARCH_VERSION="datesearch_and_spatial"
+ARG CKANEXT_DATESEARCH_VERSION="1.0.0"
 ENV CKANEXT_DATESEARCH_VERSION=${CKANEXT_DATESEARCH_VERSION}
 ENV CKANEXT_DATESEARCH_VERSION_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-datesearch"
 
@@ -68,7 +68,7 @@ RUN set -ex && \
     git+${CKANEXT_DATESEARCH_VERSION_GITHUB_URL}.git@${CKANEXT_DATESEARCH_VERSION}#egg=ckanext-datesearch
 
 # ckanext-composite ###########################################################
-ARG CKANEXT_COMPOSITE_VERSION="master"
+ARG CKANEXT_COMPOSITE_VERSION="1e6d7bb"
 ENV CKANEXT_COMPOSITE_VERSION=${CKANEXT_COMPOSITE_VERSION}
 ENV CKANEXT_COMPOSITE_GITHUB_URL="https://github.com/EnviDat/ckanext-composite"
 
@@ -79,7 +79,7 @@ RUN set -ex && \
     git+${CKANEXT_COMPOSITE_GITHUB_URL}.git@${CKANEXT_COMPOSITE_VERSION}#egg=ckanext-composite
 
 # ckanext-repeating ###########################################################
-ARG CKANEXT_REPEATING_VERSION="master"
+ARG CKANEXT_REPEATING_VERSION="1.0.0"
 ENV CKANEXT_REPEATING_VERSION=${CKANEXT_REPEATING_VERSION}
 ENV CKANEXT_REPEATING_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-repeating"
 
@@ -90,7 +90,7 @@ RUN set -ex && \
 # ckanext-spatial #############################################################
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_BUILD_SPATIAL} as extbuild-spatial
 
-ARG CKANEXT_SPATIAL_VERSION="scheming-spatial"
+ARG CKANEXT_SPATIAL_VERSION="d74cd14"
 ENV CKANEXT_SPATIAL_VERSION=${CKANEXT_SPATIAL_VERSION}
 
 USER root
