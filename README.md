@@ -115,8 +115,8 @@ All available tags are listed in the packages of each image:
 
 ### CKAN and CKAN extension versions
 
-CKAN version: `2.9.7`
-CKAN base image: `ghcr.io/keitaroinc/ckan:2.9.7-focal`
+CKAN version: `2.9.8`
+CKAN base image: `ghcr.io/keitaroinc/ckan:2.9.8-focal`
 
 The CKAN catalog platform uses several extensions to provide the functionality
 needed for the SDDI concept. The table below lists the included extensions with
