@@ -1,20 +1,36 @@
 <h1 align="center">SDDI CKAN Docker</h1>
 
 <p align="center">
-    <em>
-    <a title="Smart District Data Infrastructure" href="https://www.asg.ed.tum.de/gis/projekte/sddi/">Smart District Data Infrastructure (SDDI)</a>
-    enabled Docker images for
-    <a title="ckan.org" href="https://ckan.org/">CKAN</a>
-    </em>
-    <br />
-    <br />
-    <a href="https://github.com/tum-gis/sddi-ckan-k8s/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/tum-gis/sddi-ckan-k8s/issues">Request Feature</a>
-    <br />
-    <br />
-    <a href="https://github.com/tum-gis/ckan-docker/releases" title="Latest release">
-    <img src="https://img.shields.io/github/v/release/tum-gis/ckan-docker?logo=docker&sort=semver&style=for-the-badge">
+  <em>
+  <a title="Smart District Data Infrastructure" href="https://www.asg.ed.tum.de/gis/projekte/sddi/">Smart District Data Infrastructure (SDDI)</a>
+  enabled Docker images for
+  <a title="ckan.org" href="https://ckan.org/">CKAN</a>
+  </em>
+  <br />
+  <br />
+  <a href="https://github.com/tum-gis/sddi-ckan-k8s/issues">Report Bug</a>
+  ·
+  <a href="https://github.com/tum-gis/sddi-ckan-k8s/issues">Request Feature</a>
+  <br />
+  <br />
+  <a href="https://github.com/tum-gis/ckan-docker/releases" title="Latest release">
+    <img src="https://img.shields.io/github/v/release/tum-gis/ckan-docker?sort=semver&logo=docker">
+  </a>
+  <br />
+  </a>
+  <a href="https://github.com/tum-gis/ckan-docker/actions/workflows/edge.yml">
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/tum-gis/ckan-docker/release.yml?label=build: release">
+  </a>
+  <a href="https://github.com/tum-gis/ckan-docker/actions/workflows/edge.yml">
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/tum-gis/ckan-docker/edge.yml?label=build: main">
+  </a>
+  </a>
+  <a href="https://github.com/tum-gis/ckan-docker/actions/workflows/edge.yml">
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/tum-gis/ckan-docker/devel.yml?label=build: devel">
+  </a>
+  <br />
+  <a href="https://doi.org/10.5281/zenodo.7784078">
+    <img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7784078.svg" alt="DOI" />
   </a>
 </p>
 
