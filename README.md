@@ -18,14 +18,14 @@
   </a>
   <br />
   </a>
-  <a href="https://github.com/tum-gis/ckan-docker/actions/workflows/edge.yml">
+  <a href="https://github.com/tum-gis/ckan-docker/actions/workflows/release.yml">
     <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/tum-gis/ckan-docker/release.yml?label=build: release">
   </a>
   <a href="https://github.com/tum-gis/ckan-docker/actions/workflows/edge.yml">
-    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/tum-gis/ckan-docker/edge.yml?label=build: main">
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/tum-gis/ckan-docker/edge.yml?label=build: edge">
   </a>
   </a>
-  <a href="https://github.com/tum-gis/ckan-docker/actions/workflows/edge.yml">
+  <a href="https://github.com/tum-gis/ckan-docker/actions/workflows/devel.yml">
     <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/tum-gis/ckan-docker/devel.yml?label=build: devel">
   </a>
   <br />
