@@ -59,7 +59,7 @@ RUN set -ex && \
     git+${CKANEXT_SCHEMING_GITHUB_URL}.git@${CKANEXT_SCHEMING_VERSION}#egg=ckanext-scheming
 
 # ckanext datesearch ##########################################################
-ARG CKANEXT_DATESEARCH_VERSION="1.0.0"
+ARG CKANEXT_DATESEARCH_VERSION="internationalization"
 ENV CKANEXT_DATESEARCH_VERSION=${CKANEXT_DATESEARCH_VERSION}
 ENV CKANEXT_DATESEARCH_VERSION_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-datesearch"
 
