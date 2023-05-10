@@ -50,7 +50,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-scheming ############################################################
-ARG CKANEXT_SCHEMING_VERSION="c4f65c6"
+ARG CKANEXT_SCHEMING_VERSION="add-functionality-for-hidding-text-using-js"
 ENV CKANEXT_SCHEMING_VERSION=${CKANEXT_SCHEMING_VERSION}
 ENV CKANEXT_SCHEMING_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-scheming"
 
