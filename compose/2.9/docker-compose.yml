@@ -26,6 +26,7 @@ services:
     #  - 5432:5432
     volumes:
       - pg_data:/var/lib/postgresql/data
+      - postgis//docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:?POSTGRES_USER not set} -d ${POSTGRES_DB:?POSTGRES_DB not set}"]
       interval: 10s
@@ -33,12 +34,18 @@ services:
       retries: 5
       start_period: 5s
     environment:
+      PGDATA: /var/lib/postgresql/data/db
       POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB not set}
       POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER not set}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD not set}
-      PGDATA: /var/lib/postgresql/data/db
-
-
+      DATASTORE_DB_NAME:
+      DATASTORE_DB_RW_USERNAME:
+      DATASTORE_DB_RW_PASSWORD:
+      DATASTORE_DB_RO_USERNAME:
+      DATASTORE_DB_RO_PASSWORD:
+      DATAPUSHER_DB_NAME:
+      DATAPUSHER_DB_USERNAME:
+      DATAPUSHER_DB_PASSWORD:
 
 
   db:
