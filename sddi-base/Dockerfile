@@ -50,7 +50,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-scheming ############################################################
-ARG CKANEXT_SCHEMING_VERSION="add-functionality-for-hidding-text-using-js"
+ARG CKANEXT_SCHEMING_VERSION="f6e3722"
 ENV CKANEXT_SCHEMING_VERSION=${CKANEXT_SCHEMING_VERSION}
 ENV CKANEXT_SCHEMING_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-scheming"
 
@@ -59,7 +59,7 @@ RUN set -ex && \
     git+${CKANEXT_SCHEMING_GITHUB_URL}.git@${CKANEXT_SCHEMING_VERSION}#egg=ckanext-scheming
 
 # ckanext datesearch ##########################################################
-ARG CKANEXT_DATESEARCH_VERSION="internationalization"
+ARG CKANEXT_DATESEARCH_VERSION="1.0.1"
 ENV CKANEXT_DATESEARCH_VERSION=${CKANEXT_DATESEARCH_VERSION}
 ENV CKANEXT_DATESEARCH_VERSION_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-datesearch"
 
