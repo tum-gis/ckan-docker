@@ -14,7 +14,7 @@ For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 
 ### Fixed
 
-- Various extension updates and fixing of styling bugs mentioned in the [Styling bugs](https://github.com/tum-gis/ckan-docker/issues/20) issue.
+- Various extension updates and fixing of styling bugs mentioned in the #20 issue.
 
 ## [1.0.0] - 2023-04-28
 
