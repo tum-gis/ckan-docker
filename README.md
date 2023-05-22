@@ -148,11 +148,11 @@ are alway pinned to a stable release number or commit hash.
 
 | Extension | Version | `sddi-base` | `sddi` | `sddi-social` | Description |
 |---|---|:---:|:---:|:---:|---|
-| [`scheming`](https://github.com/MarijaKnezevic/ckanext-scheming) | `f6e3722` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Configure and share CKAN dataset metadata forms. |
+| [`scheming`](https://github.com/MarijaKnezevic/ckanext-scheming) | `5c30bba` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Configure and share CKAN dataset metadata forms. |
 | [`hierarchy`](https://github.com/ckan/ckanext-hierarchy) | `v1.2.0` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Allows to organize organizations and groups in a hierarchy tree (nested groups/orgs). |
 | [`grouphierarchysddi`](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) |  `1.0.1` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Extends `hierarchy` with pre-defined groups and topics of the SDDI concept. |
 | [`relation`](https://github.com/tum-gis/ckanext-relation-sddi) | `1.0.0` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Enables to create and visualize different types of relations (*realated_to*, *depends_on*, *part_of*) between catalog entries. |
-| [`spatial`](https://github.com/MarijaKnezevic/ckanext-spatial) | `65c0045` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Provides the ability to search for datasets according to a given spatial extent. |
+| [`spatial`](https://github.com/MarijaKnezevic/ckanext-spatial) | `90ba354` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Provides the ability to search for datasets according to a given spatial extent. |
 | [`datesearch`](https://github.com/MarijaKnezevic/ckanext-datesearch) | `1.0.1` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Provides the ability to search for datasets according to a given time frame. The search includes all datasets, in which the time of validity overlaps in at least one second with the search time frame. |
 | [`repeating`](https://github.com/MarijaKnezevic/ckanext-repeating) | `1.0.0` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | This extension provides a way to store repeating fields in CKAN datasets, resources, organizations and groups. |
 | [`composite`](https://github.com/EnviDat/ckanext-composite) | `1e6d7bb` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | The extension allows to store structured dataset metadata, single or multiple fields. Only one level of subfields is possible. The subfields can be basic text, date type or dropboxes. |
