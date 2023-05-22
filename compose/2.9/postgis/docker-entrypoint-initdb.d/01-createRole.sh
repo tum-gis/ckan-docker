@@ -12,13 +12,13 @@
     BEGIN
       IF EXISTS (
           SELECT FROM pg_catalog.pg_roles
-          WHERE  rolname = {{ .Values.global.db.auth.username | default .Values.db.auth.username | squote }}) THEN
+          WHERE  rolname = '$CKAN_DB_USERNAME') THEN
 
-          RAISE NOTICE 'Role {{ .Values.global.db.auth.username | default .Values.db.auth.username | quote }} already exists. Skipping.';
+          RAISE NOTICE 'Role "$CKAN_DB_USERNAME" already exists. Skipping.';
       ELSE
-        CREATE ROLE {{ .Values.global.db.auth.username | default .Values.db.auth.username | quote }}
+        CREATE ROLE "$CKAN_DB_USERNAME"
           NOSUPERUSER NOCREATEDB NOCREATEROLE LOGIN
-          PASSWORD {{ .Values.global.db.auth.password | default .Values.db.auth.password | squote }};
+          PASSWORD '$CKAN_DB_PASSWORD';
       END IF;
     END
     \$do\$;
