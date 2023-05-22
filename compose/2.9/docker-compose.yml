@@ -15,7 +15,7 @@ services:
   # CKAN ----------------------------------------------------------------------
   # PostGIS -------------------------------------------------------------------
   db:
-    container_name: ${POSTGRESQL_CONTAINER_NAME}
+    container_name: ${POSTGIS_CONTAINER_NAME}
     image: postgis/postgis:${POSTGIS_VERSION:?POSTGIS_VERSION not set}
     restart: unless-stopped
     networks:
@@ -53,7 +53,6 @@ services:
       DATAPUSHER_DB_PASSWORD: ${DATAPUSHER_DB_PASSWORD:?DATAPUSHER_DB_PASSWORD not set}
 
   # Solr ----------------------------------------------------------------------
-
   solr:
     container_name: ${SOLR_CONTAINER_NAME}
     image: ckan/ckan-solr:${SOLR_IMAGE_VERSION}
