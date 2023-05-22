@@ -90,7 +90,7 @@ RUN set -ex && \
 # ckanext-spatial #############################################################
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_BUILD_SPATIAL} as extbuild-spatial
 
-ARG CKANEXT_SPATIAL_VERSION="spatial-fix"
+ARG CKANEXT_SPATIAL_VERSION="65c0045"
 ENV CKANEXT_SPATIAL_VERSION=${CKANEXT_SPATIAL_VERSION}
 
 USER root
