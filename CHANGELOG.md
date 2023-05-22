@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 For releases `< 1.0.0` minor version steps may indicate breaking changes too.
+## [1.0.1] - 2023-05-22
+
+### Changed
+
+- Various extension updates and German translation.
+
+### Fixed
+
+- Various extension updates and fixing of styling bugs mentioned in the [Styling bugs](https://github.com/tum-gis/ckan-docker/issues/20) issue.
 
 ## [1.0.0] - 2023-04-28
 
