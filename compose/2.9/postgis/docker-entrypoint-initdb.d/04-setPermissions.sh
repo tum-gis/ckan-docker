@@ -9,31 +9,31 @@ echo "Set datastore permissions..."
 
 export PGPASSWORD="$POSTGRES_PASSWORD"
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" \
-    --dbname {{ .Values.global.datastore.dbname | default .Values.datastore.dbname | quote }} <<-EOSQL
+    --dbname "$DATASTORE_DB_NAME" <<-EOSQL
 
     -- revoke permissions for the read-only user
     REVOKE CREATE ON SCHEMA public FROM PUBLIC;
     REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 
-    GRANT CREATE ON SCHEMA public TO {{ .Values.global.db.auth.username | default .Values.db.auth.username | quote }} ;
-    GRANT USAGE ON SCHEMA public TO {{ .Values.global.db.auth.username | default .Values.db.auth.username | quote }} ;
+    GRANT CREATE ON SCHEMA public TO "$CKAN_DB_USERNAME";
+    GRANT USAGE ON SCHEMA public TO "$CKAN_DB_USERNAME";
 
-    GRANT CREATE ON SCHEMA public TO {{ .Values.global.datastore.auth.rw.username | default .Values.datastore.auth.rw.username | quote }};
-    GRANT USAGE ON SCHEMA public TO {{ .Values.global.datastore.auth.rw.username | default .Values.datastore.auth.rw.username | quote }};
+    GRANT CREATE ON SCHEMA public TO "$DATASTORE_DB_RW_USERNAME";
+    GRANT USAGE ON SCHEMA public TO "$DATASTORE_DB_RW_USERNAME";
 
     -- take connect permissions from main db
-    REVOKE CONNECT ON DATABASE {{ .Values.global.db.dbname | default .Values.db.dbname | quote }} FROM {{ .Values.global.datastore.auth.ro.username | default .Values.datastore.auth.ro.username | quote }};
+    REVOKE CONNECT ON DATABASE "$CKAN_DB_NAME" FROM "$DATASTORE_DB_RO_USERNAME";
 
     -- grant select permissions for read-only user
-    GRANT CONNECT ON DATABASE {{ .Values.global.datastore.dbname | default .Values.datastore.dbname | quote }} TO {{ .Values.global.datastore.auth.ro.username | default .Values.datastore.auth.ro.username | quote }};
-    GRANT USAGE ON SCHEMA public TO {{ .Values.global.datastore.auth.ro.username | default .Values.datastore.auth.ro.username | quote }};
+    GRANT CONNECT ON DATABASE "$DATASTORE_DB_NAME" TO "$DATASTORE_DB_RO_USERNAME";
+    GRANT USAGE ON SCHEMA public TO "$DATASTORE_DB_RO_USERNAME";
 
     -- grant access to current tables and views to read-only user
-    GRANT SELECT ON ALL TABLES IN SCHEMA public TO {{ .Values.global.datastore.auth.ro.username | default .Values.datastore.auth.ro.username | quote }};
+    GRANT SELECT ON ALL TABLES IN SCHEMA public TO "$DATASTORE_DB_RO_USERNAME";
 
     -- grant access to new tables and views by default
-    ALTER DEFAULT PRIVILEGES FOR USER {{ .Values.global.datastore.auth.rw.username | default .Values.datastore.auth.rw.username | quote }} IN SCHEMA public
-    GRANT SELECT ON TABLES TO {{ .Values.global.datastore.auth.ro.username | default .Values.datastore.auth.ro.username | quote }};
+    ALTER DEFAULT PRIVILEGES FOR USER "$DATASTORE_DB_RW_USERNAME" IN SCHEMA public
+    GRANT SELECT ON TABLES TO "$DATASTORE_DB_RO_USERNAME";
 
     -- a view for listing valid table (resource id) and view names
     CREATE OR REPLACE VIEW "_table_metadata" AS
@@ -55,8 +55,8 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" \
             AND dependee.relnamespace = (
                 SELECT oid FROM pg_namespace WHERE nspname='public')
         ORDER BY dependee.oid DESC;
-    ALTER VIEW "_table_metadata" OWNER TO {{ .Values.global.datastore.auth.rw.username | default .Values.datastore.auth.rw.username | quote }};
-    GRANT SELECT ON "_table_metadata" TO {{ .Values.global.datastore.auth.ro.username | default .Values.datastore.auth.ro.username | quote }};
+    ALTER VIEW "_table_metadata" OWNER TO "$DATASTORE_DB_RW_USERNAME";
+    GRANT SELECT ON "_table_metadata" TO "$DATASTORE_DB_RO_USERNAME";
 
     -- _full_text fields are now updated by a trigger when set to NULL
     CREATE OR REPLACE FUNCTION populate_full_text_trigger() RETURNS trigger
@@ -72,7 +72,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" \
             RETURN NEW;
         END;
     \$body\$ LANGUAGE plpgsql;
-    ALTER FUNCTION populate_full_text_trigger() OWNER TO {{ .Values.global.datastore.auth.rw.username | default .Values.datastore.auth.rw.username | quote }};
+    ALTER FUNCTION populate_full_text_trigger() OWNER TO "$DATASTORE_DB_RW_USERNAME";
 
     -- migrate existing tables that don't have full text trigger applied
     DO \$body\$

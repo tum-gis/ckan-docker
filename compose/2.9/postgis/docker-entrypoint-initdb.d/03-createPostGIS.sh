@@ -1,16 +1,16 @@
-    #!/bin/bash
-    set -e
+#!/bin/bash
+set -e
 
-    echo "Create PostGIS..."
+echo "Create PostGIS..."
 
-    export PGPASSWORD="$POSTGRES_PASSWORD"
-    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" \
-      --dbname {{ .Values.global.db.dbname | default .Values.db.dbname | quote }} <<-EOSQL
+export PGPASSWORD="$POSTGRES_PASSWORD"
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" \
+  --dbname "$CKAN_DB_NAME" <<-EOSQL
 
-    CREATE EXTENSION postgis;
-    ALTER VIEW geometry_columns OWNER TO {{ .Values.global.db.auth.username | default .Values.db.auth.username | quote }};
-    ALTER TABLE spatial_ref_sys OWNER TO {{ .Values.global.db.auth.username | default .Values.db.auth.username | quote }};
+CREATE EXTENSION postgis;
+ALTER VIEW geometry_columns OWNER TO "$CKAN_DB_USERNAME";
+ALTER TABLE spatial_ref_sys OWNER TO "$CKAN_DB_USERNAME";
 
-    EOSQL
+EOSQL
 
-    echo "Create PostGIS...done!"
+echo "Create PostGIS...done!"

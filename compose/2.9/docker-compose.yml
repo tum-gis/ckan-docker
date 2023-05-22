@@ -1,7 +1,7 @@
 version: "3.8"
+name: ckan
 
 volumes:
-
   ckan_data:
   pg_data:
   solr_data:
@@ -10,25 +10,27 @@ networks:
   frontend:
   backend:
 
-
 services:
-
   # Caddy ---------------------------------------------------------------------
   # CKAN ----------------------------------------------------------------------
   # PostGIS -------------------------------------------------------------------
   db:
     container_name: ${POSTGRESQL_CONTAINER_NAME}
-    image: postgres:${POSTGRES_VERSION:?POSTGRES_VERSION not set}
+    image: postgis/postgis:${POSTGIS_VERSION:?POSTGIS_VERSION not set}
     restart: unless-stopped
     networks:
       - backend
-    # ports:
-    #  - 5432:5432
+    ports:
+      - 5432:5432
     volumes:
       - pg_data:/var/lib/postgresql/data
-      - postgis//docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+      - ./postgis/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:?POSTGRES_USER not set} -d ${POSTGRES_DB:?POSTGRES_DB not set}"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${CKAN_DB_USERNAME:?CKAN_DB_USERNAME not set} -d ${CKAN_DB_NAME:?CKAN_DB_NAME not set}",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -38,31 +40,18 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB not set}
       POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER not set}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD not set}
-      DATASTORE_DB_NAME:
-      DATASTORE_DB_RW_USERNAME:
-      DATASTORE_DB_RW_PASSWORD:
-      DATASTORE_DB_RO_USERNAME:
-      DATASTORE_DB_RO_PASSWORD:
-      DATAPUSHER_DB_NAME:
-      DATAPUSHER_DB_USERNAME:
-      DATAPUSHER_DB_PASSWORD:
+      CKAN_DB_NAME: ${CKAN_DB_NAME:?CKAN_DB_NAME not set}
+      CKAN_DB_USERNAME: ${CKAN_DB_USERNAME:?CKAN_DB_USERNAME not set}
+      CKAN_DB_PASSWORD: ${CKAN_DB_PASSWORD:?CKAN_DB_PASSWORD not set}
+      DATASTORE_DB_NAME: ${DATASTORE_DB_NAME:?DATASTORE_DB_NAME not set}
+      DATASTORE_DB_RW_USERNAME: ${DATASTORE_DB_RW_USERNAME:?DATASTORE_DB_RW_USERNAME not set}
+      DATASTORE_DB_RW_PASSWORD: ${DATASTORE_DB_RW_PASSWORD:?DATASTORE_DB_RW_PASSWORD not set}
+      DATASTORE_DB_RO_USERNAME: ${DATASTORE_DB_RO_USERNAME:?DATASTORE_DB_RO_USERNAME not set}
+      DATASTORE_DB_RO_PASSWORD: ${DATASTORE_DB_RO_PASSWORD:?DATASTORE_DB_RO_PASSWORD not set}
+      DATAPUSHER_DB_NAME: ${DATAPUSHER_DB_NAME:?DATAPUSHER_DB_NAME not set}
+      DATAPUSHER_DB_USERNAME: ${DATAPUSHER_DB_USERNAME:?DATAPUSHER_DB_USERNAME not set}
+      DATAPUSHER_DB_PASSWORD: ${DATAPUSHER_DB_PASSWORD:?DATAPUSHER_DB_PASSWORD not set}
 
-
-  db:
-    container_name: ${POSTGRESQL_CONTAINER_NAME}
-    build:
-      context: postgresql/
-      args:
-       - DATASTORE_READONLY_PASSWORD=${DATASTORE_READONLY_PASSWORD}
-       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    environment:
-      - DATASTORE_READONLY_PASSWORD=${DATASTORE_READONLY_PASSWORD}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-
-
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "ckan"]
   # Solr ----------------------------------------------------------------------
 
   solr:
