@@ -11,6 +11,20 @@ networks:
   backend:
 
 services:
+
+  sddi-base:
+    image: sddi-base:${CKAN_IMAGE_VERSION}
+    build:
+      context: ../../sddi-base
+      no_cache: true
+      pull: true
+  # sddi-social:
+  #   build:
+  #     context: sddi-social
+  #     no_cache: true
+  #   depends_on:
+  #     - ckan
+
   # Caddy ---------------------------------------------------------------------
   # CKAN ----------------------------------------------------------------------
   # PostGIS -------------------------------------------------------------------
@@ -56,7 +70,13 @@ services:
   # CKAN ----------------------------------------------------------------------
   ckan:
     container_name: ${CKAN_CONTAINER_NAME}
-    image: ${CKAN_IMAGE}:${CKAN_IMAGE_VERSION}
+    image: sddi:${CKAN_IMAGE_VERSION}
+    build:
+      context: ../../sddi
+      args:
+        BASEIMAGE_REPOSITORY: sddi-base
+        BASEIMAGE_VERSION: ${CKAN_IMAGE_VERSION}
+      no_cache: true
     volumes:
       - ckan_data:/var/lib/ckan
     networks:
@@ -91,12 +111,17 @@ services:
       CKAN___API_TOKEN__JWT__ENCODE__SECRET: ${CKAN___API_TOKEN__JWT__ENCODE__SECRET:?CKAN___API_TOKEN__JWT__ENCODE__SECRET not set}
       CKAN___API_TOKEN__JWT__DECODE__SECRET: ${CKAN___API_TOKEN__JWT__DECODE__SECRET:?CKAN___API_TOKEN__JWT__DECODE__SECRET not set}
     depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      solr:
-        condition: service_healthy
+      - sddi-base
+      - db
+      - redis
+      - solr
+      # db:
+      #   condition: service_healthy
+      # redis:
+      #   condition: service_healthy
+      # solr:
+      #   condition: service_healthy
+
     ports:
       - 5000:5000
 
