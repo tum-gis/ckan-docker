@@ -1,5 +1,5 @@
 version: "3.8"
-name: ckan
+name: ckan-sddi
 
 volumes:
   ckan_data:
@@ -30,11 +30,12 @@ services:
   # PostGIS -------------------------------------------------------------------
   db:
     container_name: ${POSTGIS_CONTAINER_NAME}
-    hostname: ${CKAN_DB_HOST}
     image: postgis/postgis:${POSTGIS_VERSION:?POSTGIS_VERSION not set}
     restart: unless-stopped
     networks:
-      - backend
+      backend:
+        aliases:
+          - ${CKAN_DB_HOST}
     ports:
       - 5432:5432
     volumes:
@@ -51,6 +52,7 @@ services:
       retries: 5
       start_period: 5s
     environment:
+      TZ: ${TZ:?TZ not set}
       PGDATA: /var/lib/postgresql/data/db
       POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB not set}
       POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER not set}
@@ -78,7 +80,7 @@ services:
         BASEIMAGE_VERSION: ${CKAN_IMAGE_VERSION}
       no_cache: true
     volumes:
-      - ckan_data:/var/lib/ckan
+      - "ckan_data:${CKAN_STORAGE_PATH:?CKAN_STORAGE_PATH not set}"
     networks:
       - frontend
       - backend
@@ -86,6 +88,7 @@ services:
     # healthcheck:
     #   test: ["CMD", "wget", "-qO", "/dev/null", "http://localhost:8983/solr/"]
     environment:
+      TZ: ${TZ:?TZ not set}
       # Basic settings
       CKAN_SITE_URL: ${CKAN_SITE_URL:?CKAN_SITE_URL not set}
       # Database
@@ -99,17 +102,10 @@ services:
       CKAN_SOLR_URL: ${CKAN_SOLR_URL:?CKAN_SOLR_URL not set}
       # Redis
       CKAN_REDIS_URL: ${CKAN_REDIS_URL:?CKAN_REDIS_URL not set}
-
       # Storage path
-      CKAN_STORAGE_PATH: ${CKAN_STORAGE_PATH:?CKAN_STORAGE_PATH not set}
-      # Sysadmin
-      CKAN_SYSADMIN_NAME: ${CKAN_SYSADMIN_NAME:?CKAN_SYSADMIN_NAME not set}
-      CKAN_SYSADMIN_PASSWORD: ${CKAN_SYSADMIN_PASSWORD:?CKAN_SYSADMIN_PASSWORD net set}
-      CKAN_SYSADMIN_EMAIL: ${CKAN_SYSADMIN_EMAIL:?CKAN_SYSADMIN_EMAIL not set}
-      # Session security
-      CKAN___BEAKER__SESSION__SECRET: ${CKAN___BEAKER__SESSION__SECRET:?CKAN___BEAKER__SESSION__SECRET not set}
-      CKAN___API_TOKEN__JWT__ENCODE__SECRET: ${CKAN___API_TOKEN__JWT__ENCODE__SECRET:?CKAN___API_TOKEN__JWT__ENCODE__SECRET not set}
-      CKAN___API_TOKEN__JWT__DECODE__SECRET: ${CKAN___API_TOKEN__JWT__DECODE__SECRET:?CKAN___API_TOKEN__JWT__DECODE__SECRET not set}
+      CKAN_STORAGE_PATH: "${CKAN_STORAGE_PATH:?CKAN_STORAGE_PATH not set}"
+    env_file:
+      - ckan.env
     depends_on:
       - sddi-base
       - db
@@ -121,7 +117,6 @@ services:
       #   condition: service_healthy
       # solr:
       #   condition: service_healthy
-
     ports:
       - 5000:5000
 
@@ -137,6 +132,8 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-qO", "/dev/null", "http://localhost:8983/solr/"]
+    environment:
+      TZ: ${TZ:?TZ not set}
 
   # Redis ---------------------------------------------------------------------
   redis:
@@ -148,6 +145,8 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "-e", "QUIT"]
+    environment:
+      TZ: ${TZ:?TZ not set}
 
   # Datapusher ----------------------------------------------------------------
   datapusher:
@@ -168,5 +167,4 @@ services:
       DATAPUSHER_SSL_VERIFY: ${DATAPUSHER_SSL_VERIFY:?DATAPUSHER_SSL_VERIFY not set}
       DATAPUSHER_REWRITE_RESOURCES: ${DATAPUSHER_REWRITE_RESOURCES:?DATAPUSHER_REWRITE_RESOURCES not set}
       DATAPUSHER_REWRITE_URL: ${DATAPUSHER_REWRITE_URL:?DATAPUSHER_REWRITE_URL not set}
-      DATAPUSHER_SQLALCHEMY_DATABASE_URI:
-        postgres://${DATAPUSHER_DB_USERNAME}:${DATAPUSHER_DB_PASSWORD}@postgis/${DATAPUSHER_DB_NAME}
+      DATAPUSHER_SQLALCHEMY_DATABASE_URI: postgres://${DATAPUSHER_DB_USERNAME}:${DATAPUSHER_DB_PASSWORD}@${DATAPUSHER_DB_HOST}:${DATAPUSHER_DB_PORT}/${DATAPUSHER_DB_NAME}
