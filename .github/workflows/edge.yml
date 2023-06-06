@@ -3,6 +3,10 @@ name: Build/push edge image
 on:
   push:
     branches: [main]
+    paths:
+      - sddi-base/**
+      - sddi/**
+      - sddi-social/**
 
 env:
   REGISTRY: ghcr.io

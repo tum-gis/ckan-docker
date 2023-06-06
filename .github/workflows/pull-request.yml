@@ -1,6 +1,10 @@
 name: Test Docker image build
 on:
   pull_request:
+    paths:
+      - sddi-base/**
+      - sddi/**
+      - sddi-social/**
 
 env:
   REGISTRY: ghcr.io

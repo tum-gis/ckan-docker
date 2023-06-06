@@ -3,6 +3,10 @@ name: Build/push devel image
 on:
   push:
     branches: [devel]
+    paths:
+      - sddi-base/**
+      - sddi/**
+      - sddi-social/**
 
 env:
   REGISTRY: ghcr.io
