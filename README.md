@@ -8,9 +8,9 @@
   </em>
   <br />
   <br />
-  <a href="https://github.com/tum-gis/sddi-ckan-k8s/issues">Report Bug</a>
+  <a href="https://github.com/tum-gis/ckan-docker/issues/new/choose">Report Bug</a>
   ·
-  <a href="https://github.com/tum-gis/sddi-ckan-k8s/issues">Request Feature</a>
+  <a href="https://github.com/tum-gis/ckan-docker/issues/new/choose">Request Feature</a>
   <br />
   <br />
   <a href="https://github.com/tum-gis/ckan-docker/releases" title="Latest release">
