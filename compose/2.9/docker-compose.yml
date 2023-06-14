@@ -18,12 +18,58 @@ services:
       context: ../../sddi-base
       no_cache: true
       pull: true
+  sddi-base-debug:
+    image: sddi-base:${CKAN_IMAGE_VERSION}-debug
+    build:
+      context: ../../sddi-base
+      dockerfile: Dockerfile.debug
+      no_cache: true
+      # pull: true
+    depends_on:
+      - sddi-base
+
+  sddi:
+    image: sddi:${CKAN_IMAGE_VERSION}
+    build:
+      context: ../../sddi
+      no_cache: true
+      args:
+        BASEIMAGE_REPOSITORY: sddi-base
+        BASEIMAGE_VERSION: ${CKAN_IMAGE_VERSION}
+    depends_on:
+      - sddi-base
+  sddi-debug:
+    image: sddi:${CKAN_IMAGE_VERSION}-debug
+    build:
+      context: ../../sddi
+      dockerfile: Dockerfile.debug
+      no_cache: true
+      args:
+        BASEIMAGE_REPOSITORY: sddi-base
+        BASEIMAGE_VERSION: ${CKAN_IMAGE_VERSION}
+    depends_on:
+      - sddi-base
   # sddi-social:
+  #   image: sddi-social:${CKAN_IMAGE_VERSION}
   #   build:
-  #     context: sddi-social
+  #     context: ../../sddi-social
   #     no_cache: true
+  #     args:
+  #       BASEIMAGE_REPOSITORY: sddi
+  #       BASEIMAGE_VERSION: ${CKAN_IMAGE_VERSION}
   #   depends_on:
-  #     - ckan
+  #     - sddi
+  # sddi-social-debug:
+  #   image: sddi-social:${CKAN_IMAGE_VERSION}-debug
+  #   build:
+  #     context: ../../sddi-social
+  #     dockerfile: Dockerfile.debug
+  #     no_cache: true
+  #     args:
+  #       BASEIMAGE_REPOSITORY: sddi
+  #       BASEIMAGE_VERSION: ${CKAN_IMAGE_VERSION}
+  #   depends_on:
+  #     - sddi
 
   # Caddy ---------------------------------------------------------------------
   # CKAN ----------------------------------------------------------------------
@@ -153,11 +199,17 @@ services:
     container_name: ${DATAPUSHER_CONTAINER_NAME}
     hostname: datapusher
     image: ckan/ckan-base-datapusher:${DATAPUSHER_VERSION}
+    build:
+      context: datapusher
+      args:
+        DATAPUSHER_VERSION: ${DATAPUSHER_VERSION}
     networks:
       - backend
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-qO", "/dev/null", "http://localhost:8800"]
+    depends_on:
+      - db
     environment:
       TZ: ${TZ:?TZ not set}
       DATAPUSHER_MAX_CONTENT_LENGTH: ${DATAPUSHER_MAX_CONTENT_LENGTH:?DATAPUSHER_MAX_CONTENT_LENGTH not set}
