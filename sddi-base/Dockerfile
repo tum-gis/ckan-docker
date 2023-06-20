@@ -24,7 +24,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-grouphierarchy ######################################################
-ARG CKANEXT_SDDI_VERSION="1.0.1"
+ARG CKANEXT_SDDI_VERSION="personalization-of-sdi-ckan-via-config"
 ENV CKANEXT_SDDI_VERSION=${CKANEXT_SDDI_VERSION}
 
 RUN set -ex && \
@@ -192,6 +192,11 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_schemas = ckanext.scheming:ckan_dataset.yaml" && \
   ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json ckanext.repeating:presets.json ckanext.composite:presets.json" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
+  
+  ckan config-tool "${CKAN_INI}" "ckan.site_intro_paragraph = This is the intro to my CKAN instance. " && \
+  ckan config-tool "${CKAN_INI}" "ckan.background_image = ../base/images/hero.jpg" && \
+  ckan config-tool "${CKAN_INI}" "ckan.site_intro_text = Willkommen auf der Katalogplattform der Smarten Städte und Regionen Bayern" && \
+  
   echo "${TZ}" > /etc/timezone && \
   mkdir -p ${CKAN_STORAGE_PATH} && \
   chown -R ckan:ckan ${APP_DIR} ${CKAN_STORAGE_PATH} && \
