@@ -24,7 +24,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-grouphierarchy ######################################################
-ARG CKANEXT_SDDI_VERSION="bugfix-admin-config"
+ARG CKANEXT_SDDI_VERSION="main"
 ENV CKANEXT_SDDI_VERSION=${CKANEXT_SDDI_VERSION}
 
 RUN set -ex && \
@@ -191,7 +191,7 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.search_backend = solr-bbox" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_schemas = ckanext.scheming:ckan_dataset.yaml" && \
   ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json ckanext.repeating:presets.json ckanext.composite:presets.json" && \
-  ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \ 
+  ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
   echo "${TZ}" > /etc/timezone && \
   mkdir -p ${CKAN_STORAGE_PATH} && \
   chown -R ckan:ckan ${APP_DIR} ${CKAN_STORAGE_PATH} && \
