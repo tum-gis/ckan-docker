@@ -9,9 +9,14 @@ For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 ## [1.2.0] - 2023-06-28
 
 ### Added
-- Improvements in personalization via variables. Default groups and organizations have been added. See [here](https://github.com/tum-gis/ckan-docker/issues/23)
-- Via variables is possible to: *define Background image*, *define intro text*, *define text below intro text*
-- The administrator can also change Background image, intro text and text below intro text in the user interface in the "Systemadmin-settings" in the running instance.
+
+- Improvements in personalization via variables. Default groups and organizations have been added. See tum-gis/ckan-docker#23
+- Via variables it is now possible to: *define Background image*, *define intro text*, *define text below intro text*
+- The administrator can also change background image, intro text and text below intro text in the user interface in the "Systemadmin-settings" dialog in the running instance.
+
+## Changed
+
+- Update to CKAN `2.9.8`
 
 ### Fixed
 
