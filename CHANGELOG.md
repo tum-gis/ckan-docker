@@ -6,23 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 
-## [Unreleased] - YYYY-MM-DD
+## [1.2.0] - 2023-06-28
 
 ### Added
-
-### Changed
-
-### Removed
+- Improvements in personalization via variables. Default groups and organizations have been added. See [here](https://github.com/tum-gis/ckan-docker/issues/23)
+- Via variables is possible to: *define Background image*, *define intro text*, *define text below intro text*
+- The administrator can also change Background image, intro text and text below intro text in the user interface in the "Systemadmin-settings" in the running instance.
 
 ### Fixed
 
 - Fixed inconsistent base image and build image versions
-
-### Security
-
-### Deprecated
-
-### Known issues
 
 ## [1.0.1] - 2023-05-22
 
