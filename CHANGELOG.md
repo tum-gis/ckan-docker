@@ -6,7 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 
-## [1.2.0] - 2023-06-28
+## [1.1.1] - 2023-07-05
+### Fixed
+- bug removing in [ckanext-grouphierarchy-sddi](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) --> [Release 1.0.1](https://github.com/tum-gis/ckanext-relation-sddi/releases/tag/1.0.1)
+- bug removing in [ckanext-relation-sddi](https://github.com/tum-gis/ckanext-relation-sddi) --> [Release 1.1.1](https://github.com/tum-gis/ckanext-grouphierarchy-sddi/releases/tag/1.1.1)
+
+## [1.1.0] - 2023-06-28
 
 ### Added
 
