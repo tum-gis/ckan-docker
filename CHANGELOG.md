@@ -8,8 +8,8 @@ For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 
 ## [1.1.1] - 2023-07-05
 ### Fixed
-- bug removing in [ckanext-grouphierarchy-sddi](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) --> [Release 1.0.1](https://github.com/tum-gis/ckanext-relation-sddi/releases/tag/1.0.1)
-- bug removing in [ckanext-relation-sddi](https://github.com/tum-gis/ckanext-relation-sddi) --> [Release 1.1.1](https://github.com/tum-gis/ckanext-grouphierarchy-sddi/releases/tag/1.1.1)
+- bug removing in [ckanext-grouphierarchy-sddi](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) extension. It is possible upload the image from local source. The problem is solved in Pull Request [#11](https://github.com/tum-gis/ckanext-grouphierarchy-sddi/pull/11). -->  [Release 1.0.1](https://github.com/tum-gis/ckanext-relation-sddi/releases/tag/1.0.1).
+- bug removing in [ckanext-relation-sddi](https://github.com/tum-gis/ckanext-relation-sddi) extension. In the Pull Request [#7](https://github.com/tum-gis/ckanext-relation-sddi/pull/7) and [#8](https://github.com/tum-gis/ckanext-relation-sddi/pull/8) are color labels of main categories syncronised with their graphic representation. --> [Release 1.1.1](https://github.com/tum-gis/ckanext-grouphierarchy-sddi/releases/tag/1.1.1)
 
 ## [1.1.0] - 2023-06-28
 
@@ -147,6 +147,8 @@ for production environments.**
 ### Known issues
 
 [Unreleased]: https://github.com/tum-gis/ckan-docker/compare/0.0.5...HEAD
+[1.1.1]: https://github.com/tum-gis/ckan-docker/compare/1.1.0...1.1.1
+[1.1.0]: https://github.com/tum-gis/ckan-docker/compare/1.0.1...1.1.0
 [1.0.1]: https://github.com/tum-gis/ckan-docker/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/tum-gis/ckan-docker/compare/0.0.5...1.0.0
 [0.0.5]: https://github.com/tum-gis/ckan-docker/compare/0.0.4...0.0.5
