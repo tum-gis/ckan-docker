@@ -6,10 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 
-## [1.1.1] - 2023-07-05
+## [1.1.1] - 2023-07-06
+
 ### Fixed
-- bug removing in [ckanext-grouphierarchy-sddi](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) extension. It is possible upload the image from local source. The problem is solved in Pull Request [#11](https://github.com/tum-gis/ckanext-grouphierarchy-sddi/pull/11). -->  [Release 1.0.1](https://github.com/tum-gis/ckanext-relation-sddi/releases/tag/1.0.1).
-- bug removing in [ckanext-relation-sddi](https://github.com/tum-gis/ckanext-relation-sddi) extension. In the Pull Request [#7](https://github.com/tum-gis/ckanext-relation-sddi/pull/7) and [#8](https://github.com/tum-gis/ckanext-relation-sddi/pull/8) are color labels of main categories syncronised with their graphic representation. --> [Release 1.1.1](https://github.com/tum-gis/ckanext-grouphierarchy-sddi/releases/tag/1.1.1)
+
+- upstream bugfix from [ckanext-grouphierarchy-sddi](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) extension. Fixed upload of images from from local source. tum-gis/ckanext-grouphierarchy-sddi#11
+- upstream bugfix in [ckanext-relation-sddi](https://github.com/tum-gis/ckanext-relation-sddi) extension.
+  Color labels of main categories synchronized with their graphic representation.
+  tum-gis/ckanext-relation-sddi#7,
+  tum-gis/ckanext-relation-sddi#8
 
 ## [1.1.0] - 2023-06-28
 
