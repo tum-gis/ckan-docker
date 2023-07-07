@@ -60,7 +60,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            BASEIMAGE_VERSION=${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev:${{ matrix.context }}-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}
+            BASEIMAGE_REPOSITORY=${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev
+            BASEIMAGE_VERSION=${{ matrix.context }}-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}
       -
         name: Print image name
         run: |
@@ -88,7 +89,8 @@ jobs:
           tags: ${{ steps.meta-debug.outputs.tags }}
           labels: ${{ steps.meta-debug.outputs.labels }}
           build-args: |
-            BASEIMAGE_VERSION=${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev:${{ matrix.context }}-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}
+            BASEIMAGE_REPOSITORY=${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev
+            BASEIMAGE_VERSION=${{ matrix.context }}-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}
       -
         name: Print image name
         run: |
