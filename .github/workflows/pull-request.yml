@@ -84,6 +84,7 @@ jobs:
         with:
           push: true
           context: ${{ matrix.context }}
+          file: ${{ matrix.context }}/Dockerfile.debug
           tags: ${{ steps.meta-debug.outputs.tags }}
           labels: ${{ steps.meta-debug.outputs.labels }}
           build-args: |
