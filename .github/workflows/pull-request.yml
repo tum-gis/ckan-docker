@@ -46,7 +46,7 @@ jobs:
           images: |
             ${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev
           tags: |
-            type=ref,event=pr,prefix=${{ matrix.context }}-,suffix=-{{sha}}
+            type=ref,event=pr,prefix=${{ matrix.context }}-pr-,suffix=-{{sha}}
           labels: |
             maintainer=Chair of Geoinformatics, Technical University of Munich (TUM)
             org.opencontainers.image.vendor=Chair of Geoinformatics, Technical University of Munich (TUM)
@@ -74,7 +74,7 @@ jobs:
           images: |
             ${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev
           tags: |
-            type=ref,event=pr,prefix=${{ matrix.context }}-,suffix=-{{sha}}-debug
+            type=ref,event=pr,prefix=${{ matrix.context }}-pr-,suffix=-{{sha}}-debug
           labels: |
             maintainer=Chair of Geoinformatics, Technical University of Munich (TUM)
             org.opencontainers.image.vendor=Chair of Geoinformatics, Technical University of Munich (TUM)
