@@ -49,6 +49,7 @@ See [packages](https://github.com/orgs/tum-gis/packages?repo_name=ckan-docker) f
   - [`sddi`](#sddi)
   - [`sddi-social`](#sddi-social)
 - [:1234: Image versioning](#1234-image-versioning)
+  - [Development image versions](#development-image-versions)
   - [CKAN and CKAN extension versions](#ckan-and-ckan-extension-versions)
 - [:rocket: Usage](#rocket-usage)
 - [:book: Configuration an documentation](#book-configuration-an-documentation)
@@ -109,11 +110,20 @@ The images in this repo are versioned and tagged according to the
 [releases](https://github.com/tum-gis/ckan-docker/releases) of this repository.
 The `latest` tag points to the latest release number. The `edge` version is built from the
 latest commit to the `main` branch of this repo.
+
+All available tags are listed in the packages of each image:
+
+- [`sddi-base`](https://github.com/tum-gis/ckan-docker/pkgs/container/ckan-sddi-base)
+- [`sddi`](https://github.com/tum-gis/ckan-docker/pkgs/container/ckan-sddi)
+- [`sddi-social`](https://github.com/tum-gis/ckan-docker/pkgs/container/ckan-sddi-social)
+
+### Development image versions
+
 For development purposes the `devel` images, which are build from the latest commit to the `devel` branch are published.
 The `devel` images are used for testing and may contain errors.
 The CKAN and CKAN extension versions used for each image are listed in the table below.
 
-For development and debugging we provide a *debug* version for each image version.
+For debugging we provide a *debug* version for each image version.
 These images are indicated by the `-debug` suffix on the image tag, e.g. `latest-debug`, `0.0.6-debug`, `edge-debug` or `devel-debug`.
 The debug images have the FLASK debug toolbar enabled and all required debugging dependencies installed.
 Read more on CKAN's debug mode in the
@@ -123,11 +133,22 @@ Debug images are available starting from `v0.0.6`.
 > **Warning**: The debug image versions should not be used in a production environment!
 > With debug mode enabled, a visitor to your site could execute malicious commands.
 
-All available tags are listed in the packages of each image:
+Furthermore, for each commit to a [Pull request](https://github.com/tum-gis/ckan-docker/pulls) all image flavors are build. These images are published in the
+[`ckan-sddi-dev`](https://github.com/orgs/tum-gis/packages/container/package/ckan-sddi-dev)
+package. Images are named following this pattern:
 
-- [`sddi-base`](https://github.com/tum-gis/ckan-docker/pkgs/container/ckan-sddi-base)
-- [`sddi`](https://github.com/tum-gis/ckan-docker/pkgs/container/ckan-sddi)
-- [`sddi-social`](https://github.com/tum-gis/ckan-docker/pkgs/container/ckan-sddi-social)
+`ghcr.io/tum-gis/ckan-sddi-dev:<IMAGE FLAVOR>-pr-<PR NUMBER>-<SHORT-SHA>[-debug]`
+
+For instance, for commit 19a2e64 to PR tum-gis/ckan-docker#26 following images are build:
+
+- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-base-pr-26-19a2e64`
+- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-base-pr-26-19a2e64-debug`
+- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-19a2e64`
+- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-19a2e64-debug`
+- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-19a2e64`
+- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-19a2e64-debug`
+
+This registry will be cleared periodically.
 
 ### CKAN and CKAN extension versions
 
@@ -150,8 +171,8 @@ are alway pinned to a stable release number or commit hash.
 |---|---|:---:|:---:|:---:|---|
 | [`scheming`](https://github.com/MarijaKnezevic/ckanext-scheming) | `5c30bba` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Configure and share CKAN dataset metadata forms. |
 | [`hierarchy`](https://github.com/ckan/ckanext-hierarchy) | `v1.2.0` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Allows to organize organizations and groups in a hierarchy tree (nested groups/orgs). |
-| [`grouphierarchysddi`](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) |  `1.0.1` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Extends `hierarchy` with pre-defined groups and topics of the SDDI concept. |
-| [`relation`](https://github.com/tum-gis/ckanext-relation-sddi) | `1.0.0` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Enables to create and visualize different types of relations (*realated_to*, *depends_on*, *part_of*) between catalog entries. |
+| [`grouphierarchysddi`](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) |  `1.1.1` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Extends `hierarchy` with pre-defined groups and topics of the SDDI concept. |
+| [`relation`](https://github.com/tum-gis/ckanext-relation-sddi) | `1.0.1` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Enables to create and visualize different types of relations (*realated_to*, *depends_on*, *part_of*) between catalog entries. |
 | [`spatial`](https://github.com/MarijaKnezevic/ckanext-spatial) | `90ba354` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Provides the ability to search for datasets according to a given spatial extent. |
 | [`datesearch`](https://github.com/MarijaKnezevic/ckanext-datesearch) | `1.0.1` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Provides the ability to search for datasets according to a given time frame. The search includes all datasets, in which the time of validity overlaps in at least one second with the search time frame. |
 | [`repeating`](https://github.com/MarijaKnezevic/ckanext-repeating) | `1.0.0` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | This extension provides a way to store repeating fields in CKAN datasets, resources, organizations and groups. |

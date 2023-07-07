@@ -10,12 +10,10 @@ cd sddi-base
 
 # sddi-base:TAG
 docker build . \
-  --no-cache \
   -t "$IMAGE_REPOSITORY/ckan-sddi-base:${IMAGE_TAG}"
 
 # sddi-base:TAG-debug
 docker build . -f Dockerfile.debug \
-  --no-cache \
   --build-arg "BASEIMAGE_REPOSITORY=$IMAGE_REPOSITORY/ckan-sddi-base" \
   --build-arg BASEIMAGE_VERSION=${IMAGE_TAG} \
   -t "$IMAGE_REPOSITORY/ckan-sddi-base:${IMAGE_TAG}-debug"
@@ -27,14 +25,12 @@ cd ../sddi
 
 # sddi:TAG
 docker build . \
-  --no-cache \
   --build-arg "BASEIMAGE_REPOSITORY=$IMAGE_REPOSITORY/ckan-sddi-base" \
   --build-arg BASEIMAGE_VERSION=${IMAGE_TAG} \
   -t "$IMAGE_REPOSITORY/ckan-sddi:${IMAGE_TAG}"
 
 # sddi:TAG-debug
 docker build . \
-  --no-cache \
   --build-arg "BASEIMAGE_REPOSITORY=$IMAGE_REPOSITORY/ckan-sddi-base" \
   --build-arg BASEIMAGE_VERSION=${IMAGE_TAG}-debug \
   -t "$IMAGE_REPOSITORY/ckan-sddi:${IMAGE_TAG}-debug"
@@ -46,14 +42,12 @@ cd ../sddi-social
 
 # sddi-social:TAG
 docker build . \
-  --no-cache \
   --build-arg "BASEIMAGE_REPOSITORY=$IMAGE_REPOSITORY/ckan-sddi" \
   --build-arg BASEIMAGE_VERSION=${IMAGE_TAG} \
   -t "$IMAGE_REPOSITORY/ckan-sddi-social:${IMAGE_TAG}"
 
 # sddi-social:TAG-debug
 docker build . \
-  --no-cache \
   --build-arg "BASEIMAGE_REPOSITORY=$IMAGE_REPOSITORY/ckan-sddi" \
   --build-arg BASEIMAGE_VERSION=${IMAGE_TAG}-debug \
   -t "$IMAGE_REPOSITORY/ckan-sddi-social:${IMAGE_TAG}-debug"

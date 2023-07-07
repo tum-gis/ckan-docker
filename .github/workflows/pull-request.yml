@@ -1,4 +1,5 @@
-name: Test Docker image build
+name: Build/push dev Docker images
+
 on:
   pull_request:
     paths:
@@ -11,71 +12,198 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-images:
+  build-and-push-images:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: write
 
     steps:
-      - name: Checkout repository
+      -
+        name: Parse short sha
+        uses: benjlevesque/short-sha@v1.2
+        id: short-sha
+      -
+        name: Checkout repository
         uses: actions/checkout@v3
+      -
+        name: Log in to the Github Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build image sddi-base
+      # SDDI-BASE
+      -
+        name: Extract metadata (tags, labels) for docker image
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev
+          tags: |
+            type=ref,event=pr,prefix=sddi-base-pr-,suffix=-{{sha}}
+          labels: |
+            maintainer=Chair of Geoinformatics, Technical University of Munich (TUM)
+            org.opencontainers.image.vendor=Chair of Geoinformatics, Technical University of Munich (TUM)
+            org.opencontainers.image.title=ckan-sddi-base-docker-dev
+      -
+        name: Build and publish ${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev:sddi-base-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}
         uses: docker/build-push-action@v4
         with:
+          push: true
           context: sddi-base
-          push: false
-          tags: ghcr.io/tum-gis/ckan-sddi-base:pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
-
-      - name: Build image sddi-base debug
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      -
+        name: Print image name
+        run: |
+          echo "${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev:sddi-base-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}"
+      -
+        name: Extract metadata (tags, labels) for docker image
+        id: meta-debug
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev
+          tags: |
+            type=ref,event=pr,prefix=sddi-base-pr-,suffix=-{{sha}}-debug
+          labels: |
+            maintainer=Chair of Geoinformatics, Technical University of Munich (TUM)
+            org.opencontainers.image.vendor=Chair of Geoinformatics, Technical University of Munich (TUM)
+            org.opencontainers.image.title=ckan-sddi-base-docker-dev-debug
+      -
+        name: Build and publish ${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev:sddi-base-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}-debug
         uses: docker/build-push-action@v4
         with:
+          push: true
           context: sddi-base
           file: sddi-base/Dockerfile.debug
-          push: false
-          tags: ghcr.io/tum-gis/ckan-sddi-base:pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}-debug
+          tags: ${{ steps.meta-debug.outputs.tags }}
+          labels: ${{ steps.meta-debug.outputs.labels }}
           build-args: |
-            BASEIMAGE_REPOSITORY=ghcr.io/tum-gis/ckan-sddi-base
-            BASEIMAGE_VERSION=pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
+            BASEIMAGE_REPOSITORY=${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev
+            BASEIMAGE_VERSION=sddi-base-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}
+      -
+        name: Print image name
+        run: |
+          echo "${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev:sddi-base-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}-debug"
 
-      - name: Build image sddi
+      # SDDI
+      -
+        name: Extract metadata (tags, labels) for docker image
+        id: meta-sddi
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev
+          tags: |
+            type=ref,event=pr,prefix=sddi-pr-,suffix=-{{sha}}
+          labels: |
+            maintainer=Chair of Geoinformatics, Technical University of Munich (TUM)
+            org.opencontainers.image.vendor=Chair of Geoinformatics, Technical University of Munich (TUM)
+            org.opencontainers.image.title=ckan-sddi-docker-dev
+      -
+        name: Build and publish ${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev:sddi-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}
         uses: docker/build-push-action@v4
         with:
+          push: true
           context: sddi
-          push: false
-          tags: ghcr.io/tum-gis/ckan-sddi:pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
+          tags: ${{ steps.meta-sddi.outputs.tags }}
+          labels: ${{ steps.meta-sddi.outputs.labels }}
           build-args: |
-            BASEIMAGE_REPOSITORY=ghcr.io/tum-gis/ckan-sddi-base
-            BASEIMAGE_VERSION=pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
-
-      - name: Build image sddi debug
+            BASEIMAGE_REPOSITORY=${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev
+            BASEIMAGE_VERSION=sddi-base-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}
+      -
+        name: Print image name
+        run: |
+          echo "${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev:sddi-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}"
+      -
+        name: Extract metadata (tags, labels) for docker image
+        id: meta-sddi-debug
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev
+          tags: |
+            type=ref,event=pr,prefix=sddi-pr-,suffix=-{{sha}}-debug
+          labels: |
+            maintainer=Chair of Geoinformatics, Technical University of Munich (TUM)
+            org.opencontainers.image.vendor=Chair of Geoinformatics, Technical University of Munich (TUM)
+            org.opencontainers.image.title=ckan-sddi-docker-dev-debug
+      -
+        name: Build and publish ${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev:sddi-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}-debug
         uses: docker/build-push-action@v4
         with:
+          push: true
           context: sddi
           file: sddi/Dockerfile.debug
-          push: false
-          tags: ghcr.io/tum-gis/ckan-sddi:pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}-debug
+          tags: ${{ steps.meta-sddi-debug.outputs.tags }}
+          labels: ${{ steps.meta-sddi-debug.outputs.labels }}
           build-args: |
-            BASEIMAGE_REPOSITORY=ghcr.io/tum-gis/ckan-sddi
-            BASEIMAGE_VERSION=pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
+            BASEIMAGE_REPOSITORY=${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev
+            BASEIMAGE_VERSION=sddi-base-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}
+      -
+        name: Print image name
+        run: |
+          echo "${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev:sddi-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}-debug"
 
-      - name: Build image sddi-social
+      # SDDI
+      -
+        name: Extract metadata (tags, labels) for docker image
+        id: meta-sddi-social
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev
+          tags: |
+            type=ref,event=pr,prefix=sddi-social-pr-,suffix=-{{sha}}
+          labels: |
+            maintainer=Chair of Geoinformatics, Technical University of Munich (TUM)
+            org.opencontainers.image.vendor=Chair of Geoinformatics, Technical University of Munich (TUM)
+            org.opencontainers.image.title=ckan-sddi-social-docker-dev
+      -
+        name: Build and publish ${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev:sddi-social-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}
         uses: docker/build-push-action@v4
         with:
+          push: true
           context: sddi-social
-          push: false
-          tags: ghcr.io/tum-gis/ckan-sddi-social:pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
+          tags: ${{ steps.meta-sddi-social.outputs.tags }}
+          labels: ${{ steps.meta-sddi-social.outputs.labels }}
           build-args: |
-            BASEIMAGE_REPOSITORY=ghcr.io/tum-gis/ckan-sddi
-            BASEIMAGE_VERSION=pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
-
-      - name: Build image sddi-social debug
+            BASEIMAGE_REPOSITORY=${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev
+            BASEIMAGE_VERSION=sddi-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}
+      -
+        name: Print image name
+        run: |
+          echo "${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev:sddi-social-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}"
+      -
+        name: Extract metadata (tags, labels) for docker image
+        id: meta-sddi-social-debug
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev
+          tags: |
+            type=ref,event=pr,prefix=sddi-social-pr-,suffix=-{{sha}}-debug
+          labels: |
+            maintainer=Chair of Geoinformatics, Technical University of Munich (TUM)
+            org.opencontainers.image.vendor=Chair of Geoinformatics, Technical University of Munich (TUM)
+            org.opencontainers.image.title=ckan-sddi-social-docker-dev-debug
+      -
+        name: Build and publish ${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev:sddi-social-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}-debug
         uses: docker/build-push-action@v4
         with:
+          push: true
           context: sddi-social
           file: sddi-social/Dockerfile.debug
-          push: false
-          tags: ghcr.io/tum-gis/ckan-sddi-social:pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}-debug
+          tags: ${{ steps.meta-sddi-social-debug.outputs.tags }}
+          labels: ${{ steps.meta-sddi-social-debug.outputs.labels }}
           build-args: |
-            BASEIMAGE_REPOSITORY=ghcr.io/tum-gis/ckan-sddi-social
-            BASEIMAGE_VERSION=pr-${{github.event.number}}-${{ github.run_id }}-${{ github.run_attempt }}
+            BASEIMAGE_REPOSITORY=${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev
+            BASEIMAGE_VERSION=sddi-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}
+      -
+        name: Print image name
+        run: |
+          echo "${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev:sddi-social-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}-debug"
