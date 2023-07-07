@@ -2,10 +2,10 @@ name: Build/push dev Docker images
 
 on:
   pull_request:
-    # paths:
-    #   - sddi-base/**
-    #   - sddi/**
-    #   - sddi-social/**
+    paths:
+      - sddi-base/**
+      - sddi/**
+      - sddi-social/**
 
 env:
   REGISTRY: ghcr.io
