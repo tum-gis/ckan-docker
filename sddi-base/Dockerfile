@@ -37,7 +37,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-relation ############################################################
-ARG CKANEXT_RELATION_VERSION="main"
+ARG CKANEXT_RELATION_VERSION="1.0.2"
 ENV CKANEXT_RELATION_VERSION=${CKANEXT_RELATION_VERSION}
 
 RUN set -ex && \
