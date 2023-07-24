@@ -9,8 +9,9 @@ For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 ## [1.1.2] - 2023-07-24
 
 ### Added
-- Option to remove an already created resource has been added tum-gis/ckanext-relation-sddi/pull/10
 
+- Bump tum-gis/ckanext-relation-sddi: `1.0.1` -> `1.0.2`
+  - Option to remove an already created resource has been added. tum-gis/ckanext-relation-sddi#10
 
 ## [1.1.1] - 2023-07-06
 
@@ -125,7 +126,7 @@ for production environments.**
 - Initial release to initialize Github packages.
 - **Images are not functional jet**!
 
-## [template] - YYYY-MM-DD
+## [Unreleased] - YYYY-MM-DD
 
 ### Added
 
@@ -157,7 +158,7 @@ for production environments.**
 
 ### Known issues
 
-[Unreleased]: https://github.com/tum-gis/ckan-docker/compare/0.0.5...HEAD
+[Unreleased]: https://github.com/tum-gis/ckan-docker/compare/1.1.2...HEAD
 [1.1.2]: https://github.com/tum-gis/ckan-docker/compare/1.1.1...1.1.2
 [1.1.1]: https://github.com/tum-gis/ckan-docker/compare/1.1.0...1.1.1
 [1.1.0]: https://github.com/tum-gis/ckan-docker/compare/1.0.1...1.1.0
