@@ -340,4 +340,4 @@ to the SDDI concepts, tools, documentations, education, and funding:
 
 ## :memo: License
 
-This Helm chart is distributed under the Apache License 2.0. See [LICENSE](LICENSE) for more information.
+This Helm chart is distributed under the Apache License 2.0. See [LICENSE](LICENSE) for more information. 
