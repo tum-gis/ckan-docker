@@ -22,19 +22,33 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-hierarchy.git@${CKANEXT_HIERARCHY_VERSION}#egg=ckanext-hierarchy && \
   curl -o /wheels/ckanext-hierarchy.txt https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKANEXT_HIERARCHY_VERSION}/requirements.txt && \
   ls -lah /wheels
-
+  
 # ckanext-grouphierarchy ######################################################
-ARG CKANEXT_SDDI_VERSION="1.1.1"
+ARG CKANEXT_SDDI_VERSION="main"
 ENV CKANEXT_SDDI_VERSION=${CKANEXT_SDDI_VERSION}
 
 RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
-    git+https://github.com/tum-gis/ckanext-grouphierarchy-sddi.git@${CKANEXT_SDDI_VERSION}#egg=ckanext-grouphierarchy && \
+    git+https://github.com/MarijaKnezevic/ckanext-grouphierarchy-sddi.git@${CKANEXT_SDDI_VERSION}#egg=ckanext-grouphierarchy && \
   pip wheel --wheel-dir=/wheels -r \
-    https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/${CKANEXT_SDDI_VERSION}/requirements.txt && \
+    https://raw.githubusercontent.com/MarijaKnezevic/ckanext-grouphierarchy-sddi/${CKANEXT_SDDI_VERSION}/requirements.txt && \
   curl -o /wheels/ckanext-grouphierarchy.txt \
-    https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/${CKANEXT_SDDI_VERSION}/requirements.txt && \
+    https://raw.githubusercontent.com/MarijaKnezevic/ckanext-grouphierarchy-sddi/${CKANEXT_SDDI_VERSION}/requirements.txt && \
   ls -lah /wheels
+
+
+# ckanext-grouphierarchy ######################################################
+#ARG CKANEXT_SDDI_VERSION="1.1.1"
+#ENV CKANEXT_SDDI_VERSION=${CKANEXT_SDDI_VERSION}
+
+#RUN set -ex && \
+#  pip wheel --wheel-dir=/wheels \
+#    git+https://github.com/tum-gis/ckanext-grouphierarchy-sddi.git@${CKANEXT_SDDI_VERSION}#egg=ckanext-grouphierarchy && \
+#  pip wheel --wheel-dir=/wheels -r \
+#    https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/${CKANEXT_SDDI_VERSION}/requirements.txt && \
+#  curl -o /wheels/ckanext-grouphierarchy.txt \
+#    https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/${CKANEXT_SDDI_VERSION}/requirements.txt && \
+#  ls -lah /wheels
 
 # ckanext-relation ############################################################
 ARG CKANEXT_RELATION_VERSION="1.0.2"
