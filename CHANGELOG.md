@@ -10,9 +10,9 @@ For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 
 ### Fixed
 
--  upstream bugfix from [ckanext-grouphierarchy-sddi](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) extension tum-gis/ckanext-grouphierarchy-sddi#17
-    - Default filter "read" for searching datasets by Main Categories/Topics is removed.
--  [Extended licenses list](https://github.com/tum-gis/ckanext-grouphierarchy-sddi/blob/main/ckanext/grouphierarchy/licenses_SDDI.json) required for SDDI is added in upstream repo [ckanext-grouphierarchy-sddi](https://github.com/tum-gis/ckanext-grouphierarchy-sddi)
+- Upstream bugfix from [ckanext-grouphierarchy-sddi](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) extension tum-gis/ckanext-grouphierarchy-sddi#17
+  - Default filter "read" for searching datasets by Main Categories/Topics is removed.
+- [Extended licenses list](https://github.com/tum-gis/ckanext-grouphierarchy-sddi/blob/main/ckanext/grouphierarchy/licenses_SDDI.json) required for SDDI is added in upstream repo [ckanext-grouphierarchy-sddi](https://github.com/tum-gis/ckanext-grouphierarchy-sddi)
 
 ## [1.1.2] - 2023-07-24
 
