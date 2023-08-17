@@ -202,7 +202,7 @@ COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
 
 RUN set -ex && \
   pip install -U pip \
-  pip install markupsafe==2.0.1 && \
+  pip install --upgrade Jinja2 && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
   ckan config-tool "${CKAN_INI}" "ckan.spatial.srid = 4326" && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.search_backend = solr-bbox" && \
@@ -215,5 +215,7 @@ RUN set -ex && \
   chown -R ckan:ckan ${APP_DIR} ${CKAN_STORAGE_PATH} && \
   # Remove wheels
   rm -rf ${APP_DIR}/ext_wheels
+
+    # pip install markupsafe==2.0.1 && \
 
 USER ckan
