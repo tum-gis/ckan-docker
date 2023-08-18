@@ -152,8 +152,8 @@ This registry will be cleared periodically.
 
 ### CKAN and CKAN extension versions
 
-CKAN version: `2.9.8`
-CKAN base image: `ghcr.io/keitaroinc/ckan:2.9.8-focal`
+CKAN version: `2.10.1`
+CKAN base image: `ckan/ckan-base`
 
 The CKAN catalog platform uses several extensions to provide the functionality
 needed for the SDDI concept. The table below lists the included extensions with

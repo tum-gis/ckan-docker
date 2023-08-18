@@ -3,7 +3,7 @@
 # #############################################################################
 ARG BASEIMAGE_REPOSITORY=ghcr.io/tum-gis/ckan-sddi
 ARG BASEIMAGE_VERSION=latest
-ARG CKAN_VERSION_BUILD_STAGE=2.9.8-dev
+ARG CKAN_VERSION_BUILD_STAGE=2.10.1-dev
 
 FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
 
@@ -28,7 +28,7 @@ USER root
 
 ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
   hierarchy_display hierarchy_form display_group relation \
-  spatial_metadata spatial_query datesearch repeating composite scheming_datasets \
+  spatial_metadata spatial_query datesearch repeating scheming_datasets \
   resource_proxy geo_view geojson_view wmts_view shp_view \
   dcat dcat_json_interface structured_data \
   restricted \

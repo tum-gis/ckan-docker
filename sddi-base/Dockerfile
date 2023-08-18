@@ -1,9 +1,9 @@
 ###############################################################################
 # Build stage
 ###############################################################################
-ARG CKAN_VERSION_BUILD_STAGE=2.9.8-dev
-ARG CKAN_VERSION_BUILD_SPATIAL=2.9.8-focal
-ARG CKAN_VERSION_RUNTIME_STAGE=2.9.8-focal
+ARG CKAN_VERSION_BUILD_STAGE=2.10.1-dev
+ARG CKAN_VERSION_BUILD_SPATIAL=2.10.1-dev
+ARG CKAN_VERSION_RUNTIME_STAGE=2.10.1
 
 FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
 
@@ -68,15 +68,15 @@ RUN set -ex && \
     git+${CKANEXT_DATESEARCH_VERSION_GITHUB_URL}.git@${CKANEXT_DATESEARCH_VERSION}#egg=ckanext-datesearch
 
 # ckanext-composite ###########################################################
-ARG CKANEXT_COMPOSITE_VERSION="1e6d7bb"
-ENV CKANEXT_COMPOSITE_VERSION=${CKANEXT_COMPOSITE_VERSION}
-ENV CKANEXT_COMPOSITE_GITHUB_URL="https://github.com/EnviDat/ckanext-composite"
+# ARG CKANEXT_COMPOSITE_VERSION="1e6d7bb"
+# ENV CKANEXT_COMPOSITE_VERSION=${CKANEXT_COMPOSITE_VERSION}
+# ENV CKANEXT_COMPOSITE_GITHUB_URL="https://github.com/EnviDat/ckanext-composite"
 
-RUN set -ex && \
-  pip install -r \
-    https://raw.githubusercontent.com/EnviDat/ckanext-composite/${CKANEXT_COMPOSITE_VERSION}/dev-requirements.txt && \
-  pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_COMPOSITE_GITHUB_URL}.git@${CKANEXT_COMPOSITE_VERSION}#egg=ckanext-composite
+# RUN set -ex && \
+#   pip install -r \
+#     https://raw.githubusercontent.com/EnviDat/ckanext-composite/${CKANEXT_COMPOSITE_VERSION}/dev-requirements.txt && \
+#   pip wheel --wheel-dir=/wheels \
+#     git+${CKANEXT_COMPOSITE_GITHUB_URL}.git@${CKANEXT_COMPOSITE_VERSION}#egg=ckanext-composite
 
 # ckanext-repeating ###########################################################
 ARG CKANEXT_REPEATING_VERSION="1.0.0"
@@ -88,46 +88,55 @@ RUN set -ex && \
     git+${CKANEXT_REPEATING_GITHUB_URL}.git@${CKANEXT_REPEATING_VERSION}#egg=ckanext-repeating
 
 # ckanext-spatial #############################################################
-FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_BUILD_SPATIAL} as extbuild-spatial
+FROM ckan/ckan-base:${CKAN_VERSION_BUILD_SPATIAL} as extbuild-spatial
 
-ARG CKANEXT_SPATIAL_VERSION="90ba354"
+ARG CKANEXT_SPATIAL_VERSION="master"
 ENV CKANEXT_SPATIAL_VERSION=${CKANEXT_SPATIAL_VERSION}
 
 USER root
 
 # Install any system packages necessary to build extensions
 RUN set -ex && \
- apt-get update && \
- apt-get install -y --no-install-recommends \
-  python3-dev python3-pip libxml2-dev libxslt1-dev libgeos-c1v5 python-is-python3 && \
-  mkdir -p /wheels && \
-  pip install -U pip
+  apk update && \
+  apk add --no-cache \
+    geos \
+    geos-dev \
+    proj-util \
+    proj-dev \
+    libxml2 \
+    libxslt \
+    gcc \
+    libxml2-dev \
+    libxslt-dev
 
 RUN set -ex && \
-  pip install -r https://raw.githubusercontent.com/MarijaKnezevic/ckanext-spatial/${CKANEXT_SPATIAL_VERSION}/requirements.txt && \
+  mkdir -p /wheels && \
+  pip install --upgrade pip && \
+  pip install -r https://raw.githubusercontent.com/ckan/ckanext-spatial/${CKANEXT_SPATIAL_VERSION}/requirements.txt && \
   curl -o /wheels/ckanext-spatial.txt \
-    https://raw.githubusercontent.com/MarijaKnezevic/ckanext-spatial/${CKANEXT_SPATIAL_VERSION}/requirements.txt && \
-  pip install -r https://raw.githubusercontent.com/MarijaKnezevic/ckanext-spatial/${CKANEXT_SPATIAL_VERSION}/requirements-postgis.txt && \
-  curl -o /wheels/ckanext-spatial-postgis.txt \
-    https://raw.githubusercontent.com/MarijaKnezevic/ckanext-spatial/${CKANEXT_SPATIAL_VERSION}/requirements-postgis.txt && \
-    ls -lah /wheels
+    https://raw.githubusercontent.com/ckan/ckanext-spatial/${CKANEXT_SPATIAL_VERSION}/requirements.txt
+
+  # pip install -r https://raw.githubusercontent.com/ckan/ckanext-spatial/${CKANEXT_SPATIAL_VERSION}/requirements-postgis.txt && \
+  # curl -o /wheels/ckanext-spatial-postgis.txt \
+  #   https://raw.githubusercontent.com/ckan/ckanext-spatial/${CKANEXT_SPATIAL_VERSION}/requirements-postgis.txt && \
+  #   ls -lah /wheels
 
 RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
-    git+https://github.com/MarijaKnezevic/ckanext-spatial.git@${CKANEXT_SPATIAL_VERSION}#egg=ckanext-spatial
+    git+https://github.com/ckan/ckanext-spatial.git@${CKANEXT_SPATIAL_VERSION}#egg=ckanext-spatial
 
 ###############################################################################
 # Runtime stage
 ###############################################################################
-FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
+FROM ckan/ckan-base:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 
 ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
   hierarchy_display hierarchy_form display_group relation \
-  spatial_metadata spatial_query datesearch repeating composite scheming_datasets \
+  spatial_metadata spatial_query datesearch repeating scheming_datasets \
   envvars"
 
 # Extra env for compatibility with ckan/base Docker images for downstream k8s
-ENV CKAN_INI=${APP_DIR}/production.ini
+ENV CKAN_INI=${APP_DIR}/ckan.ini
 ENV CKAN_STORAGE_PATH=/var/lib/ckan
 ENV TZ="UTC"
 
@@ -135,11 +144,17 @@ USER root
 
 # Install any system packages necessary to build extensions
 RUN set -ex && \
-  apt-get update && \
-  apt-get install -y --no-install-recommends \
-    libxml2-dev libxslt1-dev libgeos-c1v5 && \
-    pip install --no-cache-dir -U pip && \
-    rm -rf /var/lib/apt/lists/*
+  apk update && \
+  apk add --no-cache \
+    geos \
+    geos-dev \
+    proj-util \
+    proj-dev \
+    libxml2 \
+    libxslt \
+    gcc \
+    libxml2-dev \
+    libxslt-dev
 
 # Copy python wheels from build stage
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
@@ -163,8 +178,8 @@ RUN set -ex && \
 # ckanext-spatial #############################################################
 RUN set -ex && \
   pip install -r ${APP_DIR}/ext_wheels/ckanext-spatial.txt && \
-  pip install -r ${APP_DIR}/ext_wheels/ckanext-spatial-postgis.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-spatial
+  # pip install -r ${APP_DIR}/ext_wheels/ckanext-spatial-postgis.txt && \
 
 # ckanext-scheming ############################################################
 RUN set -ex && \
@@ -175,22 +190,25 @@ RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-datesearch
 
 # ckanext-composite ###########################################################
-RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-composite
+# RUN set -ex && \
+#   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-composite
 
 # ckanext-repeating ###########################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-repeating
 
 # Copy init scripts and additional files
-COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
+# COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
+COPY --chown=ckan:ckan initScripts/ /docker-entrypoint.d/
 
 RUN set -ex && \
+  pip install -U pip && \
+  pip install --upgrade Jinja2 && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
   ckan config-tool "${CKAN_INI}" "ckan.spatial.srid = 4326" && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.search_backend = solr-bbox" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_schemas = ckanext.scheming:ckan_dataset.yaml" && \
-  ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json ckanext.repeating:presets.json ckanext.composite:presets.json" && \
+  ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json ckanext.repeating:presets.json" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
   ckan config-tool "${CKAN_INI}" "licenses_group_url = https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/main/ckanext/grouphierarchy/licenses_SDDI.json" && \
   echo "${TZ}" > /etc/timezone && \
