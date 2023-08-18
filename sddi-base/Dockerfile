@@ -136,7 +136,7 @@ ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
   envvars"
 
 # Extra env for compatibility with ckan/base Docker images for downstream k8s
-ENV CKAN_INI=${APP_DIR}/production.ini
+ENV CKAN_INI=${APP_DIR}/ckan.ini
 ENV CKAN_STORAGE_PATH=/var/lib/ckan
 ENV TZ="UTC"
 
@@ -198,10 +198,11 @@ RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-repeating
 
 # Copy init scripts and additional files
-COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
+# COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
+COPY --chown=ckan:ckan initScripts/ /docker-entrypoint.d/
 
 RUN set -ex && \
-  pip install -U pip \
+  pip install -U pip && \
   pip install --upgrade Jinja2 && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
   ckan config-tool "${CKAN_INI}" "ckan.spatial.srid = 4326" && \
@@ -215,7 +216,5 @@ RUN set -ex && \
   chown -R ckan:ckan ${APP_DIR} ${CKAN_STORAGE_PATH} && \
   # Remove wheels
   rm -rf ${APP_DIR}/ext_wheels
-
-    # pip install markupsafe==2.0.1 && \
 
 USER ckan
