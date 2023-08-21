@@ -1,9 +1,9 @@
 ###############################################################################
 # Build stage
 ###############################################################################
-ARG CKAN_VERSION_BUILD_STAGE=2.9.8-dev
-ARG CKAN_VERSION_BUILD_SPATIAL=2.9.8-focal
-ARG CKAN_VERSION_RUNTIME_STAGE=2.9.8-focal
+ARG CKAN_VERSION_BUILD_STAGE=2.9.9-dev
+ARG CKAN_VERSION_BUILD_SPATIAL=2.9.9-focal
+ARG CKAN_VERSION_RUNTIME_STAGE=2.9.9-focal
 
 FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
 

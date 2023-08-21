@@ -3,7 +3,7 @@
 # #############################################################################
 ARG BASEIMAGE_REPOSITORY=ghcr.io/tum-gis/ckan-sddi
 ARG BASEIMAGE_VERSION=latest
-ARG CKAN_VERSION_BUILD_STAGE=2.9.8-dev
+ARG CKAN_VERSION_BUILD_STAGE=2.9.9-dev
 
 FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
 

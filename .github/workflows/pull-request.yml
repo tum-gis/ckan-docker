@@ -149,7 +149,7 @@ jobs:
         run: |
           echo "${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev:sddi-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}-debug"
 
-      # SDDI
+      # SDDI-SOCIAL
       -
         name: Extract metadata (tags, labels) for docker image
         id: meta-sddi-social
