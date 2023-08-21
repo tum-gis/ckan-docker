@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 
+## [1.2.0] - 2023-08-21
+
+### Changed
+
+- Update to CKAN `2.9.9`
+
+### Fixed
+
 ## [1.1.3] - 2023-08-03
 
 ### Fixed
