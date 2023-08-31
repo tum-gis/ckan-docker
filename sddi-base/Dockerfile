@@ -87,6 +87,19 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_REPEATING_GITHUB_URL}.git@${CKANEXT_REPEATING_VERSION}#egg=ckanext-repeating
 
+# ckanext-security ############################################################
+ARG CKANEXT_SECURITY_VERSION="v3.0.4"
+ENV CKANEXT_SECURITY_VERSION=${CKANEXT_SECURITY_VERSION}
+ENV CKANEXT_SECURITY_GITHUB_URL="https://github.com/data-govt-nz/ckanext-security"
+
+RUN set -ex && \
+  pip wheel --wheel-dir=/wheels -r \
+    https://raw.githubusercontent.com/data-govt-nz/ckanext-security/${CKANEXT_SECURITY_VERSION}/requirements.txt && \
+  curl -o /wheels/ckanext-security.txt \
+    https://raw.githubusercontent.com/data-govt-nz/ckanext-security/${CKANEXT_SECURITY_VERSION}/requirements.txt && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_SECURITY_GITHUB_URL}.git@${CKANEXT_SECURITY_VERSION}#egg=ckanext-security
+
 # ckanext-spatial #############################################################
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_BUILD_SPATIAL} as extbuild-spatial
 
@@ -181,6 +194,11 @@ RUN set -ex && \
 # ckanext-repeating ###########################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-repeating
+
+# ckanext-security ############################################################
+RUN set -ex && \
+  pip install -r ${APP_DIR}/ext_wheels/ckanext-security.txt && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-security
 
 # Copy init scripts and additional files
 COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
