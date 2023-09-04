@@ -204,7 +204,6 @@ def make_flask_stack(conf):
         session_opts['session.data_dir'] = '{data_dir}/sessions'.format(
             data_dir=cache_dir)
 
-    app.wsgi_app = RootPathMiddleware(app.wsgi_app, session_opts)
     app.session_interface = BeakerSessionInterface()
 
     # Add Jinja2 extensions and filters
