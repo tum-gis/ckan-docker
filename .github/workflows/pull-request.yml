@@ -1,6 +1,7 @@
-name: Build/push dev Docker images
+name: Build/push dev Docker images for PRs
 
 on:
+  workflow_dispatch:
   pull_request:
     paths:
       - sddi-base/**
