@@ -1,9 +1,9 @@
 ###############################################################################
 # Build stage
 ###############################################################################
-ARG CKAN_VERSION_BUILD_STAGE=2.10.1-dev
-ARG CKAN_VERSION_BUILD_SPATIAL=2.10.1-dev
-ARG CKAN_VERSION_RUNTIME_STAGE=2.10.1
+ARG CKAN_VERSION_BUILD_STAGE=2.9.9-dev
+ARG CKAN_VERSION_BUILD_SPATIAL=2.9.9-dev
+ARG CKAN_VERSION_RUNTIME_STAGE=2.9.9
 
 FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
 
