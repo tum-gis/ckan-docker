@@ -223,10 +223,6 @@ COPY --chown=ckan:ckan who.ini ${APP_DIR}/who.ini
 COPY --chown=ckan:ckan who.ini ${CKAN_DIR}/who.ini
 COPY --chown=ckan:ckan who.ini ${CKAN_DIR}/ckan/config/who.ini
 
-# Download
-# ADD https://raw.githubusercontent.com/data-govt-nz/ckanext-security/${CKANEXT_SECURITY_VERSION}/ckanext-security.patch \
-#  /tmp/sec.patch
-
 COPY --chown=ckan:ckan flask_app.py ${CKAN_DIR}/ckan/config/middleware/flask_app.py
 COPY --chown=ckan:ckan pylons_app.py ${CKAN_DIR}/ckan/config/middleware/pylons_app.py
 
