@@ -87,6 +87,19 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_REPEATING_GITHUB_URL}.git@${CKANEXT_REPEATING_VERSION}#egg=ckanext-repeating
 
+# ckanext-repeating ###########################################################
+ARG CKANEXT_CALMAV_VERSION="master"
+ENV CKANEXT_CALMAV_VERSION=${CKANEXT_CALMAV_VERSION}
+ENV CKANEXT_CALMAV_GITHUB_URL="https://github.com/mutantsan/ckanext-clamav"
+
+RUN set -ex && \
+  pip wheel --wheel-dir=/wheels -r \
+    https://raw.githubusercontent.com/mutantsan/ckanext-clamav/${CKANEXT_CALMAV_VERSION}/requirements.txt && \
+  curl -o /wheels/ckanext-clamav.txt \
+    https://raw.githubusercontent.com/mutantsan/ckanext-clamav/${CKANEXT_CALMAV_VERSION}/requirements.txt && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_CALMAV_GITHUB_URL}.git@${CKANEXT_CALMAV_VERSION}#egg=ckanext-clamav
+
 # ckanext-spatial #############################################################
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_BUILD_SPATIAL} as extbuild-spatial
 
@@ -124,6 +137,7 @@ FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
   hierarchy_display hierarchy_form display_group relation \
   spatial_metadata spatial_query datesearch repeating composite scheming_datasets \
+  clamav \
   envvars"
 
 # Extra env for compatibility with ckan/base Docker images for downstream k8s
@@ -137,7 +151,7 @@ USER root
 RUN set -ex && \
   apt-get update && \
   apt-get install -y --no-install-recommends \
-    libxml2-dev libxslt1-dev libgeos-c1v5 && \
+    libxml2-dev libxslt1-dev libgeos-c1v5 clamav clamav-daemon && \
     pip install --no-cache-dir -U pip && \
     rm -rf /var/lib/apt/lists/*
 
@@ -181,6 +195,11 @@ RUN set -ex && \
 # ckanext-repeating ###########################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-repeating
+
+# ckanext-clamav ##############################################################
+RUN set -ex && \
+  pip install -r ${APP_DIR}/ext_wheels/ckanext-clamav.txt && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-clamav
 
 # Copy init scripts and additional files
 COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d

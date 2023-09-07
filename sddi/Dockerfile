@@ -57,7 +57,7 @@ ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
   spatial_metadata spatial_query datesearch repeating composite scheming_datasets \
   resource_proxy geo_view geojson_view wmts_view shp_view \
   dcat dcat_json_interface structured_data \
-  restricted \
+  restricted clamav \
   envvars"
 
 # Copy python wheels from build stage
