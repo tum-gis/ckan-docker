@@ -151,7 +151,7 @@ USER root
 RUN set -ex && \
   apt-get update && \
   apt-get install -y --no-install-recommends \
-    libxml2-dev libxslt1-dev libgeos-c1v5 clamav clamav-daemon && \
+    libxml2-dev libxslt1-dev libgeos-c1v5 clamav && \
     pip install --no-cache-dir -U pip && \
     rm -rf /var/lib/apt/lists/*
 
