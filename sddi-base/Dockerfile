@@ -88,7 +88,7 @@ RUN set -ex && \
     git+${CKANEXT_REPEATING_GITHUB_URL}.git@${CKANEXT_REPEATING_VERSION}#egg=ckanext-repeating
 
 # ckanext-password-policy #####################################################
-ARG CKANEXT_PASSWORD_POLICY_VERSION="master"
+ARG CKANEXT_PASSWORD_POLICY_VERSION="montreal"
 ENV CKANEXT_PASSWORD_POLICY_VERSION=${CKANEXT_PASSWORD_POLICY_VERSION}
 ENV CKANEXT_PASSWORD_POLICY_GITHUB_URL="https://github.com/keitaroinc/ckanext-password-policy"
 
