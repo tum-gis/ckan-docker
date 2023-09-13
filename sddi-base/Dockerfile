@@ -213,9 +213,9 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json ckanext.repeating:presets.json ckanext.composite:presets.json" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
   ckan config-tool "${CKAN_INI}" "licenses_group_url = https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/main/ckanext/grouphierarchy/licenses_SDDI.json" && \
-  ckan config-tool "${CKAN_INI}" "ckan.password_policy.password_length = 12" && \
-  ckan config-tool "${CKAN_INI}" "ckan.password_policy.failed_logins = 3" && \
-  ckan config-tool "${CKAN_INI}" "ckan.password_policy.user_locked_time = 600" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.password_policy.password_length = 12" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.password_policy.failed_logins = 3" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.password_policy.user_locked_time = 600" && \
   echo "${TZ}" > /etc/timezone && \
   mkdir -p ${CKAN_STORAGE_PATH} && \
   chown -R ckan:ckan ${APP_DIR} ${CKAN_STORAGE_PATH} && \
