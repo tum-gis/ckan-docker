@@ -87,6 +87,19 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_REPEATING_GITHUB_URL}.git@${CKANEXT_REPEATING_VERSION}#egg=ckanext-repeating
 
+# ckanext-password-policy #####################################################
+ARG CKANEXT_PASSWORD_POLICY_VERSION="master"
+ENV CKANEXT_PASSWORD_POLICY_VERSION=${CKANEXT_PASSWORD_POLICY_VERSION}
+ENV CKANEXT_PASSWORD_POLICY_GITHUB_URL="https://github.com/keitaroinc/ckanext-password-policy"
+
+RUN set -ex && \
+  pip install -r \
+    https://raw.githubusercontent.com/keitaroinc/ckanext-password-policy/${CKANEXT_PASSWORD_POLICY_VERSION}/requirements.txt && \
+  curl -o /wheels/ckanext-password-policy.txt \
+    https://raw.githubusercontent.com/keitaroinc/ckanext-password-policy/${CKANEXT_PASSWORD_POLICY_VERSION}/requirements.txt && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_PASSWORD_POLICY_GITHUB_URL}.git@${CKANEXT_PASSWORD_POLICY_VERSION}#egg=ckanext-password-policy
+
 # ckanext-spatial #############################################################
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_BUILD_SPATIAL} as extbuild-spatial
 
@@ -124,6 +137,7 @@ FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
   hierarchy_display hierarchy_form display_group relation \
   spatial_metadata spatial_query datesearch repeating composite scheming_datasets \
+  password_policy \
   envvars"
 
 # Extra env for compatibility with ckan/base Docker images for downstream k8s
@@ -182,8 +196,14 @@ RUN set -ex && \
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-repeating
 
+# ckanext-password-policy #####################################################
+RUN set -ex && \
+  pip install -r ${APP_DIR}/ext_wheels/ckanext-password-policy.txt && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-password-policy
+
 # Copy init scripts and additional files
 COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
+COPY --chown=ckan:ckan who.ini ${APP_DIR}/who.ini
 
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
@@ -193,6 +213,9 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json ckanext.repeating:presets.json ckanext.composite:presets.json" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
   ckan config-tool "${CKAN_INI}" "licenses_group_url = https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/main/ckanext/grouphierarchy/licenses_SDDI.json" && \
+  ckan config-tool "${CKAN_INI}" "ckan.password_policy.password_length = 12" && \
+  ckan config-tool "${CKAN_INI}" "ckan.password_policy.failed_logins = 3" && \
+  ckan config-tool "${CKAN_INI}" "ckan.password_policy.user_locked_time = 600" && \
   echo "${TZ}" > /etc/timezone && \
   mkdir -p ${CKAN_STORAGE_PATH} && \
   chown -R ckan:ckan ${APP_DIR} ${CKAN_STORAGE_PATH} && \
