@@ -1,9 +1,9 @@
 ###############################################################################
 # Build stage
 ###############################################################################
-ARG CKAN_VERSION_BUILD_STAGE=2.9.8-dev
-ARG CKAN_VERSION_BUILD_SPATIAL=2.9.8-focal
-ARG CKAN_VERSION_RUNTIME_STAGE=2.9.8-focal
+ARG CKAN_VERSION_BUILD_STAGE=2.9.9-dev
+ARG CKAN_VERSION_BUILD_SPATIAL=2.9.9-focal
+ARG CKAN_VERSION_RUNTIME_STAGE=2.9.9-focal
 
 FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
 
@@ -24,7 +24,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-grouphierarchy ######################################################
-ARG CKANEXT_SDDI_VERSION="1.1.1"
+ARG CKANEXT_SDDI_VERSION="1.1.2"
 ENV CKANEXT_SDDI_VERSION=${CKANEXT_SDDI_VERSION}
 
 RUN set -ex && \
@@ -37,7 +37,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-relation ############################################################
-ARG CKANEXT_RELATION_VERSION="1.0.1"
+ARG CKANEXT_RELATION_VERSION="1.0.2"
 ENV CKANEXT_RELATION_VERSION=${CKANEXT_RELATION_VERSION}
 
 RUN set -ex && \
@@ -87,6 +87,21 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_REPEATING_GITHUB_URL}.git@${CKANEXT_REPEATING_VERSION}#egg=ckanext-repeating
 
+# ckanext-harvest ###########################################################
+ARG CKANEXT_HARVEST_VERSION="v1.5.6"
+ENV CKANEXT_HARVEST_VERSION=${CKANEXT_HARVEST_VERSION}
+ENV CKANEXT_HARVEST_GITHUB_URL="https://github.com/ckan/ckanext-harvest.git"
+
+RUN set -ex && \
+    mkdir -p /wheels && \
+    pip install -r https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/dev-requirements.txt
+
+RUN set -ex && \
+  pip wheel --wheel-dir=/wheels -r https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt && \
+  pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-harvest.git@${CKANEXT_HARVEST_VERSION}#egg=ckanext-harvest && \
+  curl -o /wheels/ckanext-harvest.txt https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt && \
+  ls -lah /wheels
+
 # ckanext-spatial #############################################################
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_BUILD_SPATIAL} as extbuild-spatial
 
@@ -123,7 +138,7 @@ FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 
 ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
   hierarchy_display hierarchy_form display_group relation \
-  spatial_metadata spatial_query datesearch repeating composite scheming_datasets \
+  spatial_metadata spatial_query datesearch repeating composite scheming_datasets harvest ckan_harvester\
   envvars"
 
 # Extra env for compatibility with ckan/base Docker images for downstream k8s
@@ -178,6 +193,10 @@ RUN set -ex && \
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-composite
 
+# ckanext-harvest ###########################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-harvest
+ 
 # ckanext-repeating ###########################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-repeating
@@ -192,6 +211,8 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_schemas = ckanext.scheming:ckan_dataset.yaml" && \
   ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json ckanext.repeating:presets.json ckanext.composite:presets.json" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
+  ckan config-tool "${CKAN_INI}" "licenses_group_url = https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/main/ckanext/grouphierarchy/licenses_SDDI.json" && \
+  ckan config-tool "${CKAN_INI}" "ckan.auth.create_user_via_web = true" && \
   echo "${TZ}" > /etc/timezone && \
   mkdir -p ${CKAN_STORAGE_PATH} && \
   chown -R ckan:ckan ${APP_DIR} ${CKAN_STORAGE_PATH} && \
