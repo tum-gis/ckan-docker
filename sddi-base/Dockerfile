@@ -88,9 +88,21 @@ RUN set -ex && \
     git+${CKANEXT_REPEATING_GITHUB_URL}.git@${CKANEXT_REPEATING_VERSION}#egg=ckanext-repeating
 
 # ckanext-harvest ###########################################################
+
 ARG CKANEXT_HARVEST_VERSION="v1.5.6"
 ENV CKANEXT_HARVEST_VERSION=${CKANEXT_HARVEST_VERSION}
 ENV CKANEXT_HARVEST_GITHUB_URL="https://github.com/ckan/ckanext-harvest.git"
+
+# Install necessary packages to build extensions
+RUN apk add --no-cache \
+    python3-dev \
+    gcc \
+    g++ \
+    libffi-dev \
+    openssl-dev \
+    rust \
+    cargo
+
 
 RUN set -ex && \
     mkdir -p /wheels && \
@@ -194,9 +206,9 @@ RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-composite
 
 # ckanext-harvest ###########################################################
-RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-harvest
- 
+RUN pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-harvest && \
+    pip install --no-index --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-harvest.txt
+
 # ckanext-repeating ###########################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-repeating
