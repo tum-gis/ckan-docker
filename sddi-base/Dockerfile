@@ -138,7 +138,7 @@ FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 
 ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
   hierarchy_display hierarchy_form display_group relation \
-  spatial_metadata spatial_query datesearch repeating composite scheming_datasets harvest ckan_harvester\
+  spatial_metadata spatial_query datesearch repeating composite scheming_datasets harvest ckan_harvester \
   envvars"
 
 # Extra env for compatibility with ckan/base Docker images for downstream k8s
