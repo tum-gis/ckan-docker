@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 
+## [1.2.2-twinby-master] - 2023-10-14
+
+### Added
+- This version is just for purpose of the master catalog in [TwinBy](https://www.twinby.bayern/de/startseite) Project.
+  - in this version upload option is disabled
+
 ## [1.2.1] - 2023-10-14
 
 ### Fixed
@@ -187,6 +193,7 @@ for production environments.**
 ### Known issues
 
 [Unreleased]: https://github.com/tum-gis/ckan-docker/compare/1.2.0...HEAD
+[1.2.2-twinby-master]: https://github.com/tum-gis/ckan-docker/compare/1.2.1...1.2.2-twinby-master
 [1.2.1]: https://github.com/tum-gis/ckan-docker/compare/1.2.0...1.2.1
 [1.2.0]: https://github.com/tum-gis/ckan-docker/compare/1.1.3...1.2.0
 [1.1.3]: https://github.com/tum-gis/ckan-docker/compare/1.1.2...1.1.3
