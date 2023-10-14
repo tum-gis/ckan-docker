@@ -214,6 +214,7 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.password_policy.password_length = 12" && \
   ckan config-tool "${CKAN_INI}" "ckan.password_policy.failed_logins = 3" && \
   ckan config-tool "${CKAN_INI}" "ckan.password_policy.user_locked_time = 600" && \
+  ckan config-tool "${CKAN_INI}" "ckan.max_resource_size = 0" && \
   echo "${TZ}" > /etc/timezone && \
   mkdir -p ${CKAN_STORAGE_PATH} && \
   chown -R ckan:ckan ${APP_DIR} ${CKAN_STORAGE_PATH} && \
