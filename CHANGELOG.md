@@ -6,18 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 
-## [1.2.1] - 2023-10-14
-
-### Fixed
-- Upstream bugfix for pentest in [ckanext-datesearch](https://github.com/tum-gis/ckanext-datesearch) extension tum-gis/ckanext-datesearch/issues/1
-- Upstream bugfix for pentest in [ckanext-grouphierarchy-sddi](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) extension tum-gis/ckan-docker/pull/40
-    - Reducing the number of emails sent for the "Forgot your password?" function
-    - Cross-Site-Scripting problems mentioned [here](https://github.com/tum-gis/ckan-docker/pull/40)
+## [1.3.0] - 2023-10-15
 
 ### Added
-- other other default basemap since the default basemap used in v1.2.0 is not going to be supported anymore ckan/ckanext-spatial/issues/317
 
-  
+- Changed default basemap in map views, see ckan/ckanext-spatial#317
+
+### Changed
+
+- Upstream bugfix for pentest in [ckanext-datesearch](https://github.com/tum-gis/ckanext-datesearch)
+  extension tum-gis/ckanext-datesearch#1
+- Upstream bugfix for pentest in [ckanext-grouphierarchy-sddi](https://github.com/tum-gis/ckanext-grouphierarchy-sddi)
+  extension tum-gis/ckan-docker#40
+  - Limit emails sent for the "Forgot your password?" function
+  - Cross-Site-Scripting problems mentioned [here](https://github.com/tum-gis/ckan-docker/pull/40)
+
 ## [1.2.0] - 2023-08-21
 
 ### Changed
@@ -104,7 +107,7 @@ for production environments.**
 - Added `CKAN_INI` env var for CKAN config.ini file path for better compatibility with
   official CKAN images
 - Set timezone using `TZ` env var
-- Allow setting runtime base image with ` BASEIMAGE_REPOSITORY` build arg
+- Allow setting runtime base image with `BASEIMAGE_REPOSITORY` build arg
 
 ### Changed
 
@@ -186,8 +189,8 @@ for production environments.**
 
 ### Known issues
 
-[Unreleased]: https://github.com/tum-gis/ckan-docker/compare/1.2.0...HEAD
-[1.2.1]: https://github.com/tum-gis/ckan-docker/compare/1.2.0...1.2.1
+[Unreleased]: https://github.com/tum-gis/ckan-docker/compare/1.3.0...HEAD
+[1.3.0]: https://github.com/tum-gis/ckan-docker/compare/1.2.0...1.3.0
 [1.2.0]: https://github.com/tum-gis/ckan-docker/compare/1.1.3...1.2.0
 [1.1.3]: https://github.com/tum-gis/ckan-docker/compare/1.1.2...1.1.3
 [1.1.2]: https://github.com/tum-gis/ckan-docker/compare/1.1.1...1.1.2
