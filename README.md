@@ -133,18 +133,28 @@ Debug images are available starting from `v0.0.6`.
 > **Warning**: The debug image versions should not be used in a production environment!
 > With debug mode enabled, a visitor to your site could execute malicious commands.
 
-Furthermore, for each commit to a [Pull request](https://github.com/tum-gis/ckan-docker/pulls) all image flavors are build. These images are published in the
+Furthermore, for each commit to a [Pull request](https://github.com/tum-gis/ckan-docker/pulls) all image flavors are build.
+These images are published in the
 [`ckan-sddi-dev`](https://github.com/orgs/tum-gis/packages/container/package/ckan-sddi-dev)
 package. Images are named following this pattern:
 
+`ghcr.io/tum-gis/ckan-sddi-dev:<IMAGE FLAVOR>-pr-<PR NUMBER>-[-debug]`
 `ghcr.io/tum-gis/ckan-sddi-dev:<IMAGE FLAVOR>-pr-<PR NUMBER>-<SHORT-SHA>[-debug]`
+
+The image without the `SHORT-SHA` refer to the *latest* build of a pull request.
 
 For instance, for commit 19a2e64 to PR tum-gis/ckan-docker#26 following images are build:
 
+- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-base-pr-26`
+- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-base-pr-26-debug`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-base-pr-26-19a2e64`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-base-pr-26-19a2e64-debug`
+- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26`
+- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-debug`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-19a2e64`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-19a2e64-debug`
+- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26`
+- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-debug`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-19a2e64`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-19a2e64-debug`
 
