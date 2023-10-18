@@ -8,6 +8,18 @@ For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 
 ## [1.2.0] - 2023-08-21
 
+### Added
+
+- Extended workflows to create a *latest* image for each pull request. The latest image will
+  be tagged following this pattern:
+
+  - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-base-pr-${{github.event.number}}`
+  - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-base-pr-${{github.event.number}}-debug`
+  - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-${{github.event.number}}`
+  - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-${{github.event.number}}-debug`
+  - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-${{github.event.number}}`
+  - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-${{github.event.number}}-debug`
+
 ### Changed
 
 - Update to CKAN `2.9.9`
