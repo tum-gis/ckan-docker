@@ -87,7 +87,7 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_REPEATING_GITHUB_URL}.git@${CKANEXT_REPEATING_VERSION}#egg=ckanext-repeating
 
-# ckanext-repeating ###########################################################
+# ckanext-clamav ##############################################################
 ARG CKANEXT_CALMAV_VERSION="master"
 ENV CKANEXT_CALMAV_VERSION=${CKANEXT_CALMAV_VERSION}
 ENV CKANEXT_CALMAV_GITHUB_URL="https://github.com/mutantsan/ckanext-clamav"
