@@ -133,18 +133,28 @@ Debug images are available starting from `v0.0.6`.
 > **Warning**: The debug image versions should not be used in a production environment!
 > With debug mode enabled, a visitor to your site could execute malicious commands.
 
-Furthermore, for each commit to a [Pull request](https://github.com/tum-gis/ckan-docker/pulls) all image flavors are build. These images are published in the
+Furthermore, for each commit to a [Pull request](https://github.com/tum-gis/ckan-docker/pulls) all image flavors are build.
+These images are published in the
 [`ckan-sddi-dev`](https://github.com/orgs/tum-gis/packages/container/package/ckan-sddi-dev)
 package. Images are named following this pattern:
 
+`ghcr.io/tum-gis/ckan-sddi-dev:<IMAGE FLAVOR>-pr-<PR NUMBER>-[-debug]`
 `ghcr.io/tum-gis/ckan-sddi-dev:<IMAGE FLAVOR>-pr-<PR NUMBER>-<SHORT-SHA>[-debug]`
+
+The image without the `SHORT-SHA` refer to the *latest* build of a pull request.
 
 For instance, for commit 19a2e64 to PR tum-gis/ckan-docker#26 following images are build:
 
+- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-base-pr-26`
+- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-base-pr-26-debug`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-base-pr-26-19a2e64`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-base-pr-26-19a2e64-debug`
+- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26`
+- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-debug`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-19a2e64`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-19a2e64-debug`
+- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26`
+- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-debug`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-19a2e64`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-19a2e64-debug`
 
@@ -169,18 +179,19 @@ are alway pinned to a stable release number or commit hash.
 
 | Extension | Version | `sddi-base` | `sddi` | `sddi-social` | Description |
 |---|---|:---:|:---:|:---:|---|
-| [`scheming`](https://github.com/MarijaKnezevic/ckanext-scheming) | `5c30bba` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Configure and share CKAN dataset metadata forms. |
+| [`scheming`](https://github.com/MarijaKnezevic/ckanext-scheming) | `8548240` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Configure and share CKAN dataset metadata forms. |
 | [`hierarchy`](https://github.com/ckan/ckanext-hierarchy) | `v1.2.0` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Allows to organize organizations and groups in a hierarchy tree (nested groups/orgs). |
-| [`grouphierarchysddi`](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) |  `1.1.2` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Extends `hierarchy` with pre-defined groups and topics of the SDDI concept. |
+| [`grouphierarchysddi`](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) |  `1.1.3` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Extends `hierarchy` with pre-defined groups and topics of the SDDI concept. |
 | [`relation`](https://github.com/tum-gis/ckanext-relation-sddi) | `1.0.2` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Enables to create and visualize different types of relations (*realated_to*, *depends_on*, *part_of*) between catalog entries. |
-| [`spatial`](https://github.com/MarijaKnezevic/ckanext-spatial) | `90ba354` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Provides the ability to search for datasets according to a given spatial extent. |
-| [`datesearch`](https://github.com/MarijaKnezevic/ckanext-datesearch) | `1.0.1` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Provides the ability to search for datasets according to a given time frame. The search includes all datasets, in which the time of validity overlaps in at least one second with the search time frame. |
+| [`spatial`](https://github.com/MarijaKnezevic/ckanext-spatial) | `c2118b9` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Provides the ability to search for datasets according to a given spatial extent. |
+| [`datesearch`](https://github.com/MarijaKnezevic/ckanext-datesearch) | `1.0.2` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Provides the ability to search for datasets according to a given time frame. The search includes all datasets, in which the time of validity overlaps in at least one second with the search time frame. |
 | [`repeating`](https://github.com/MarijaKnezevic/ckanext-repeating) | `1.0.0` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | This extension provides a way to store repeating fields in CKAN datasets, resources, organizations and groups. |
 | [`composite`](https://github.com/EnviDat/ckanext-composite) | `1e6d7bb` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | The extension allows to store structured dataset metadata, single or multiple fields. Only one level of subfields is possible. The subfields can be basic text, date type or dropboxes. |
 | [`restricted`](https://github.com/MarijaKnezevic/ckanext-restricted) | `1.0.0` |  | :heavy_check_mark: | :heavy_check_mark: | CKAN extension to restrict the accessibility to the resources of a dataset. This way the package metadata is accesible but not the data itself (resource). The resource access restriction level can be individualy defined for every package. |
 | [`dcat`](https://github.com/ckan/ckanext-dcat) | `v1.4.0` |  | :heavy_check_mark: | :heavy_check_mark: | Allow CKAN to expose and consume metadata from other catalogs using RDF documents serialized using DCAT. |
 | [`geoview`](https://github.com/ckan/ckanext-geoview) | `v0.0.20` |  | :heavy_check_mark: | :heavy_check_mark: | This extension contains view plugins to display geospatial files and services in CKAN. |
 | [`disqus`](https://github.com/ckan/ckanext-disqus) |  |  |  | :heavy_check_mark: | The Disqus extension allows site visitors to comment on individual packages using an AJAX-based commenting system. The downsides of this plugin are that comments are not stored locally and user information is not shared between CKAN and the commenting system. |
+| [`password_policy`](https://github.com/keitaroinc/ckanext-password-policy") | `master`|:heavy_check_mark:  |:heavy_check_mark:| :heavy_check_mark: | CKAN extension that adds password policy for all the users. |
 
 ## :rocket: Usage
 
