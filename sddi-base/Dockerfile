@@ -87,6 +87,19 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_REPEATING_GITHUB_URL}.git@${CKANEXT_REPEATING_VERSION}#egg=ckanext-repeating
 
+# ckanext-security ############################################################
+ARG CKANEXT_SECURITY_VERSION="v3.0.4"
+ENV CKANEXT_SECURITY_VERSION=${CKANEXT_SECURITY_VERSION}
+ENV CKANEXT_SECURITY_GITHUB_URL="https://github.com/data-govt-nz/ckanext-security"
+
+RUN set -ex && \
+  pip wheel --wheel-dir=/wheels -r \
+    https://raw.githubusercontent.com/data-govt-nz/ckanext-security/${CKANEXT_SECURITY_VERSION}/requirements.txt && \
+  curl -o /wheels/ckanext-security.txt \
+    https://raw.githubusercontent.com/data-govt-nz/ckanext-security/${CKANEXT_SECURITY_VERSION}/requirements.txt && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_SECURITY_GITHUB_URL}.git@${CKANEXT_SECURITY_VERSION}#egg=ckanext-security
+
 # ckanext-spatial #############################################################
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_BUILD_SPATIAL} as extbuild-spatial
 
@@ -124,6 +137,7 @@ FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
   hierarchy_display hierarchy_form display_group relation \
   spatial_metadata spatial_query datesearch repeating composite scheming_datasets \
+  security \
   envvars"
 
 # Extra env for compatibility with ckan/base Docker images for downstream k8s
@@ -182,6 +196,11 @@ RUN set -ex && \
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-repeating
 
+# ckanext-security ############################################################
+RUN set -ex && \
+  pip install -r ${APP_DIR}/ext_wheels/ckanext-security.txt && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-security
+
 # Copy init scripts and additional files
 COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
 
@@ -198,5 +217,18 @@ RUN set -ex && \
   chown -R ckan:ckan ${APP_DIR} ${CKAN_STORAGE_PATH} && \
   # Remove wheels
   rm -rf ${APP_DIR}/ext_wheels
+
+# Apply ckanext-security path #################################################
+# WIP: For testing, we copy this to all possible locations. First location should be sufficient.
+COPY --chown=ckan:ckan who.ini ${APP_DIR}/who.ini
+COPY --chown=ckan:ckan who.ini ${CKAN_DIR}/who.ini
+COPY --chown=ckan:ckan who.ini ${CKAN_DIR}/ckan/config/who.ini
+
+# Download
+# ADD https://raw.githubusercontent.com/data-govt-nz/ckanext-security/${CKANEXT_SECURITY_VERSION}/ckanext-security.patch \
+#  /tmp/sec.patch
+
+COPY --chown=ckan:ckan flask_app.py ${CKAN_DIR}/ckan/config/middleware/flask_app.py
+COPY --chown=ckan:ckan pylons_app.py ${CKAN_DIR}/ckan/config/middleware/pylons_app.py
 
 USER ckan
