@@ -6,20 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 
-## [1.3.0] - 2023-10-15
+## [2.0.0] - 2023-10-19
+
+### Breaking
+
+- Added [ckanext-password-policy](https://github.com/keitaroinc/ckanext-password-policy/tree/montreal).
+  This may break existing installations. The default password policy settings are:
+
+  - `ckanext.password_policy.password_length=12`
+  - `ckanext.password_policy.failed_logins=3`
+  - `ckanext.password_policy.user_locked_time=600`
 
 ### Added
 
 - Changed default basemap in map views, see ckan/ckanext-spatial#317
 
-### Changed
+### Security
 
-- Upstream bugfix for pentest in [ckanext-datesearch](https://github.com/tum-gis/ckanext-datesearch)
-  extension tum-gis/ckanext-datesearch#1
-- Upstream bugfix for pentest in [ckanext-grouphierarchy-sddi](https://github.com/tum-gis/ckanext-grouphierarchy-sddi)
-  extension tum-gis/ckan-docker#40
-  - Limit emails sent for the "Forgot your password?" function
-  - Cross-Site-Scripting problems mentioned [here](https://github.com/tum-gis/ckan-docker/pull/40)
+This release contains several security relevant changes and fixes.
+The issues are discussed in #40.
+
+- Updated dependencies in [ckanext-datesearch](https://github.com/tum-gis/ckanext-datesearch), tum-gis/ckanext-datesearch#1
+- Several fixes in [ckanext-grouphierarchy-sddi](https://github.com/tum-gis/ckanext-grouphierarchy-sddi)
+- Limit emails sent for the "Forgot your password?" function
+- Added Cross-Site-Scripting protection
 
 ## [1.2.0] - 2023-08-21
 
@@ -201,8 +211,8 @@ for production environments.**
 
 ### Known issues
 
-[Unreleased]: https://github.com/tum-gis/ckan-docker/compare/1.3.0...HEAD
-[1.3.0]: https://github.com/tum-gis/ckan-docker/compare/1.2.0...1.3.0
+[Unreleased]: https://github.com/tum-gis/ckan-docker/compare/2.0.0...HEAD
+[2.0.0]: https://github.com/tum-gis/ckan-docker/compare/1.2.0...2.0.0
 [1.2.0]: https://github.com/tum-gis/ckan-docker/compare/1.1.3...1.2.0
 [1.1.3]: https://github.com/tum-gis/ckan-docker/compare/1.1.2...1.1.3
 [1.1.2]: https://github.com/tum-gis/ckan-docker/compare/1.1.1...1.1.2
