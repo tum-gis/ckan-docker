@@ -167,9 +167,9 @@ RUN set -ex && \
   apt-get install -y --no-install-recommends \
     clamav \
     clamav-daemon \
-    libgeos-c1v5 && \
+    libgeos-c1v5 \
     libxml2-dev \
-    libxslt1-dev \
+    libxslt1-dev && \
     pip install --no-cache-dir -U pip && \
     rm -rf /var/lib/apt/lists/*
 
