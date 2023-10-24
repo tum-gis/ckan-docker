@@ -214,6 +214,7 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
   ckan config-tool "${CKAN_INI}" "licenses_group_url = https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/main/ckanext/grouphierarchy/licenses_SDDI.json" && \
   ckan config-tool "${CKAN_INI}" "ckanext.password_policy.password_length = 12" && \
+  ckan config-tool "${CKAN_INI}" "ckan.auth.public_user_details = False" && \
   ckan config-tool "${CKAN_INI}" "ckanext.password_policy.failed_logins = 3" && \
   ckan config-tool "${CKAN_INI}" "ckanext.password_policy.user_locked_time = 600" && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.type = custom" && \
