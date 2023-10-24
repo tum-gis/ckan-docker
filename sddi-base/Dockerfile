@@ -216,6 +216,7 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckanext.password_policy.password_length = 12" && \
   ckan config-tool "${CKAN_INI}" "ckanext.password_policy.failed_logins = 3" && \
   ckan config-tool "${CKAN_INI}" "ckanext.password_policy.user_locked_time = 600" && \
+  ckan config-tool "${CKAN_INI}" "ckan.auth.public_user_details = False" && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.type = custom" && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.custom.url = https://b.tiles.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoid2RlaWdlbGUiLCJhIjoiY2tiNWxhNmRxMHF0cTJ0bzI4Zjhua2JmZSJ9.UMGtDXPfs2z2Smc1N0p9Qw" && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.attribution = Tiles by <a href="http://mapbox.com">MapBox</a>" && \
