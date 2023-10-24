@@ -37,7 +37,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-relation ############################################################
-ARG CKANEXT_RELATION_VERSION="1.0.2"
+ARG CKANEXT_RELATION_VERSION="1.0.3"
 ENV CKANEXT_RELATION_VERSION=${CKANEXT_RELATION_VERSION}
 
 RUN set -ex && \
@@ -134,7 +134,7 @@ RUN set -ex && \
 ###############################################################################
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 
-ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
+ENV CKAN__PLUGINS "image_view text_view recline_view webpage_view datastore datapusher \
   hierarchy_display hierarchy_form display_group relation \
   spatial_metadata spatial_query datesearch repeating composite scheming_datasets \
   password_policy \
@@ -216,6 +216,9 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckanext.password_policy.password_length = 12" && \
   ckan config-tool "${CKAN_INI}" "ckanext.password_policy.failed_logins = 3" && \
   ckan config-tool "${CKAN_INI}" "ckanext.password_policy.user_locked_time = 600" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.type = custom" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.custom.url = https://b.tiles.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoid2RlaWdlbGUiLCJhIjoiY2tiNWxhNmRxMHF0cTJ0bzI4Zjhua2JmZSJ9.UMGtDXPfs2z2Smc1N0p9Qw" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.attribution = Tiles by <a href="http://mapbox.com">MapBox</a>" && \
   echo "${TZ}" > /etc/timezone && \
   mkdir -p ${CKAN_STORAGE_PATH} && \
   chown -R ckan:ckan ${APP_DIR} ${CKAN_STORAGE_PATH} && \
