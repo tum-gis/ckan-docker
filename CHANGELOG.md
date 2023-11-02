@@ -20,7 +20,7 @@ For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 ### Added
 
 - Changed default basemap in map views, see ckan/ckanext-spatial#317
-- Added new resource preview - [webpage view](webpage_view)
+- Enabled new resource preview - [webpage view](webpage_view)
 
 ### Security
 
