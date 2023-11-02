@@ -24,7 +24,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-grouphierarchy ######################################################
-ARG CKANEXT_SDDI_VERSION="1.1.2"
+ARG CKANEXT_SDDI_VERSION="1.1.3"
 ENV CKANEXT_SDDI_VERSION=${CKANEXT_SDDI_VERSION}
 
 RUN set -ex && \
@@ -37,7 +37,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-relation ############################################################
-ARG CKANEXT_RELATION_VERSION="1.0.2"
+ARG CKANEXT_RELATION_VERSION="1.0.3"
 ENV CKANEXT_RELATION_VERSION=${CKANEXT_RELATION_VERSION}
 
 RUN set -ex && \
@@ -50,7 +50,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-scheming ############################################################
-ARG CKANEXT_SCHEMING_VERSION="5c30bba"
+ARG CKANEXT_SCHEMING_VERSION="8548240"
 ENV CKANEXT_SCHEMING_VERSION=${CKANEXT_SCHEMING_VERSION}
 ENV CKANEXT_SCHEMING_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-scheming"
 
@@ -59,7 +59,7 @@ RUN set -ex && \
     git+${CKANEXT_SCHEMING_GITHUB_URL}.git@${CKANEXT_SCHEMING_VERSION}#egg=ckanext-scheming
 
 # ckanext datesearch ##########################################################
-ARG CKANEXT_DATESEARCH_VERSION="1.0.1"
+ARG CKANEXT_DATESEARCH_VERSION="1.0.2"
 ENV CKANEXT_DATESEARCH_VERSION=${CKANEXT_DATESEARCH_VERSION}
 ENV CKANEXT_DATESEARCH_VERSION_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-datesearch"
 
@@ -87,10 +87,23 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_REPEATING_GITHUB_URL}.git@${CKANEXT_REPEATING_VERSION}#egg=ckanext-repeating
 
+# ckanext-password-policy #####################################################
+ARG CKANEXT_PASSWORD_POLICY_VERSION="5618dc9"
+ENV CKANEXT_PASSWORD_POLICY_VERSION=${CKANEXT_PASSWORD_POLICY_VERSION}
+ENV CKANEXT_PASSWORD_POLICY_GITHUB_URL="https://github.com/keitaroinc/ckanext-password-policy"
+
+RUN set -ex && \
+  pip install -r \
+    https://raw.githubusercontent.com/keitaroinc/ckanext-password-policy/${CKANEXT_PASSWORD_POLICY_VERSION}/requirements.txt && \
+  curl -o /wheels/ckanext-password-policy.txt \
+    https://raw.githubusercontent.com/keitaroinc/ckanext-password-policy/${CKANEXT_PASSWORD_POLICY_VERSION}/requirements.txt && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_PASSWORD_POLICY_GITHUB_URL}.git@${CKANEXT_PASSWORD_POLICY_VERSION}#egg=ckanext-password-policy
+
 # ckanext-spatial #############################################################
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_BUILD_SPATIAL} as extbuild-spatial
 
-ARG CKANEXT_SPATIAL_VERSION="90ba354"
+ARG CKANEXT_SPATIAL_VERSION="c2118b9"
 ENV CKANEXT_SPATIAL_VERSION=${CKANEXT_SPATIAL_VERSION}
 
 USER root
@@ -121,9 +134,10 @@ RUN set -ex && \
 ###############################################################################
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 
-ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
+ENV CKAN__PLUGINS "image_view text_view recline_view webpage_view datastore datapusher \
   hierarchy_display hierarchy_form display_group relation \
   spatial_metadata spatial_query datesearch repeating composite scheming_datasets \
+  password_policy \
   envvars"
 
 # Extra env for compatibility with ckan/base Docker images for downstream k8s
@@ -182,8 +196,14 @@ RUN set -ex && \
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-repeating
 
+# ckanext-password-policy #####################################################
+RUN set -ex && \
+  pip install -r ${APP_DIR}/ext_wheels/ckanext-password-policy.txt && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-password-policy
+
 # Copy init scripts and additional files
 COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
+COPY --chown=ckan:ckan who.ini ${APP_DIR}/who.ini
 
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
@@ -193,6 +213,12 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json ckanext.repeating:presets.json ckanext.composite:presets.json" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
   ckan config-tool "${CKAN_INI}" "licenses_group_url = https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/main/ckanext/grouphierarchy/licenses_SDDI.json" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.password_policy.password_length = 12" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.password_policy.failed_logins = 3" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.password_policy.user_locked_time = 600" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.type = custom" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.custom.url = https://tile.openstreetmap.de/{z}/{x}/{y}.png" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.attribution = <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors." && \
   echo "${TZ}" > /etc/timezone && \
   mkdir -p ${CKAN_STORAGE_PATH} && \
   chown -R ckan:ckan ${APP_DIR} ${CKAN_STORAGE_PATH} && \
