@@ -191,7 +191,7 @@ are alway pinned to a stable release number or commit hash.
 | [`dcat`](https://github.com/ckan/ckanext-dcat) | `v1.4.0` |  | :heavy_check_mark: | :heavy_check_mark: | Allow CKAN to expose and consume metadata from other catalogs using RDF documents serialized using DCAT. |
 | [`geoview`](https://github.com/ckan/ckanext-geoview) | `v0.0.20` |  | :heavy_check_mark: | :heavy_check_mark: | This extension contains view plugins to display geospatial files and services in CKAN. |
 | [`disqus`](https://github.com/ckan/ckanext-disqus) |  |  |  | :heavy_check_mark: | The Disqus extension allows site visitors to comment on individual packages using an AJAX-based commenting system. The downsides of this plugin are that comments are not stored locally and user information is not shared between CKAN and the commenting system. |
-| [`password_policy`](https://github.com/keitaroinc/ckanext-password-policy") | `master`|:heavy_check_mark:  |:heavy_check_mark:| :heavy_check_mark: | CKAN extension that adds password policy for all the users. |
+| [`password_policy`](https://github.com/keitaroinc/ckanext-password-policy) | `5618dc9`|:heavy_check_mark:  |:heavy_check_mark:| :heavy_check_mark: | CKAN extension that adds password policy for all the users. |
 
 ## :rocket: Usage
 
