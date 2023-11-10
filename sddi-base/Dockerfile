@@ -90,7 +90,7 @@ RUN set -ex && \
 # ckanext-spatial #############################################################
 FROM ckan/ckan-base:${CKAN_VERSION_BUILD_SPATIAL} as extbuild-spatial
 
-ARG CKANEXT_SPATIAL_VERSION="v2.1.0"
+ARG CKANEXT_SPATIAL_VERSION="v2.1.1"
 ENV CKANEXT_SPATIAL_VERSION=${CKANEXT_SPATIAL_VERSION}
 
 USER root
