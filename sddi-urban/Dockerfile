@@ -81,7 +81,7 @@ RUN set -ex && \
     git+${CKANEXT_LHM_GITHUB_URL}.git@${CKANEXT_LHM_VERSION}#egg=ckanext-lhm
 
 # ckanext-harvest ##########################################################
-ARG CKANEXT_HARVEST_VERSION="v1.0.0"
+ARG CKANEXT_HARVEST_VERSION="v1.5.6"
 ENV CKANEXT_HARVEST_VERSION=${CKANEXT_HARVEST_VERSION}
 ENV CKANEXT_HARVEST_GITHUB_URL="https://github.com/ckan/ckanext-harvest"
 
