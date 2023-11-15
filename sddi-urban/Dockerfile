@@ -76,7 +76,7 @@ ENV CKANEXT_LHM_GITHUB_URL="https://github.com/MandanaMoshref/ckanext-lhm"
 
 RUN set -ex && \
   pip install -r \
-    https://raw.githubusercontent.com/MandanaMoshref/ckanext-lhm/${CKANEXT_XLOADER_VERSION}/requirements.txt && \
+    https://raw.githubusercontent.com/MandanaMoshref/ckanext-lhm/${CKANEXT_LHM_VERSION}/requirements.txt && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_LHM_GITHUB_URL}.git@${CKANEXT_LHM_VERSION}#egg=ckanext-lhm
 
