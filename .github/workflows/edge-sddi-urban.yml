@@ -40,7 +40,7 @@ jobs:
           images: |
             ${{ env.REGISTRY }}/it-at-m/ckan-${{ matrix.context }}
           tags: |
-            type=edge,branch=main
+            type=edge,branch=sddi-urban
           labels: |
             maintainer=Chair of Geoinformatics, Technical University of Munich (TUM)
             org.opencontainers.image.vendor=Chair of Geoinformatics, Technical University of Munich (TUM)
@@ -63,7 +63,7 @@ jobs:
           images: |
             ${{ env.REGISTRY }}/it-at-m/ckan-${{ matrix.context }}
           tags: |
-            type=edge,branch=main,suffix=-debug
+            type=edge,branch=sddi-urban,suffix=-debug
           labels: |
             maintainer=Chair of Geoinformatics, Technical University of Munich (TUM)
             org.opencontainers.image.vendor=Chair of Geoinformatics, Technical University of Munich (TUM)
