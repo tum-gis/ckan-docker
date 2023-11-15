@@ -54,6 +54,8 @@ ENV CKANEXT_RESOURCEDICTIONARY_GITHUB_URL="https://github.com/keitaroinc/ckanext
 RUN set -ex && \
   pip install -r \
     https://raw.githubusercontent.com/keitaroinc/ckanext-resourcedictionary/${CKANEXT_RESOURCEDICTIONARY_VERSION}/requirements.txt && \
+  curl -o /wheels/ckanext-resourcedictionary.txt \
+    https://raw.githubusercontent.com/keitaroinc/ckanext-resourcedictionary/${CKANEXT_RESOURCEDICTIONARY_VERSION}/requirements.txt && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_RESOURCEDICTIONARY_GITHUB_URL}.git@${CKANEXT_RESOURCEDICTIONARY_VERSION}#egg=ckanext-resourcedictionary
 
@@ -64,6 +66,8 @@ ENV CKANEXT_XLOADER_GITHUB_URL="https://github.com/ckan/ckanext-xloader"
 
 RUN set -ex && \
   pip install -r \
+    https://raw.githubusercontent.com/ckan/ckanext-xloader/${CKANEXT_XLOADER_VERSION}/requirements.txt && \
+  curl -o /wheels/ckanext-xloader.txt \
     https://raw.githubusercontent.com/ckan/ckanext-xloader/${CKANEXT_XLOADER_VERSION}/requirements.txt && \
   pip install -U requests[security] && \
   pip wheel --wheel-dir=/wheels \
@@ -77,6 +81,8 @@ ENV CKANEXT_LHM_GITHUB_URL="https://github.com/MandanaMoshref/ckanext-lhm"
 RUN set -ex && \
   pip install -r \
     https://raw.githubusercontent.com/MandanaMoshref/ckanext-lhm/${CKANEXT_LHM_VERSION}/requirements.txt && \
+  curl -o /wheels/ckanext-lhm.txt \
+    https://raw.githubusercontent.com/MandanaMoshref/ckanext-lhm/${CKANEXT_LHM_VERSION}/requirements.txt && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_LHM_GITHUB_URL}.git@${CKANEXT_LHM_VERSION}#egg=ckanext-lhm
 
@@ -87,6 +93,8 @@ ENV CKANEXT_HARVEST_GITHUB_URL="https://github.com/ckan/ckanext-harvest"
 
 RUN set -ex && \
   pip install -r \
+    https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt && \
+  curl -o /wheels/ckanext-harvest.txt \
     https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_HARVEST_GITHUB_URL}.git@${CKANEXT_HARVEST_VERSION}#egg=ckanext-harvest
@@ -129,18 +137,23 @@ RUN set -ex && \
 
 # ckanext-resourcedictionary ##################################################
 RUN set -ex && \
+  pip install -r ${APP_DIR}/ext_wheels/ckanext-resourcedictionary.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-resourcedictionary
 
 # ckanext-xloader #############################################################
 RUN set -ex && \
+  pip install -r ${APP_DIR}/ext_wheels/ckanext-xloader.txt && \
+  pip install -U requests[security] && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-xloader
-
+  
 # ckanext-lhm #################################################################
 RUN set -ex && \
+  pip install -r ${APP_DIR}/ext_wheels/ckanext-lhm.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-lhm
 
 # ckanext-harvest #############################################################
 RUN set -ex && \
+  pip install -r ${APP_DIR}/ext_wheels/ckanext-harvest.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-harvest
 
 RUN set -ex && \
