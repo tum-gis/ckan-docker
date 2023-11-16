@@ -100,12 +100,10 @@ RUN set -ex && \
     git+${CKANEXT_HARVEST_GITHUB_URL}.git@${CKANEXT_HARVEST_VERSION}#egg=ckanext-harvest
 
 # ckanext-scheming ##########################################################
-# uninstall previous version from sddi-base
 ARG CKANEXT_SCHEMING_VERSION="master"
 ENV CKANEXT_SCHEMING_VERSION=${CKANEXT_SCHEMING_VERSION}
 ENV CKANEXT_SCHEMING_GITHUB_URL="https://github.com/gislab-augsburg/ckanext-scheming"
 
-RUN pip uninstall ckanext-scheming
 RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_SCHEMING_GITHUB_URL}.git@${CKANEXT_SCHEMING_VERSION}#egg=ckanext-scheming
@@ -169,7 +167,7 @@ RUN set -ex && \
 
 # ckanext-scheming #############################################################
 # uninstall previous version from sddi-base
-RUN pip uninstall ckanext-scheming
+RUN yes | pip uninstall ckanext-scheming
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-scheming
 
