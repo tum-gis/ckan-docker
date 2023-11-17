@@ -74,17 +74,17 @@ RUN set -ex && \
     git+${CKANEXT_XLOADER_GITHUB_URL}.git@${CKANEXT_XLOADER_VERSION}#egg=ckanext-xloader
 
 # ckanext-lhm ##########################################################
-#ARG CKANEXT_LHM_VERSION="master"
-#ENV CKANEXT_LHM_VERSION=${CKANEXT_LHM_VERSION}
-#ENV CKANEXT_LHM_GITHUB_URL="https://github.com/MandanaMoshref/ckanext-lhm"
-#
-#RUN set -ex && \
-#  pip install -r \
-#    https://raw.githubusercontent.com/MandanaMoshref/ckanext-lhm/${CKANEXT_LHM_VERSION}/requirements.txt && \
-#  curl -o /wheels/ckanext-lhm.txt \
-#    https://raw.githubusercontent.com/MandanaMoshref/ckanext-lhm/${CKANEXT_LHM_VERSION}/requirements.txt && \
-#  pip wheel --wheel-dir=/wheels \
-#    git+${CKANEXT_LHM_GITHUB_URL}.git@${CKANEXT_LHM_VERSION}#egg=ckanext-lhm
+ARG CKANEXT_LHM_VERSION="master"
+ENV CKANEXT_LHM_VERSION=${CKANEXT_LHM_VERSION}
+ENV CKANEXT_LHM_GITHUB_URL="https://github.com/MandanaMoshref/ckanext-lhm"
+
+RUN set -ex && \
+  pip install -r \
+    https://raw.githubusercontent.com/MandanaMoshref/ckanext-lhm/${CKANEXT_LHM_VERSION}/requirements.txt && \
+  curl -o /wheels/ckanext-lhm.txt \
+    https://raw.githubusercontent.com/MandanaMoshref/ckanext-lhm/${CKANEXT_LHM_VERSION}/requirements.txt && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_LHM_GITHUB_URL}.git@${CKANEXT_LHM_VERSION}#egg=ckanext-lhm
 
 # ckanext-harvest ##########################################################
 ARG CKANEXT_HARVEST_VERSION="v1.5.6"
@@ -156,11 +156,9 @@ RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-xloader
   
 # ckanext-lhm #################################################################
-#RUN set -ex && \
-#  pip install -r ${APP_DIR}/ext_wheels/ckanext-lhm.txt && \
-#  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-lhm
-  pip install -r https://raw.githubusercontent.com/MandanaMoshref/ckanext-lhm/master/requirements.txt && \
-  pip install -e 'git+https://github.com/MandanaMoshref/ckanext-lhm.git@master#egg=ckanext-lhm'
+RUN set -ex && \
+  pip install -r ${APP_DIR}/ext_wheels/ckanext-lhm.txt && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-lhm
 
 # ckanext-harvest #############################################################
 RUN set -ex && \
