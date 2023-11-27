@@ -114,6 +114,10 @@ ENV CKANEXT_QGOV_VERSION=${CKANEXT_QGOV_VERSION}
 ENV CKANEXT_QGOV_GITHUB_URL="https://github.com/qld-gov-au/ckanext-qgov"
 
 RUN set -ex && \
+  pip install -r \
+    https://raw.githubusercontent.com/qld-gov-au/ckanext-qgov/${CKANEXT_QGOV_VERSION}/requirements.txt && \
+  curl -o /wheels/ckanext-qgov.txt \
+    https://raw.githubusercontent.com/qld-gov-au/ckanext-qgov/${CKANEXT_QGOV_VERSION}/requirements.txt && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_QGOV_GITHUB_URL}.git@${CKANEXT_QGOV_VERSION}#egg=ckanext-qgov
 
@@ -182,6 +186,7 @@ RUN set -ex && \
 
 # ckanext-qgov #############################################################
 RUN set -ex && \
+  pip install -r ${APP_DIR}/ext_wheels/ckanext-qgov.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-qgov
 
 
