@@ -108,6 +108,15 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_SCHEMING_GITHUB_URL}.git@${CKANEXT_SCHEMING_VERSION}#egg=ckanext-scheming
 
+# ckanext-qgov ##########################################################
+ARG CKANEXT_QGOV_VERSION="6.0.2"
+ENV CKANEXT_QGOV_VERSION=${CKANEXT_QGOV_VERSION}
+ENV CKANEXT_QGOV_GITHUB_URL="https://github.com/qld-gov-au/ckanext-qgov"
+
+RUN set -ex && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_QGOV_GITHUB_URL}.git@${CKANEXT_QGOV_VERSION}#egg=ckanext-qgov
+
 
 # #############################################################################
 # # Runtime stage
@@ -170,6 +179,11 @@ RUN set -ex && \
 RUN yes | pip uninstall ckanext-scheming
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-scheming
+
+# ckanext-qgov #############################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-qgov
+
 
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
