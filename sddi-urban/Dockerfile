@@ -96,6 +96,10 @@ RUN set -ex && \
     https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt && \
   curl -o /wheels/ckanext-harvest.txt \
     https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt && \
+  pip install -r \
+    https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/dev-requirements.txt && \
+  curl -o /wheels/ckanext-harvest-dev.txt \
+    https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/dev-requirements.txt && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_HARVEST_GITHUB_URL}.git@${CKANEXT_HARVEST_VERSION}#egg=ckanext-harvest
 
@@ -130,16 +134,13 @@ FROM ${BASEIMAGE_REPOSITORY}:${BASEIMAGE_VERSION} as runtime
 USER root
 
 ENV CKAN__PLUGINS "image_view text_view recline_view webpage_view \
-  scheming_datasets scheming_groups scheming_organizations \
-  spatial_metadata spatial_query spatial_harvest_metadata_api \
-  composite lhm resourcedictionary datastore xloader \
-  hierarchy_display hierarchy_form display_group relation \
-  spatial_metadata spatial_query datesearch repeating \
-  password_policy resource_proxy geo_view geojson_view wmts_view shp_view \
-  dcat dcat_json_interface structured_data \
-  restricted \
-  harvest ckan_harvester csw_harvester waf_harvester doc_harvester \
-  envvars"
+    scheming_datasets scheming_groups scheming_organizations \
+    spatial_metadata spatial_query spatial_harvest_metadata_api \
+    composite hierarchy_display hierarchy_form lhm lhm_theme \
+    resourcedictionary datastore xloader hierarchy_group_form \
+    password_policy resource_proxy geo_view geojson_view wmts_view shp_view \
+    harvest ckan_harvester csw_harvester waf_harvester doc_harvester \
+    qgovext envvars"
 
 # Copy python wheels from build stage
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
@@ -176,6 +177,7 @@ RUN set -ex && \
 # ckanext-harvest #############################################################
 RUN set -ex && \
   pip install -r ${APP_DIR}/ext_wheels/ckanext-harvest.txt && \
+  pip install -r ${APP_DIR}/ext_wheels/ckanext-harvest-dev.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-harvest
 
 # ckanext-scheming #############################################################
