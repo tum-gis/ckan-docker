@@ -2,7 +2,7 @@ name: Build/push edge image
 
 on:
   push:
-    branches: [sddi-urban]
+    branches: [sddi-urban-2.9.9]
     paths:
       - sddi-urban/**
 
@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        context: ['sddi-urban']
+        context: ['sddi-urban-2.9.9']
       fail-fast: true
       max-parallel: 1
     permissions:
@@ -40,7 +40,7 @@ jobs:
           images: |
             ${{ env.REGISTRY }}/it-at-m/ckan-${{ matrix.context }}
           tags: |
-            type=edge,branch=sddi-urban
+            type=edge,branch=sddi-urban-2.9.9
           labels: |
             maintainer=it@m, Landeshauptstadt Muenchen (LHM)
             org.opencontainers.image.vendor=it@m, Landeshauptstadt Muenchen (LHM)
@@ -63,7 +63,7 @@ jobs:
           images: |
             ${{ env.REGISTRY }}/it-at-m/ckan-${{ matrix.context }}
           tags: |
-            type=edge,branch=sddi-urban,suffix=-debug
+            type=edge,branch=sddi-urban-2.9.9,suffix=-debug
           labels: |
             maintainer=it@m, Landeshauptstadt Muenchen (LHM)
             org.opencontainers.image.vendor=it@m, Landeshauptstadt Muenchen (LHM)
