@@ -54,7 +54,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            BASEIMAGE_VERSION=edge-2.9.9
+            BASEIMAGE_VERSION=edge
 
       - name: Extract metadata (tags, labels) for debug docker image
         id: meta-debug
@@ -78,4 +78,4 @@ jobs:
           tags: ${{ steps.meta-debug.outputs.tags }}
           labels: ${{ steps.meta-debug.outputs.labels }}
           build-args: |
-            BASEIMAGE_VERSION=edge-2.9.9
+            BASEIMAGE_VERSION=edge
