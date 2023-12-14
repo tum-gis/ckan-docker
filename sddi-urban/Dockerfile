@@ -1,4 +1,3 @@
-# Do Build
 # #############################################################################
 # # Build stage
 # #############################################################################
@@ -104,7 +103,7 @@ RUN set -ex && \
     git+${CKANEXT_HARVEST_GITHUB_URL}.git@${CKANEXT_HARVEST_VERSION}#egg=ckanext-harvest
 
 # ckanext-scheming ##########################################################
-ARG CKANEXT_SCHEMING_VERSION="master"
+ARG CKANEXT_SCHEMING_VERSION="a7fdd9c"
 ENV CKANEXT_SCHEMING_VERSION=${CKANEXT_SCHEMING_VERSION}
 ENV CKANEXT_SCHEMING_GITHUB_URL="https://github.com/gislab-augsburg/ckanext-scheming"
 
