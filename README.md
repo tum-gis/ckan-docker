@@ -196,7 +196,7 @@ are alway pinned to a stable release number or commit hash.
 
 | Extension | Version | `sddi-base` | `sddi` | `sddi-social` | `sddi-urban` | Description |
 |---|---|:---:|:---:|:---:|:---:|---|
-| [`scheming`](https://github.com/MarijaKnezevic/ckanext-scheming), [`scheming`](https://github.com/gislab-augsburg/ckanext-scheming) (sddi-urban)  | `f98daec`, `a7fdd9c` (sddi-urban) | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Configure and share CKAN dataset metadata forms. |
+| [`scheming`](https://github.com/MarijaKnezevic/ckanext-scheming), [`scheming (sddi-urban)`](https://github.com/gislab-augsburg/ckanext-scheming) (sddi-urban)  | `f98daec`, `a7fdd9c (sddi-urban)`| :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Configure and share CKAN dataset metadata forms. |
 | [`hierarchy`](https://github.com/ckan/ckanext-hierarchy) | `v1.2.0` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Allows to organize organizations and groups in a hierarchy tree (nested groups/orgs). |
 | [`grouphierarchysddi`](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) |  `1.1.3` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  | Extends `hierarchy` with pre-defined groups and topics of the SDDI concept. |
 | [`relation`](https://github.com/tum-gis/ckanext-relation-sddi) | `1.0.3` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |  | Enables to create and visualize different types of relations (*realated_to*, *depends_on*, *part_of*) between catalog entries. |
