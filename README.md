@@ -213,7 +213,7 @@ are alway pinned to a stable release number or commit hash.
 | [`xloader`](https://github.com/ckan/ckanext-xloader) | `1.0.1` |  |  |  | :heavy_check_mark: | Provides a faster and more robust way to load data into CKAN's DataStore. |
 | [`lhm`](https://github.com/MandanaMoshref/ckanext-lhm) | `b079a72` |  |  |  | :heavy_check_mark: | Adds options for a custom metadata schema, custom theming and an adapted set of groups and topics, provided by Landeshauptstadt München (LHM).  |
 | [`harvest`](https://github.com/ckan/ckanext-harvest) | `v1.5.6` |  |  |  | :heavy_check_mark: | Provides a framework and management tools for automatic harvesting of other metatdata catalogs. |
-| [`qgov`](https://github.com/qld-gov-au/ckanext-qgov) | `6.0.2` |  |  |  | :heavy_check_mark: | Adds extended security and GDPR features. XXX will be replaced in 2024 |
+| [`qgov`](https://github.com/qld-gov-au/ckanext-qgov) | `6.0.2` |  |  |  | :heavy_check_mark: | Adds extended security and GDPR features. |
 
 
 ## :rocket: Usage
