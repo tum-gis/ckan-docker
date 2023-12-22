@@ -73,15 +73,15 @@ RUN set -ex && \
     git+${CKANEXT_XLOADER_GITHUB_URL}.git@${CKANEXT_XLOADER_VERSION}#egg=ckanext-xloader
 
 # ckanext-lhm ##########################################################
-ARG CKANEXT_LHM_VERSION="cca4bcb"
+ARG CKANEXT_LHM_VERSION="5975207"
 ENV CKANEXT_LHM_VERSION=${CKANEXT_LHM_VERSION}
-ENV CKANEXT_LHM_GITHUB_URL="https://github.com/MandanaMoshref/ckanext-lhm"
+ENV CKANEXT_LHM_GITHUB_URL="https://github.com/gislab-augsburg/ckanext-lhm"
 
 RUN set -ex && \
   pip install -r \
-    https://raw.githubusercontent.com/MandanaMoshref/ckanext-lhm/${CKANEXT_LHM_VERSION}/requirements.txt && \
+    https://raw.githubusercontent.com/gislab-augsburg/ckanext-lhm/${CKANEXT_LHM_VERSION}/requirements.txt && \
   curl -o /wheels/ckanext-lhm.txt \
-    https://raw.githubusercontent.com/MandanaMoshref/ckanext-lhm/${CKANEXT_LHM_VERSION}/requirements.txt && \
+    https://raw.githubusercontent.com/gislab-augsburg/ckanext-lhm/${CKANEXT_LHM_VERSION}/requirements.txt && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_LHM_GITHUB_URL}.git@${CKANEXT_LHM_VERSION}#egg=ckanext-lhm
 
