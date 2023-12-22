@@ -211,7 +211,7 @@ are alway pinned to a stable release number or commit hash.
 | [`password_policy`](https://github.com/keitaroinc/ckanext-password-policy) | `5618dc9`|:heavy_check_mark:  |:heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark: | CKAN extension that adds password policy for all the users. |
 | [`resourcedictionary`](https://github.com/keitaroinc/ckanext-resourcedictionary) | `v1.0.0` |  |  |  | :heavy_check_mark: | Extends the default CKAN Data Dictionary functionality by adding possibility to create data dictionary before actual data is uploaded to datastore.  |
 | [`xloader`](https://github.com/ckan/ckanext-xloader) | `1.0.1` |  |  |  | :heavy_check_mark: | Provides a faster and more robust way to load data into CKAN's DataStore. |
-| [`lhm`](https://github.com/MandanaMoshref/ckanext-lhm) | `b079a72` |  |  |  | :heavy_check_mark: | Adds options for a custom metadata schema, custom theming and an adapted set of groups and topics, provided by Landeshauptstadt München (LHM).  |
+| [`lhm`](https://github.com/MandanaMoshref/ckanext-lhm) | `cca4bcb` |  |  |  | :heavy_check_mark: | Adds options for a custom metadata schema, custom theming and an adapted set of groups and topics, provided by Landeshauptstadt München (LHM).  |
 | [`harvest`](https://github.com/ckan/ckanext-harvest) | `v1.5.6` |  |  |  | :heavy_check_mark: | Provides a framework and management tools for automatic harvesting of other metatdata catalogs. |
 | [`qgov`](https://github.com/qld-gov-au/ckanext-qgov) | `6.0.2` |  |  |  | :heavy_check_mark: | Adds extended security and GDPR features. |
 
