@@ -198,5 +198,7 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckanext.geoview.shp_viewer.encoding = UTF-8" && \
   # Remove wheels
   rm -rf ${APP_DIR}/ext_wheels
+  # Remove init script
+  rm -f ${APP_DIR}/docker-afterinit.d/01_create_groups.sh
 
 USER ckan
