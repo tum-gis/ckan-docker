@@ -7,6 +7,7 @@ on:
       - sddi-base/**
       - sddi/**
       - sddi-social/**
+      - sddi-urban/**
 
 env:
   REGISTRY: ghcr.io
@@ -17,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        context: ['sddi-base', 'sddi', 'sddi-social']
+        context: ['sddi-base', 'sddi', 'sddi-social', 'sddi-urban']
       fail-fast: true
       max-parallel: 1
     permissions:
