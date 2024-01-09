@@ -73,15 +73,15 @@ RUN set -ex && \
     git+${CKANEXT_XLOADER_GITHUB_URL}.git@${CKANEXT_XLOADER_VERSION}#egg=ckanext-xloader
 
 # ckanext-lhm ##########################################################
-ARG CKANEXT_LHM_VERSION="5975207"
+ARG CKANEXT_LHM_VERSION="cca4bcb"
 ENV CKANEXT_LHM_VERSION=${CKANEXT_LHM_VERSION}
-ENV CKANEXT_LHM_GITHUB_URL="https://github.com/gislab-augsburg/ckanext-lhm"
+ENV CKANEXT_LHM_GITHUB_URL="https://github.com/MandanaMoshref/ckanext-lhm"
 
 RUN set -ex && \
   pip install -r \
-    https://raw.githubusercontent.com/gislab-augsburg/ckanext-lhm/${CKANEXT_LHM_VERSION}/requirements.txt && \
+    https://raw.githubusercontent.com/MandanaMoshref/ckanext-lhm/${CKANEXT_LHM_VERSION}/requirements.txt && \
   curl -o /wheels/ckanext-lhm.txt \
-    https://raw.githubusercontent.com/gislab-augsburg/ckanext-lhm/${CKANEXT_LHM_VERSION}/requirements.txt && \
+    https://raw.githubusercontent.com/MandanaMoshref/ckanext-lhm/${CKANEXT_LHM_VERSION}/requirements.txt && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_LHM_GITHUB_URL}.git@${CKANEXT_LHM_VERSION}#egg=ckanext-lhm
 
@@ -197,6 +197,8 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckanext.geoview.shp_viewer.srid = 4326" && \
   ckan config-tool "${CKAN_INI}" "ckanext.geoview.shp_viewer.encoding = UTF-8" && \
   # Remove wheels
-  rm -rf ${APP_DIR}/ext_wheels
+  rm -rf ${APP_DIR}/ext_wheels && \
+  # Remove init script
+  rm -f ${APP_DIR}/docker-afterinit.d/01_create_groups.sh
 
 USER ckan
