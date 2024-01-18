@@ -111,18 +111,14 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_SCHEMING_GITHUB_URL}.git@${CKANEXT_SCHEMING_VERSION}#egg=ckanext-scheming
 
-# ckanext-qgov ##########################################################
-ARG CKANEXT_QGOV_VERSION="6.0.2"
-ENV CKANEXT_QGOV_VERSION=${CKANEXT_QGOV_VERSION}
-ENV CKANEXT_QGOV_GITHUB_URL="https://github.com/qld-gov-au/ckanext-qgov"
+# ckanext-glab ##########################################################
+ARG CKANEXT_GLAB_VERSION="0612d22"
+ENV CKANEXT_GLAB_VERSION=${CKANEXT_GLAB_VERSION}
+ENV CKANEXT_GLAB_GITHUB_URL="https://github.com/gislab-augsburg/ckanext-glab"
 
 RUN set -ex && \
-  pip install -r \
-    https://raw.githubusercontent.com/qld-gov-au/ckanext-qgov/${CKANEXT_QGOV_VERSION}/requirements.txt && \
-  curl -o /wheels/ckanext-qgov.txt \
-    https://raw.githubusercontent.com/qld-gov-au/ckanext-qgov/${CKANEXT_QGOV_VERSION}/requirements.txt && \
   pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_QGOV_GITHUB_URL}.git@${CKANEXT_QGOV_VERSION}#egg=ckanext-qgov
+    git+${CKANEXT_GLAB_GITHUB_URL}.git@${CKANEXT_GLAB_VERSION}#egg=ckanext-glab
 
 
 # #############################################################################
@@ -139,7 +135,7 @@ ENV CKAN__PLUGINS "image_view text_view recline_view webpage_view \
     resourcedictionary datastore xloader hierarchy_group_form \
     password_policy resource_proxy geo_view geojson_view wmts_view shp_view \
     harvest ckan_harvester csw_harvester waf_harvester doc_harvester \
-    qgovext envvars"
+    gdpr envvars"
 
 # Copy python wheels from build stage
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
@@ -185,10 +181,9 @@ RUN yes | pip uninstall ckanext-scheming
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-scheming
 
-# ckanext-qgov #############################################################
+# ckanext-glab #############################################################
 RUN set -ex && \
-  pip install -r ${APP_DIR}/ext_wheels/ckanext-qgov.txt && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-qgov
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-glab
 
 
 RUN set -ex && \
