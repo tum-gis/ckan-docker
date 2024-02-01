@@ -5,55 +5,97 @@ ARG CKAN_VERSION_BUILD_STAGE=2.10.1-dev
 ARG CKAN_VERSION_BUILD_SPATIAL=2.9.9-focal
 ARG CKAN_VERSION_RUNTIME_STAGE=2.10.1-focal
 
-FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
+FROM python:3.9-slim as ckanbuild
 
-USER root
+# Used by Github Actions to tag the image with
+ENV IMAGE_TAG=2.10.3
 
-RUN apk add --no-cache \
-    # python3 \
-    # python3-dev \
+# Set CKAN version to build
+ENV GIT_URL=https://github.com/ckan/ckan.git
+ENV GIT_BRANCH=ckan-2.10.3
+
+# Set src dirs
+ENV SRC_DIR=/srv/app/src
+ENV PIP_SRC=${SRC_DIR}
+
+WORKDIR ${SRC_DIR}
+
+RUN apt-get update && apt-get install -y \
     git \
     curl \
-    postgresql-dev \
-    linux-headers \
+    libpq-dev \
     gcc \
     make \
     g++ \
-    zlib-dev \
     autoconf \
     automake \
     libtool \
     patch \
     musl-dev \
-    pcre-dev \
-    pcre \
-    geos \
+    libpcre3-dev \
+    libpcre3 \
     libffi-dev \
     libxml2-dev \
-    libxslt-dev \
-    openssl-dev \
-    rust \
-    cargo
+    libxslt-dev
 
-ARG PYTHON_VERSION=3.9.9
+ # Cleanup to reduce image size
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# download and extract python sources
-RUN cd /opt \
-    && wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz \                                              
-    && tar xzf Python-${PYTHON_VERSION}.tgz
+# Link python to python3
+RUN ln -s /usr/bin/python3 /usr/bin/python
 
-# build python and remove left-over sources
-RUN cd /opt/Python-${PYTHON_VERSION} \ 
-    && ./configure --prefix=/usr --enable-optimizations --with-ensurepip=install \
-    && make install \
-    && rm /opt/Python-${PYTHON_VERSION}.tgz /opt/Python-${PYTHON_VERSION} -rf
+# Create the src directory
+RUN mkdir -p ${SRC_DIR}
 
-RUN set -ex && \
-    pip install --no-cache-dir -U pip && \
-    rm -rf /var/lib/apt/lists/*
+# Downgrade setuptools so that CKAN requirements can be built
+RUN pip3 install setuptools==44.1.0
 
-RUN pip install markupsafe==2.0.1 && \
-    pip install wheel
+# Fetch and build CKAN and requirements
+RUN pip3 install -e git+${GIT_URL}@${GIT_BRANCH}#egg=ckan
+
+# Copy patches and apply patches script
+COPY ./patches ${SRC_DIR}/patches
+COPY ./scripts/apply_ckan_patches.sh ${SRC_DIR}/apply_ckan_patches.sh
+
+# Apply patches
+RUN cd ${SRC_DIR} && ls -lah ${SRC_DIR} && bash ${SRC_DIR}/apply_ckan_patches.sh
+RUN rm -rf /srv/app/src/ckan/.git
+
+# Create a constraint file that limits the Cython version to a compatible one, see https://github.com/yaml/pyyaml/issues/736
+RUN echo 'Cython < 3.0' > /tmp/constraint.txt
+RUN pip3_CONSTRAINT=/tmp/constraint.txt pip3 wheel --wheel-dir=/wheels PyYAML==5.4.1
+
+# RUN pip3-compile ckan/requirements.in
+RUN pip3 wheel --wheel-dir=/wheels -r ckan/requirements.txt
+RUN pip3 wheel --wheel-dir=/wheels uWSGI==2.0.20 gevent==21.12.0 greenlet==1.1.3
+
+FROM python:3.9-slim as extbuild
+
+USER root
+
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpq-dev \
+    gcc \
+    make \
+    g++ \
+    autoconf \
+    automake \
+    libtool \
+    patch \
+    musl-dev \
+    libpcre3-dev \
+    libpcre3 \
+    libffi-dev \
+    libxml2-dev \
+    libxslt-dev
+
+RUN pip install -U markupsafe==2.0.1
+
+# Create a constraint file that limits the Cython version to a compatible one, see https://github.com/yaml/pyyaml/issues/736
+RUN echo 'Cython < 3.0' > /tmp/constraint.txt
+RUN pip3_CONSTRAINT=/tmp/constraint.txt pip3 wheel --wheel-dir=/wheels PyYAML==5.4.1
 
 # ckanext-hierarchy ###########################################################
 ARG CKANEXT_HIERARCHY_VERSION="v1.2.0"
@@ -147,7 +189,6 @@ RUN set -ex && \
     git+${CKANEXT_PASSWORD_POLICY_GITHUB_URL}.git@${CKANEXT_PASSWORD_POLICY_VERSION}#egg=ckanext-password-policy
 
 # ckanext-harvest ###########################################################
-
 ARG CKANEXT_HARVEST_VERSION="v1.5.6"
 ENV CKANEXT_HARVEST_VERSION=${CKANEXT_HARVEST_VERSION}
 ENV CKANEXT_HARVEST_GITHUB_URL="https://github.com/ckan/ckanext-harvest.git"
@@ -162,75 +203,91 @@ RUN set -ex && \
   curl -o /wheels/ckanext-harvest.txt https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt && \
   ls -lah /wheels
 
-# # ckanext-spatial #############################################################
+# ckanext-spatial #############################################################
 ENV CKANEXT_SPATIAL_GITHUB_URL="https://github.com/ckan/ckanext-spatial"
-ENV CKANEXT_SPATIAL_VERSION="v2.1.1"
+ENV CKANEXT_SPATIAL_VERSION="release-v2.1.0"
 
 RUN set -ex && \
-  # pip wheel --wheel-dir=/wheels -r \
-  #   https://raw.githubusercontent.com/ckan/ckanext-spatial/v2.1.1/requirements.txt && \
   curl -o /wheels/ckanext-spatial-requirements.txt \
-    https://raw.githubusercontent.com/ckan/ckanext-spatial/v2.1.1/requirements.txt && \
+    https://raw.githubusercontent.com/ckan/ckanext-spatial/${CKANEXT_SPATIAL_VERSION}/requirements-py2.txt && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_SPATIAL_GITHUB_URL}.git@${CKANEXT_SPATIAL_VERSION}#egg=ckanext-spatial
 
-###############################################################################
-# Runtime stage
-###############################################################################
-FROM ckan/ckan-base:2.10 as runtime
+FROM python:3.9-slim
 
-# Extra env for compatibility with ckan/base Docker images for downstream k8s
+ENV APP_DIR=/srv/app
+ENV SRC_DIR=/srv/app/src
+ENV CKAN_DIR=${SRC_DIR}/ckan
+ENV DATA_DIR=/srv/app/data
+ENV PIP_SRC=${SRC_DIR}
+ENV GIT_BRANCH=ckan-2.10.3
+
+# Setting the locale
+ENV LC_ALL="en_US.UTF-8"
+RUN apt-get update && apt-get install --no-install-recommends -y locales
+RUN sed -i "/$LC_ALL/s/^# //g" /etc/locale.gen
+RUN dpkg-reconfigure --frontend=noninteractive locales
+RUN update-locale LANG=${LC_ALL}
+
+# Set timezone
+RUN echo "UTC" >  /etc/timezone
 ENV CKAN_INI=${APP_DIR}/production.ini
 ENV CKAN_STORAGE_PATH=/var/lib/ckan
-ENV TZ="UTC"
 
-USER root
-
-RUN apk add --no-cache \
-    python3 \
-    python3-dev \
+# Update the package lists and install required packages
+RUN apt-get update && apt-get install -y \
+    bash \
     git \
+    gettext \
     curl \
-    postgresql-dev \
-    linux-headers \
-    gcc \
-    make \
-    g++ \
-    zlib-dev \
-    autoconf \
-    automake \
-    libtool \
-    patch \
+    wget \
+    unzip \
+    postgresql-client \
+    libmagic1 \
+    libpcre3 \
+    libxslt1.1 \
+    libxml2 \
+    tzdata \
+    apache2-utils \
     musl-dev \
-    pcre-dev \
-    pcre \
-    geos \
-    libffi-dev \
-    libxml2-dev \
-    libxslt-dev \
-    openssl-dev \
-    rust \
-    cargo \
-    proj-data
+    libssl-dev \
+    proj-bin \
+    libproj-dev \
+    proj-data \
+    python3-cffi
 
-ENV CKAN__PLUGINS "image_view text_view recline_view webpage_view datastore \
-  harvest ckan_harvester \
-  hierarchy_display hierarchy_form \
-  # datapusher Token required \
-  display_group \
-  # relation  ImportError: cannot import name 'Mapping' from 'collections' \
-  spatial_metadata spatial_query \
-  scheming_datasets \
-  datesearch \
-  composite \
-  repeating \
-  # password_policy No module named 'ckan.lib.repoze_plugins' \
-  envvars"
+# Cleanup to reduce image size
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN pip install markupsafe==2.0.1
+# Create a constraint file that limits the Cython version to a compatible one, see https://github.com/yaml/pyyaml/issues/736
+RUN echo 'Cython < 3.0' > /tmp/constraint.txt
+RUN pip3_CONSTRAINT=/tmp/constraint.txt pip3 wheel --wheel-dir=/wheels PyYAML==5.4.1
 
-# Copy python wheels from build stage
-COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
+# Create SRC_DIR
+RUN mkdir -p ${SRC_DIR} && \
+    # Link python to python3
+    ln -s /usr/bin/python3 /usr/bin/python
+
+# Get artifacts from build stages
+COPY --from=ckanbuild /wheels /srv/app/wheels
+COPY --from=extbuild /wheels /srv/app/ext_wheels
+COPY --from=ckanbuild /srv/app/src/ckan ${CKAN_DIR}
+
+# Additional install steps for build stages artifacts
+RUN pip3 install --no-index --find-links=/srv/app/wheels uWSGI==2.0.20 gevent==21.12.0
+
+# Create a local user and group to run the app
+# Add a group with a specific GID (92)
+RUN groupadd -g 92 ckan
+# Add a user with a specific UID (92), home directory, and add to the ckan group
+RUN useradd -u 92 -g ckan -M -d /srv/app -s /bin/bash ckan
+
+WORKDIR ${CKAN_DIR}
+
+# Install CKAN
+RUN pip3 install -e /srv/app/src/ckan
+RUN cp who.ini ${APP_DIR}
+RUN pip3 install --no-index --find-links=/srv/app/wheels -r requirements.txt
 
 # ckanext-harvest ###########################################################
 RUN pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-harvest && \
@@ -246,21 +303,11 @@ RUN set -ex && \
   pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-grouphierarchy.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-grouphierarchy
 
-# ckanext-relation ############################################################
-# RUN set -ex && \
-#   pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-relation.txt && \
-#   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-relation
-
-# ckanext-spatial #############################################################
-RUN set -ex && \
-  pip install -r ${APP_DIR}/ext_wheels/ckanext-spatial-requirements.txt && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-spatial
-
-# # ckanext-scheming ############################################################
+# ckanext-scheming ############################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-scheming
 
-# # ckanext-datesearch ##########################################################
+# ckanext-datesearch ##########################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-datesearch
 
@@ -277,6 +324,11 @@ RUN set -ex && \
   pip install -r ${APP_DIR}/ext_wheels/ckanext-password-policy.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-password-policy
 
+# ckanext-spatial #############################################################
+RUN set -ex && \
+    pip3 install -e 'git+https://github.com/ckan/ckanext-spatial.git#egg=ckanext-spatial' && \
+    pip3 install -r 'https://raw.githubusercontent.com/ckan/ckanext-spatial/master/requirements.txt'
+
 # Copy init scripts and additional files
 COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
 COPY --chown=ckan:ckan who.ini ${APP_DIR}/who.ini
@@ -286,22 +338,40 @@ RUN set -ex && \
 
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
-  # ckan config-tool "${CKAN_INI}" "ckan.spatial.srid = 4326" && \
-  # ckan config-tool "${CKAN_INI}" "ckanext.spatial.search_backend = solr-bbox" && \
+  ckan config-tool "${CKAN_INI}" "ckan.spatial.srid = 4326" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.spatial.search_backend = solr-bbox" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_schemas = ckanext.scheming:ckan_dataset.yaml" && \
   ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json ckanext.repeating:presets.json ckanext.composite:presets.json" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
   ckan config-tool "${CKAN_INI}" "licenses_group_url = https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/main/ckanext/grouphierarchy/licenses_SDDI.json" && \
-  # ckan config-tool "${CKAN_INI}" "ckanext.password_policy.password_length = 12" && \
-  # ckan config-tool "${CKAN_INI}" "ckanext.password_policy.failed_logins = 3" && \
-  # ckan config-tool "${CKAN_INI}" "ckanext.password_policy.user_locked_time = 600" && \
-  # ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.type = custom" && \
-  # ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.custom.url = https://tile.openstreetmap.de/{z}/{x}/{y}.png" && \
-  # ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.attribution = <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors." && \
+  ckan config-tool "${CKAN_INI}" "ckanext.password_policy.password_length = 12" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.password_policy.failed_logins = 3" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.password_policy.user_locked_time = 600" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.type = custom" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.custom.url = https://tile.openstreetmap.de/{z}/{x}/{y}.png" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.attribution = <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors." && \
   echo "${TZ}" > /etc/timezone && \
   mkdir -p ${CKAN_STORAGE_PATH} && \
   chown -R ckan:ckan ${APP_DIR} ${CKAN_STORAGE_PATH} && \
   # Remove wheels
   rm -rf ${APP_DIR}/ext_wheels
 
-USER ckan
+WORKDIR ${APP_DIR}
+
+# Create local storage folder
+RUN mkdir -p ${CKAN_STORAGE_PATH} && \
+    chown -R ckan:ckan ${CKAN_STORAGE_PATH}
+
+COPY setup/prerun.py ${APP_DIR}
+COPY setup/start_ckan.sh ${APP_DIR}
+ADD https://raw.githubusercontent.com/ckan/ckan/${GIT_BRANCH}/wsgi.py ${APP_DIR}
+RUN chmod 644 ${APP_DIR}/wsgi.py
+
+# Create entrypoint directory for children image scripts
+ONBUILD RUN mkdir /docker-entrypoint.d
+
+EXPOSE 5000
+
+HEALTHCHECK --interval=60s --timeout=5s --retries=5 CMD curl --fail http://localhost:5000/api/3/action/status_show || exit CMD ["/srv/app/start_ckan.sh"]
+
+CMD ["/srv/app/start_ckan.sh"]
