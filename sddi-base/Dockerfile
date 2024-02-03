@@ -1,10 +1,6 @@
 ###############################################################################
-# Build stage
+# CKAN build stage
 ###############################################################################
-ARG CKAN_VERSION_BUILD_STAGE=2.10.1-dev
-ARG CKAN_VERSION_BUILD_SPATIAL=2.9.9-focal
-ARG CKAN_VERSION_RUNTIME_STAGE=2.10.1-focal
-
 FROM python:3.9-slim as ckanbuild
 
 # Used by Github Actions to tag the image with
@@ -69,6 +65,9 @@ RUN pip3_CONSTRAINT=/tmp/constraint.txt pip3 wheel --wheel-dir=/wheels PyYAML==5
 RUN pip3 wheel --wheel-dir=/wheels -r ckan/requirements.txt
 RUN pip3 wheel --wheel-dir=/wheels uWSGI==2.0.20 gevent==21.12.0 greenlet==1.1.3
 
+###############################################################################
+# Extbuild stage
+###############################################################################
 FROM python:3.9-slim as extbuild
 
 USER root
@@ -110,6 +109,13 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-hierarchy.git@${CKANEXT_HIERARCHY_VERSION}#egg=ckanext-hierarchy && \
   curl -o /wheels/ckanext-hierarchy.txt https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKANEXT_HIERARCHY_VERSION}/requirements.txt && \
   ls -lah /wheels
+
+# ckanext-envvars
+ENV ENVVARS_GIT_URL=https://github.com/okfn/ckanext-envvars
+ENV ENVVARS_GIT_BRANCH=0.0.2
+
+RUN set -ex && \
+  pip3 wheel --wheel-dir=/wheels git+${ENVVARS_GIT_URL}@${ENVVARS_GIT_BRANCH}#egg=ckanext-envvars
 
 # ckanext-grouphierarchy ######################################################
 ARG CKANEXT_SDDI_VERSION="1.1.3"
@@ -194,8 +200,8 @@ ENV CKANEXT_HARVEST_VERSION=${CKANEXT_HARVEST_VERSION}
 ENV CKANEXT_HARVEST_GITHUB_URL="https://github.com/ckan/ckanext-harvest.git"
 
 RUN set -ex && \
-    mkdir -p /wheels && \
-    pip install -r https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/dev-requirements.txt
+  mkdir -p /wheels && \
+  pip install -r https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/dev-requirements.txt
 
 RUN set -ex && \
   pip wheel --wheel-dir=/wheels -r https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt && \
@@ -213,6 +219,9 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_SPATIAL_GITHUB_URL}.git@${CKANEXT_SPATIAL_VERSION}#egg=ckanext-spatial
 
+###############################################################################
+# Runtime stage
+###############################################################################
 FROM python:3.9-slim
 
 ENV APP_DIR=/srv/app
@@ -254,10 +263,13 @@ RUN apt-get update && apt-get install -y \
     proj-bin \
     libproj-dev \
     proj-data \
-    python3-cffi
+    python3-cffi \
+    supervisor
 
 # Cleanup to reduce image size
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN pip install markupsafe==2.0.1 setuptools wheel
 
 # Create a constraint file that limits the Cython version to a compatible one, see https://github.com/yaml/pyyaml/issues/736
 RUN echo 'Cython < 3.0' > /tmp/constraint.txt
@@ -269,29 +281,30 @@ RUN mkdir -p ${SRC_DIR} && \
     ln -s /usr/bin/python3 /usr/bin/python
 
 # Get artifacts from build stages
-COPY --from=ckanbuild /wheels /srv/app/wheels
-COPY --from=extbuild /wheels /srv/app/ext_wheels
-COPY --from=ckanbuild /srv/app/src/ckan ${CKAN_DIR}
+COPY --from=ckanbuild /wheels ${APP_DIR}/wheels
+COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
+COPY --from=ckanbuild ${APP_DIR}/src/ckan ${CKAN_DIR}
 
 # Additional install steps for build stages artifacts
-RUN pip3 install --no-index --find-links=/srv/app/wheels uWSGI==2.0.20 gevent==21.12.0
+RUN pip3 install --no-index --find-links=${APP_DIR}/wheels uWSGI==2.0.20 gevent==21.12.0
 
 # Create a local user and group to run the app
 # Add a group with a specific GID (92)
 RUN groupadd -g 92 ckan
 # Add a user with a specific UID (92), home directory, and add to the ckan group
-RUN useradd -u 92 -g ckan -M -d /srv/app -s /bin/bash ckan
+RUN useradd -u 92 -g ckan -M -d ${APP_DIR} -s /bin/bash ckan
 
 WORKDIR ${CKAN_DIR}
 
 # Install CKAN
-RUN pip3 install -e /srv/app/src/ckan
+RUN pip3 install -e ${APP_DIR}/src/ckan
 RUN cp who.ini ${APP_DIR}
-RUN pip3 install --no-index --find-links=/srv/app/wheels -r requirements.txt
+RUN pip3 install --no-index --find-links=${APP_DIR}/wheels -r requirements.txt
 
 # ckanext-harvest ###########################################################
-RUN pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-harvest && \
-    pip install --no-index --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-harvest.txt
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-harvest && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-harvest.txt
 
 # ckanext-hierarchy ###########################################################
 RUN set -ex && \
@@ -302,6 +315,10 @@ RUN set -ex && \
 RUN set -ex && \
   pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-grouphierarchy.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-grouphierarchy
+
+# ckanext-envvars ############################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-envvars
 
 # ckanext-scheming ############################################################
 RUN set -ex && \
@@ -326,12 +343,25 @@ RUN set -ex && \
 
 # ckanext-spatial #############################################################
 RUN set -ex && \
-    pip3 install -e 'git+https://github.com/ckan/ckanext-spatial.git#egg=ckanext-spatial' && \
-    pip3 install -r 'https://raw.githubusercontent.com/ckan/ckanext-spatial/master/requirements.txt'
+  pip3 install -e 'git+https://github.com/ckan/ckanext-spatial.git#egg=ckanext-spatial' && \
+  pip3 install -r 'https://raw.githubusercontent.com/ckan/ckanext-spatial/master/requirements.txt'
 
 # Copy init scripts and additional files
 COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
 COPY --chown=ckan:ckan who.ini ${APP_DIR}/who.ini
+
+ENV CKAN__PLUGINS "envvars image_view text_view recline_view webpage_view datastore \
+  harvest ckan_harvester \
+  hierarchy_display hierarchy_form \
+  # datapusher Token required \
+  # display_group ValueError: Cannot determine url for /usr/local/lib/python3.9/site-packages/ckanext/grouphierarchy/fanstatic/hierarchy_theme.css \
+  # relation  ImportError: cannot import name 'Mapping' from 'collections' \
+  spatial_metadata spatial_query \
+  scheming_datasets \
+  datesearch \
+  composite \
+  repeating"
+  # password_policy No module named 'ckan.lib.repoze_plugins' \
 
 RUN set -ex && \
   ckan generate config ${APP_DIR}/production.ini
@@ -358,10 +388,13 @@ RUN set -ex && \
 
 WORKDIR ${APP_DIR}
 
+ENV UWSGI_HARAKIRI=50
+
 # Create local storage folder
 RUN mkdir -p ${CKAN_STORAGE_PATH} && \
     chown -R ckan:ckan ${CKAN_STORAGE_PATH}
 
+# Copy local scripts
 COPY setup/prerun.py ${APP_DIR}
 COPY setup/start_ckan.sh ${APP_DIR}
 ADD https://raw.githubusercontent.com/ckan/ckan/${GIT_BRANCH}/wsgi.py ${APP_DIR}
