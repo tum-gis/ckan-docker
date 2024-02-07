@@ -39,10 +39,9 @@ jobs:
         with:
           images: |
             ${{ env.REGISTRY }}/it-at-m/ckan-${{ matrix.context }}
-          flavor: latest=true
           tags: |
-            type=edge,branch=sddi-urban-2.9.9,suffix=-2.9.9
-            type=raw,value=udp-katalog-1.1.2
+            type=edge,branch=sddi-urban-2.9.9,suffix=-2.9.9-dev
+            type=raw,value=udp-katalog-1.1.3-dev
           labels: |
             maintainer=it@m, Landeshauptstadt Muenchen (LHM)
             org.opencontainers.image.vendor=it@m, Landeshauptstadt Muenchen (LHM)
@@ -65,8 +64,8 @@ jobs:
           images: |
             ${{ env.REGISTRY }}/it-at-m/ckan-${{ matrix.context }}
           tags: |
-            type=edge,branch=sddi-urban-2.9.9,suffix=-2.9.9-debug
-            type=raw,value=udp-katalog-1.1.2-debug
+            type=edge,branch=sddi-urban-2.9.9,suffix=-2.9.9-debug-dev
+            type=raw,value=udp-katalog-1.1.3-debug-dev
           labels: |
             maintainer=it@m, Landeshauptstadt Muenchen (LHM)
             org.opencontainers.image.vendor=it@m, Landeshauptstadt Muenchen (LHM)
