@@ -121,6 +121,15 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_GLAB_GITHUB_URL}.git@${CKANEXT_GLAB_VERSION}#egg=ckanext-glab
 
+# ckanext-iso ##########################################################
+ARG CKANEXT_ISO_VERSION="ad9c676"
+ENV CKANEXT_ISO_VERSION=${CKANEXT_ISO_VERSION}
+ENV CKANEXT_ISO_GITHUB_URL="https://github.com/gislab-augsburg/ckanext-iso"
+
+RUN set -ex && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_ISO_GITHUB_URL}.git@${CKANEXT_ISO_VERSION}#egg=ckanext-iso
+
 
 # #############################################################################
 # # Runtime stage
@@ -136,7 +145,7 @@ ENV CKAN__PLUGINS "image_view text_view recline_view webpage_view \
     resourcedictionary datastore xloader hierarchy_group_form \
     password_policy resource_proxy geo_view geojson_view wmts_view shp_view \
     harvest ckan_harvester csw_harvester waf_harvester doc_harvester \
-    gdpr envvars"
+    gdpr iso envvars"
 
 # Copy python wheels from build stage
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
@@ -185,6 +194,10 @@ RUN set -ex && \
 # ckanext-glab #############################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-glab
+
+# ckanext-iso #############################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-iso
 
 
 RUN set -ex && \
