@@ -131,7 +131,7 @@ Read more on CKAN's debug mode in the
 Debug images are available starting from `v0.0.6`.
 
 > **Warning**: The debug image versions should not be used in a production environment!
-> With debug mode enabled, a visitor to your site could execute malicious commands.
+> With debug mode enabled,a visitor to your site could execute malicious commands.
 
 Furthermore, for each commit to a [Pull request](https://github.com/tum-gis/ckan-docker/pulls) all image flavors are build.
 These images are published in the
