@@ -202,7 +202,7 @@ RUN set -ex && \
 # install supervisor ########################################################
 RUN set -ex && \
   apt-get update && \
-  apt-get install supervisor
+  apt-get -y install supervisor
 COPY supervisor/supervisor-ckan-worker.conf /etc/supervisor/conf.d
 
 
