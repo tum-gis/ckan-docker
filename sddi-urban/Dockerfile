@@ -199,6 +199,12 @@ RUN set -ex && \
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-iso
 
+# install supervisor ########################################################
+RUN set -ex && \
+  apt-get update && \
+  apt-get install supervisor
+COPY supervisor/supervisor-ckan-worker.conf /etc/supervisor/conf.d
+
 
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
