@@ -205,6 +205,7 @@ RUN set -ex && \
   apt-get -y install supervisor
 COPY supervisor/supervisor-ckan-worker.conf /etc/supervisor/conf.d
 COPY supervisor/supervisord.conf /etc/supervisor
+COPY supervisor/start-supervisor.sh /srv/app/docker-afterinit.d
 
 
 RUN set -ex && \
