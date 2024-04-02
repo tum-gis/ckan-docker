@@ -67,6 +67,20 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_DATESEARCH_VERSION_GITHUB_URL}.git@${CKANEXT_DATESEARCH_VERSION}#egg=ckanext-datesearch
 
+# ckanext-ckanext-theme-sddi ###########################################################
+ARG CKANEXT_THEME_VERSION="showcase-updating"
+ENV CKANEXT_THEME_VERSION=${CKANEXT_THEME_VERSION}
+
+RUN set -ex && \
+    mkdir -p /wheels && \
+    pip install -r https://raw.githubusercontent.com/MarijaKnezevic/ckanext-theme-sddi/${CKANEXT_THEME_VERSION}/dev-requirements.txt
+
+RUN set -ex && \
+  pip wheel --wheel-dir=/wheels -r https://raw.githubusercontent.com/MarijaKnezevic/ckanext-theme-sddi/${CKANEXT_THEME_VERSION}/requirements.txt && \
+  pip wheel --wheel-dir=/wheels git+https://github.com/MarijaKnezevic/ckanext-theme-sddi.git@${CKANEXT_THEME_VERSION}#egg=ckanext-theme-sddi && \
+  curl -o /wheels/ckanext-theme-sddi.txt https://raw.githubusercontent.com/MarijaKnezevic/ckanext-theme-sddi/${CKANEXT_THEME_VERSION}/requirements.txt && \
+  ls -lah /wheels
+  
 # ckanext-composite ###########################################################
 ARG CKANEXT_COMPOSITE_VERSION="1e6d7bb"
 ENV CKANEXT_COMPOSITE_VERSION=${CKANEXT_COMPOSITE_VERSION}
@@ -122,7 +136,7 @@ RUN set -ex && \
 FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 
 ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
-  hierarchy_display hierarchy_form display_group relation \
+  theme_sddi hierarchy_display hierarchy_form display_group relation \
   spatial_metadata spatial_query datesearch repeating composite scheming_datasets \
   envvars"
 
@@ -154,6 +168,11 @@ RUN set -ex && \
 RUN set -ex && \
   pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-grouphierarchy.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-grouphierarchy
+
+# ckanext-theme-sddi ######################################################
+RUN set -ex && \
+  pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-theme-sddi.txt && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-theme-sddi
 
 # ckanext-relation ############################################################
 RUN set -ex && \
