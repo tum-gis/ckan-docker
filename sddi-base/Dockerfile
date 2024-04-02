@@ -67,7 +67,7 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_DATESEARCH_VERSION_GITHUB_URL}.git@${CKANEXT_DATESEARCH_VERSION}#egg=ckanext-datesearch
 
-# ckanext-ckanext-theme-sddi ###########################################################
+# ckanext-theme-sddi ###########################################################
 ARG CKANEXT_THEME_VERSION="showcase-updating"
 ENV CKANEXT_THEME_VERSION=${CKANEXT_THEME_VERSION}
 
@@ -79,6 +79,20 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels -r https://raw.githubusercontent.com/MarijaKnezevic/ckanext-theme-sddi/${CKANEXT_THEME_VERSION}/requirements.txt && \
   pip wheel --wheel-dir=/wheels git+https://github.com/MarijaKnezevic/ckanext-theme-sddi.git@${CKANEXT_THEME_VERSION}#egg=ckanext-theme-sddi && \
   curl -o /wheels/ckanext-theme-sddi.txt https://raw.githubusercontent.com/MarijaKnezevic/ckanext-theme-sddi/${CKANEXT_THEME_VERSION}/requirements.txt && \
+  ls -lah /wheels
+
+# ckanext-showcase ###########################################################
+ARG CKANEXT_SHOWCASE_VERSION="master"
+ENV CKANEXT_SHOWCASE_VERSION=${CKANEXT_SHOWCASE_VERSION}
+
+RUN set -ex && \
+    mkdir -p /wheels && \
+    pip install -r https://raw.githubusercontent.com/ckan/ckanext-showcase/${CKANEXT_SHOWCASE_VERSION}/dev-requirements.txt
+
+RUN set -ex && \
+  pip wheel --wheel-dir=/wheels -r https://raw.githubusercontent.com/ckan/ckanext-showcase/${CKANEXT_SHOWCASE_VERSION}/requirements.txt && \
+  pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-showcase.git@${CKANEXT_SHOWCASE_VERSION}#egg=ckanext-showcase && \
+  curl -o /wheels/ckanext-showcase.txt https://raw.githubusercontent.com/ckan/ckanext-showcase/${CKANEXT_SHOWCASE_VERSION}/requirements.txt && \
   ls -lah /wheels
   
 # ckanext-composite ###########################################################
@@ -137,7 +151,7 @@ FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 
 ENV CKAN__PLUGINS "image_view text_view recline_view datastore datapusher \
   theme_sddi hierarchy_display hierarchy_form display_group relation \
-  spatial_metadata spatial_query datesearch repeating composite scheming_datasets \
+  spatial_metadata spatial_query datesearch repeating composite scheming_datasets showcase \
   envvars"
 
 # Extra env for compatibility with ckan/base Docker images for downstream k8s
@@ -174,6 +188,11 @@ RUN set -ex && \
   pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-theme-sddi.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-theme-sddi
 
+# ckanext-showcase ######################################################
+RUN set -ex && \
+  pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-showcase.txt && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-showcase
+  
 # ckanext-relation ############################################################
 RUN set -ex && \
   pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-relation.txt && \
