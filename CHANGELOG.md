@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 
+## [2.0.2] - 2024-04-17
+### Added
+- Variable that defines after how many seconds of user inactivity the user is logged out `who.timeout = 1800`
+
+### Fixed
+- Various `ckanext-grouphierarchy-sddi` updates and fixing of styling bugs. See [CHANGELOG](https://github.com/tum-gis/ckanext-grouphierarchy-sddi/releases/tag/1.1.4) for changes.
+  - Removed "Remember me" button on the login page
+  - Fixing the missing variables for personalization of the main page
+  - Repair the view of the dataset added by the organization on the main page
+  
 ## [2.0.1] - 2023-11-07
 
 ### Added
@@ -223,6 +233,7 @@ for production environments.**
 ### Known issues
 
 [Unreleased]: https://github.com/tum-gis/ckan-docker/compare/2.0.1...HEAD
+[2.0.2]: https://github.com/tum-gis/ckan-docker/compare/2.0.1...2.0.2
 [2.0.1]: https://github.com/tum-gis/ckan-docker/compare/2.0.0...2.0.1
 [2.0.0]: https://github.com/tum-gis/ckan-docker/compare/1.2.0...2.0.0
 [1.2.0]: https://github.com/tum-gis/ckan-docker/compare/1.1.3...1.2.0
