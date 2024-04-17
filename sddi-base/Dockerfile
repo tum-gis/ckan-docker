@@ -240,6 +240,7 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.custom.url = https://tile.openstreetmap.de/{z}/{x}/{y}.png" && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.attribution = <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors." && \
   ckan config-tool "${CKAN_INI}" "who.timeout = 1800" && \
+  ckan config-tool "${CKAN_INI}" "ckan.auth.public_user_details = False" && \
   echo "${TZ}" > /etc/timezone && \
   mkdir -p ${CKAN_STORAGE_PATH} && \
   chown -R ckan:ckan ${APP_DIR} ${CKAN_STORAGE_PATH} && \
