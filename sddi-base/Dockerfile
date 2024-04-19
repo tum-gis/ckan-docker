@@ -24,7 +24,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-grouphierarchy ######################################################
-ARG CKANEXT_SDDI_VERSION="1.1.3"
+ARG CKANEXT_SDDI_VERSION="1.1.4"
 ENV CKANEXT_SDDI_VERSION=${CKANEXT_SDDI_VERSION}
 
 RUN set -ex && \
@@ -87,6 +87,19 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_REPEATING_GITHUB_URL}.git@${CKANEXT_REPEATING_VERSION}#egg=ckanext-repeating
 
+# ckanext-clamav ##############################################################
+ARG CKANEXT_CALMAV_VERSION="master"
+ENV CKANEXT_CALMAV_VERSION=${CKANEXT_CALMAV_VERSION}
+ENV CKANEXT_CALMAV_GITHUB_URL="https://github.com/mutantsan/ckanext-clamav"
+
+RUN set -ex && \
+  pip wheel --wheel-dir=/wheels -r \
+    https://raw.githubusercontent.com/mutantsan/ckanext-clamav/${CKANEXT_CALMAV_VERSION}/requirements.txt && \
+  curl -o /wheels/ckanext-clamav.txt \
+    https://raw.githubusercontent.com/mutantsan/ckanext-clamav/${CKANEXT_CALMAV_VERSION}/requirements.txt && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_CALMAV_GITHUB_URL}.git@${CKANEXT_CALMAV_VERSION}#egg=ckanext-clamav
+
 # ckanext-password-policy #####################################################
 ARG CKANEXT_PASSWORD_POLICY_VERSION="5618dc9"
 ENV CKANEXT_PASSWORD_POLICY_VERSION=${CKANEXT_PASSWORD_POLICY_VERSION}
@@ -137,7 +150,7 @@ FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 ENV CKAN__PLUGINS "image_view text_view recline_view webpage_view datastore datapusher \
   hierarchy_display hierarchy_form display_group relation \
   spatial_metadata spatial_query datesearch repeating composite scheming_datasets \
-  password_policy \
+  password_policy clamav \
   envvars"
 
 # Extra env for compatibility with ckan/base Docker images for downstream k8s
@@ -151,6 +164,8 @@ USER root
 RUN set -ex && \
   apt-get update && \
   apt-get install -y --no-install-recommends \
+    clamav \
+    clamav-daemon \
     libxml2-dev libxslt1-dev libgeos-c1v5 && \
     pip install --no-cache-dir -U pip && \
     rm -rf /var/lib/apt/lists/*
@@ -195,7 +210,12 @@ RUN set -ex && \
 # ckanext-repeating ###########################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-repeating
-
+  
+# ckanext-clamav ##############################################################
+RUN set -ex && \
+  pip install -r ${APP_DIR}/ext_wheels/ckanext-clamav.txt && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-clamav
+  
 # ckanext-password-policy #####################################################
 RUN set -ex && \
   pip install -r ${APP_DIR}/ext_wheels/ckanext-password-policy.txt && \
@@ -219,6 +239,8 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.type = custom" && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.custom.url = https://tile.openstreetmap.de/{z}/{x}/{y}.png" && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.attribution = <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors." && \
+  ckan config-tool "${CKAN_INI}" "who.timeout = 1800" && \
+  ckan config-tool "${CKAN_INI}" "ckan.auth.public_user_details = False" && \
   echo "${TZ}" > /etc/timezone && \
   mkdir -p ${CKAN_STORAGE_PATH} && \
   chown -R ckan:ckan ${APP_DIR} ${CKAN_STORAGE_PATH} && \
