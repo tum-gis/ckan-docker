@@ -45,6 +45,19 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_RESTRICTED_GITHUB_URL}.git@${CKANEXT_RESTRICTED_VERSION}#egg=ckanext-restricted
 
+# ckanext-clamav ##############################################################
+ARG CKANEXT_CALMAV_VERSION="master"
+ENV CKANEXT_CALMAV_VERSION=${CKANEXT_CALMAV_VERSION}
+ENV CKANEXT_CALMAV_GITHUB_URL="https://github.com/mutantsan/ckanext-clamav"
+
+RUN set -ex && \
+  pip wheel --wheel-dir=/wheels -r \
+    https://raw.githubusercontent.com/mutantsan/ckanext-clamav/${CKANEXT_CALMAV_VERSION}/requirements.txt && \
+  curl -o /wheels/ckanext-clamav.txt \
+    https://raw.githubusercontent.com/mutantsan/ckanext-clamav/${CKANEXT_CALMAV_VERSION}/requirements.txt && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_CALMAV_GITHUB_URL}.git@${CKANEXT_CALMAV_VERSION}#egg=ckanext-clamav
+    
 # #############################################################################
 # # Runtime stage
 # #############################################################################
@@ -57,7 +70,7 @@ ENV CKAN__PLUGINS "image_view text_view recline_view webpage_view datastore data
   spatial_metadata spatial_query datesearch repeating composite scheming_datasets \
   password_policy resource_proxy geo_view geojson_view wmts_view shp_view \
   dcat dcat_json_interface structured_data \
-  restricted \
+  restricted clamav \
   envvars"
 
 # Copy python wheels from build stage
@@ -76,11 +89,18 @@ RUN set -ex && \
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-restricted
 
+# ckanext-clamav ##############################################################
+RUN set -ex && \
+  pip install -r ${APP_DIR}/ext_wheels/ckanext-clamav.txt && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-clamav
+  
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
   ckan config-tool "${CKAN_INI}" "ckanext.geoview.ol_viewer.formats = wms kml" && \
   ckan config-tool "${CKAN_INI}" "ckanext.geoview.shp_viewer.srid = 4326" && \
   ckan config-tool "${CKAN_INI}" "ckanext.geoview.shp_viewer.encoding = UTF-8" && \
+  ckan config-tool "${CKAN_INI}" "who.timeout = 1800" && \
+  ckan config-tool "${CKAN_INI}" "ckan.auth.public_user_details = False" && \
   # Remove wheels
   rm -rf ${APP_DIR}/ext_wheels
 
