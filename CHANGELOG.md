@@ -18,10 +18,7 @@ For releases `< 1.0.0` minor version steps may indicate breaking changes too.
   - 
 ## [2.1.1] - 2024-04-17
 ## [2.1.0] - 2024-04-17
-## [2.0.1] - 2024-04-17
-  
 ## [2.0.1] - 2023-11-07
-
 ### Added
 
 - Expanding the Dataset Spatial Extend preview. tum-gis/ckan-docker#52
