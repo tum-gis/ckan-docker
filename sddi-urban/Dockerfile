@@ -217,4 +217,8 @@ RUN set -ex && \
   # Remove init script
   rm -f ${APP_DIR}/docker-afterinit.d/01_create_groups.sh
 
+# Set timezone
+ENV TZ="Europe/Berlin"
+RUN echo "${TZ}" > /etc/timezone
+
 USER ckan
