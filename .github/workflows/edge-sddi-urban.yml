@@ -65,7 +65,7 @@ jobs:
             ${{ env.REGISTRY }}/it-at-m/ckan-${{ matrix.context }}
           tags: |
             type=edge,branch=sddi-urban-2.9.9,suffix=-2.9.9-debug-dev
-            type=raw,value=udp-katalog-1.1.4-debug-dev
+            type=raw,value=udp-katalog-1.1.5-debug-dev
           labels: |
             maintainer=it@m, Landeshauptstadt Muenchen (LHM)
             org.opencontainers.image.vendor=it@m, Landeshauptstadt Muenchen (LHM)
