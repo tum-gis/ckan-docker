@@ -215,6 +215,7 @@ are alway pinned to a stable release number or commit hash.
 | [`harvest`](https://github.com/ckan/ckanext-harvest) | `v1.5.6` |  |  |  | :heavy_check_mark: | Provides a framework and management tools for automatic harvesting of other metatdata catalogs. |
 | [`glab`](https://github.com/gislab-augsburg/ckanext-glab/tree/gdpr) | `0612d22` |  |  |  | :heavy_check_mark: | Adds extended security and GDPR features. |
 | [`iso`](https://github.com/gislab-augsburg/ckanext-iso) | `c4c28a8` |  |  |  | :heavy_check_mark: | Adapts csw harvester from ckanext-spatial to requirements for harvesting LHM Geoportal. |
+| [`keycloak`](https://github.com/keitaroinc/ckanext-keycloak) | `v2.1` |  |  |  | :heavy_check_mark: | Enables Single Sign-On with keycloak |
 
 
 ## :rocket: Usage

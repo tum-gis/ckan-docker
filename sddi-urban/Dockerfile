@@ -129,6 +129,19 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_ISO_GITHUB_URL}.git@${CKANEXT_ISO_VERSION}#egg=ckanext-iso
 
+# ckanext-keycloak ##########################################################
+ARG CKANEXT_KEYCLOAK_VERSION="v2.1"
+ENV CKANEXT_KEYCLOAK_VERSION=${CKANEXT_KEYCLOAK_VERSION}
+ENV CKANEXT_KEYCLOAK_GITHUB_URL="https://github.com/keitaroinc/ckanext-keycloak"
+
+RUN set -ex && \
+  pip install -r \
+    https://raw.githubusercontent.com/keitaroinc/ckanext-keycloak/${CKANEXT_KEYCLOAK_VERSION}/requirements.txt && \
+  curl -o /wheels/ckanext-keycloak.txt \
+    https://raw.githubusercontent.com/keitaroinc/ckanext-keycloak/${CKANEXT_KEYCLOAK_VERSION}/requirements.txt && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_KEYCLOAK_GITHUB_URL}.git@${CKANEXT_KEYCLOAK_VERSION}#egg=ckanext-keycloak
+
 
 # #############################################################################
 # # Runtime stage
@@ -197,6 +210,11 @@ RUN set -ex && \
 # ckanext-iso #############################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-iso
+
+# ckanext-keycloak #################################################################
+RUN set -ex && \
+  pip install -r ${APP_DIR}/ext_wheels/ckanext-keycloak.txt && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-lkeycloak
 
 # install supervisor ########################################################
 RUN set -ex && \
