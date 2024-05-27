@@ -214,7 +214,7 @@ RUN set -ex && \
 # ckanext-keycloak #################################################################
 RUN set -ex && \
   pip install -r ${APP_DIR}/ext_wheels/ckanext-keycloak.txt && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-lkeycloak
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-keycloak
 
 # install supervisor ########################################################
 RUN set -ex && \
