@@ -224,6 +224,7 @@ RUN set -ex && \
 # Copy init scripts and additional files
 COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
 COPY --chown=ckan:ckan who.ini ${APP_DIR}/who.ini
+COPY --chown=ckan:ckan uwsgi.conf ${APP_DIR}/uwsgi.conf
 
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
