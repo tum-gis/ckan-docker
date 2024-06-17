@@ -143,13 +143,13 @@ RUN set -ex && \
 #    git+${CKANEXT_KEYCLOAK_GITHUB_URL}.git@${CKANEXT_KEYCLOAK_VERSION}#egg=ckanext-keycloak
 
 # ckanext-noanonaccess ##########################################################
-ARG CKANEXT_ISO_VERSION="v2.0.4"
-ENV CKANEXT_ISO_VERSION=${CKANEXT_ISO_VERSION}
-ENV CKANEXT_ISO_GITHUB_URL="https://github.com/datopian/ckanext-noanonaccess"
+ARG CKANEXT_NOANONACCESS_VERSION="v2.0.4"
+ENV CKANEXT_NOANONACCESS_VERSION=${CKANEXT_NOANONACCESS_VERSION}
+ENV CKANEXT_NOANONACCESS_GITHUB_URL="https://github.com/datopian/ckanext-noanonaccess"
 
 RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_ISO_GITHUB_URL}.git@${CKANEXT_ISO_VERSION}#egg=ckanext-noanonaccess
+    git+${CKANEXT_NOANONACCESS_GITHUB_URL}.git@${CKANEXT_NOANONACCESS_VERSION}#egg=ckanext-noanonaccess
 
 
 # #############################################################################
@@ -225,7 +225,7 @@ RUN set -ex && \
 #  pip install -r ${APP_DIR}/ext_wheels/ckanext-keycloak.txt && \
 #  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-keycloak
 
-# ckanext-iso #############################################################
+# ckanext-noanonaccess #############################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-noanonaccess
 
