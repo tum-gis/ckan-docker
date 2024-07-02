@@ -73,7 +73,7 @@ RUN set -ex && \
     git+${CKANEXT_XLOADER_GITHUB_URL}.git@${CKANEXT_XLOADER_VERSION}#egg=ckanext-xloader
 
 # ckanext-lhm ##########################################################
-ARG CKANEXT_LHM_VERSION="d258e1f"
+ARG CKANEXT_LHM_VERSION="c7cbea7"
 ENV CKANEXT_LHM_VERSION=${CKANEXT_LHM_VERSION}
 ENV CKANEXT_LHM_GITHUB_URL="https://github.com/MandanaMoshref/ckanext-lhm"
 
