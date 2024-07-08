@@ -73,7 +73,11 @@ RUN set -ex && \
     git+${CKANEXT_XLOADER_GITHUB_URL}.git@${CKANEXT_XLOADER_VERSION}#egg=ckanext-xloader
 
 # ckanext-lhm ##########################################################
+<<<<<<< HEAD
+ARG CKANEXT_LHM_VERSION="c7cbea7"
+=======
 ARG CKANEXT_LHM_VERSION="cca4bcb"
+>>>>>>> b3519d32a68b10f164e74aa129fef24d0ab4cabe
 ENV CKANEXT_LHM_VERSION=${CKANEXT_LHM_VERSION}
 ENV CKANEXT_LHM_GITHUB_URL="https://github.com/MandanaMoshref/ckanext-lhm"
 
@@ -111,18 +115,45 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_SCHEMING_GITHUB_URL}.git@${CKANEXT_SCHEMING_VERSION}#egg=ckanext-scheming
 
-# ckanext-qgov ##########################################################
-ARG CKANEXT_QGOV_VERSION="6.0.2"
-ENV CKANEXT_QGOV_VERSION=${CKANEXT_QGOV_VERSION}
-ENV CKANEXT_QGOV_GITHUB_URL="https://github.com/qld-gov-au/ckanext-qgov"
+# ckanext-glab ##########################################################
+ARG CKANEXT_GLAB_VERSION="0612d22"
+ENV CKANEXT_GLAB_VERSION=${CKANEXT_GLAB_VERSION}
+ENV CKANEXT_GLAB_GITHUB_URL="https://github.com/gislab-augsburg/ckanext-glab"
 
 RUN set -ex && \
-  pip install -r \
-    https://raw.githubusercontent.com/qld-gov-au/ckanext-qgov/${CKANEXT_QGOV_VERSION}/requirements.txt && \
-  curl -o /wheels/ckanext-qgov.txt \
-    https://raw.githubusercontent.com/qld-gov-au/ckanext-qgov/${CKANEXT_QGOV_VERSION}/requirements.txt && \
   pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_QGOV_GITHUB_URL}.git@${CKANEXT_QGOV_VERSION}#egg=ckanext-qgov
+    git+${CKANEXT_GLAB_GITHUB_URL}.git@${CKANEXT_GLAB_VERSION}#egg=ckanext-glab
+
+# ckanext-iso ##########################################################
+ARG CKANEXT_ISO_VERSION="c4c28a8"
+ENV CKANEXT_ISO_VERSION=${CKANEXT_ISO_VERSION}
+ENV CKANEXT_ISO_GITHUB_URL="https://github.com/gislab-augsburg/ckanext-iso"
+
+RUN set -ex && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_ISO_GITHUB_URL}.git@${CKANEXT_ISO_VERSION}#egg=ckanext-iso
+
+## ckanext-keycloak ##########################################################
+#ARG CKANEXT_KEYCLOAK_VERSION="v2.1"
+#ENV CKANEXT_KEYCLOAK_VERSION=${CKANEXT_KEYCLOAK_VERSION}
+#ENV CKANEXT_KEYCLOAK_GITHUB_URL="https://github.com/keitaroinc/ckanext-keycloak"
+#
+#RUN set -ex && \
+#  pip install -r \
+#    https://raw.githubusercontent.com/keitaroinc/ckanext-keycloak/${CKANEXT_KEYCLOAK_VERSION}/requirements.txt && \
+#  curl -o /wheels/ckanext-keycloak.txt \
+#    https://raw.githubusercontent.com/keitaroinc/ckanext-keycloak/${CKANEXT_KEYCLOAK_VERSION}/requirements.txt && \
+#  pip wheel --wheel-dir=/wheels \
+#    git+${CKANEXT_KEYCLOAK_GITHUB_URL}.git@${CKANEXT_KEYCLOAK_VERSION}#egg=ckanext-keycloak
+
+# ckanext-noanonaccess ##########################################################
+ARG CKANEXT_NOANONACCESS_VERSION="v2.0.4"
+ENV CKANEXT_NOANONACCESS_VERSION=${CKANEXT_NOANONACCESS_VERSION}
+ENV CKANEXT_NOANONACCESS_GITHUB_URL="https://github.com/datopian/ckanext-noanonaccess"
+
+RUN set -ex && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_NOANONACCESS_GITHUB_URL}.git@${CKANEXT_NOANONACCESS_VERSION}#egg=ckanext-noanonaccess
 
 
 # #############################################################################
@@ -139,7 +170,7 @@ ENV CKAN__PLUGINS "image_view text_view recline_view webpage_view \
     resourcedictionary datastore xloader hierarchy_group_form \
     password_policy resource_proxy geo_view geojson_view wmts_view shp_view \
     harvest ckan_harvester csw_harvester waf_harvester doc_harvester \
-    qgovext envvars"
+    gdpr iso envvars"
 
 # Copy python wheels from build stage
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
@@ -185,10 +216,30 @@ RUN yes | pip uninstall ckanext-scheming
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-scheming
 
-# ckanext-qgov #############################################################
+# ckanext-glab #############################################################
 RUN set -ex && \
-  pip install -r ${APP_DIR}/ext_wheels/ckanext-qgov.txt && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-qgov
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-glab
+
+# ckanext-iso #############################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-iso
+
+## ckanext-keycloak #################################################################
+#RUN set -ex && \
+#  pip install -r ${APP_DIR}/ext_wheels/ckanext-keycloak.txt && \
+#  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-keycloak
+
+# ckanext-noanonaccess #############################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-noanonaccess
+
+# install supervisor ########################################################
+RUN set -ex && \
+  apt-get update && \
+  apt-get -y install supervisor
+COPY supervisor/supervisor-ckan-worker.conf /etc/supervisor/conf.d
+COPY supervisor/supervisord.conf /etc/supervisor
+COPY supervisor/start-supervisor.sh /srv/app/docker-afterinit.d
 
 
 RUN set -ex && \
@@ -200,5 +251,12 @@ RUN set -ex && \
   rm -rf ${APP_DIR}/ext_wheels && \
   # Remove init script
   rm -f ${APP_DIR}/docker-afterinit.d/01_create_groups.sh
+<<<<<<< HEAD
+
+# Set timezone
+ENV TZ="Europe/Berlin"
+RUN echo "${TZ}" > /etc/timezone
+=======
+>>>>>>> b3519d32a68b10f164e74aa129fef24d0ab4cabe
 
 USER ckan
