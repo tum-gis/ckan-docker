@@ -64,24 +64,3 @@ docker push "$IMAGE_REPOSITORY/ckan-sddi-social:${IMAGE_TAG}-debug"
 
 cd ..
 printf "\n\n"
-
-# sddi ########################################################################
-cd ../sddi-urban
-
-# sddi:TAG
-docker build . \
-  --build-arg "BASEIMAGE_REPOSITORY=$IMAGE_REPOSITORY/ckan-sddi-base" \
-  --build-arg BASEIMAGE_VERSION=${IMAGE_TAG} \
-  -t "$IMAGE_REPOSITORY/ckan-sddi-urban:${IMAGE_TAG}"
-
-docker push "$IMAGE_REPOSITORY/ckan-sddi-urban:${IMAGE_TAG}"
-
-# sddi:TAG-debug
-docker build . \
-  --build-arg "BASEIMAGE_REPOSITORY=$IMAGE_REPOSITORY/ckan-sddi-base" \
-  --build-arg BASEIMAGE_VERSION=${IMAGE_TAG}-debug \
-  -t "$IMAGE_REPOSITORY/ckan-sddi-urban:${IMAGE_TAG}-debug"
-
-docker push "$IMAGE_REPOSITORY/ckan-sddi-urban:${IMAGE_TAG}-debug"
-printf "\n\n"
-

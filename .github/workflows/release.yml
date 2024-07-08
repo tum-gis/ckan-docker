@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        context: ['sddi-base', 'sddi', 'sddi-social', 'sddi-urban']
+        context: ['sddi-base', 'sddi', 'sddi-social']
       fail-fast: true
       max-parallel: 1
     permissions:

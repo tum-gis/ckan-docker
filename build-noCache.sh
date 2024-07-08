@@ -60,23 +60,3 @@ docker build . \
 
 cd ..
 printf "\n\n"
-
-# sddi-urban ########################################################################
-cd ../sddi-urban
-
-# sddi-urban:TAG
-docker build . \
-  --no-cache \
-  --build-arg "BASEIMAGE_REPOSITORY=$IMAGE_REPOSITORY/ckan-sddi-base" \
-  --build-arg BASEIMAGE_VERSION=${IMAGE_TAG} \
-  -t "$IMAGE_REPOSITORY/ckan-sddi-urban:${IMAGE_TAG}"
-
-# sddi:TAG-debug
-docker build . \
-  --no-cache \
-  --build-arg "BASEIMAGE_REPOSITORY=$IMAGE_REPOSITORY/ckan-sddi-base" \
-  --build-arg BASEIMAGE_VERSION=${IMAGE_TAG}-debug \
-  -t "$IMAGE_REPOSITORY/ckan-sddi-urban:${IMAGE_TAG}-debug"
-
-printf "\n\n"
-
