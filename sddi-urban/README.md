@@ -1,6 +1,6 @@
 <h1 align="center">SDDI CKAN Docker, additional image sddi-urban</h1>
 
-This directory provides an additional [CKAN](https://github.com/ckan) Docker images for the
+This directory provides an additional [CKAN](https://github.com/ckan) Docker image for the
 [`sddi-ckan-k8s`](https://github.com/tum-gis/sddi-ckan-k8s) Helm chart.
 The images contain CKAN itself compiled with a set of CKAN extension to add functionality required for
 the SDDI concept and beyond that.
@@ -18,7 +18,8 @@ the SDDI concept and beyond that.
 
 ## :inbox_tray: Image flavor overview
 
-The CKAN-SDDI Docker images are released in three flavors, that are described below.
+The CKAN-SDDI Docker images are originally released in different flavors, that are described in the 
+[Readme](https://github.com/tum-gis/sddi-ckan-k8s). With `sddi-base`, another flavor is added. 
 For each flavor a one [package](https://github.com/orgs/tum-gis/packages?repo_name=ckan-docker)
 exists in this repository, where the image can be pulled.
 
@@ -34,7 +35,7 @@ extended import-/ export, harvesting, and security support. Some extensions from
 are installed but deactivated. These could be easily reactivated by including them into the
 plugin list in ckan configuration.
 This image also includes a slightly different set of preinstalled SDDI groups and topics as
-well as the option of custom theming and a custom metadata schema, inspired by the requirements
+well as the option of custom theming and custom metadata schemas, inspired by the requirements
 of Landeshauptstadt München (LHM).
 
 ```text
@@ -90,7 +91,6 @@ are alway pinned to a stable release number or commit hash.
 | [`harvest`](https://github.com/ckan/ckanext-harvest) | `v1.5.6` |  |  |  | :heavy_check_mark: | Provides a framework and management tools for automatic harvesting of other metatdata catalogs. |
 | [`glab`](https://github.com/gislab-augsburg/ckanext-glab/tree/gdpr) | `0612d22` |  |  |  | :heavy_check_mark: | Adds extended security and GDPR features. |
 | [`iso`](https://github.com/gislab-augsburg/ckanext-iso) | `c4c28a8` |  |  |  | :heavy_check_mark: | Adapts csw harvester from ckanext-spatial to requirements for harvesting LHM Geoportal. |
-| [`keycloak`](https://github.com/keitaroinc/ckanext-keycloak) | `v2.1` |  |  |  | :heavy_check_mark: | Enables Single Sign-On with keycloak |
 
 
 ## :rocket: Usage
