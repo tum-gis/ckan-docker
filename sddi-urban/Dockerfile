@@ -73,11 +73,7 @@ RUN set -ex && \
     git+${CKANEXT_XLOADER_GITHUB_URL}.git@${CKANEXT_XLOADER_VERSION}#egg=ckanext-xloader
 
 # ckanext-lhm ##########################################################
-<<<<<<< HEAD
 ARG CKANEXT_LHM_VERSION="c7cbea7"
-=======
-ARG CKANEXT_LHM_VERSION="cca4bcb"
->>>>>>> b3519d32a68b10f164e74aa129fef24d0ab4cabe
 ENV CKANEXT_LHM_VERSION=${CKANEXT_LHM_VERSION}
 ENV CKANEXT_LHM_GITHUB_URL="https://github.com/MandanaMoshref/ckanext-lhm"
 
@@ -251,12 +247,9 @@ RUN set -ex && \
   rm -rf ${APP_DIR}/ext_wheels && \
   # Remove init script
   rm -f ${APP_DIR}/docker-afterinit.d/01_create_groups.sh
-<<<<<<< HEAD
 
 # Set timezone
 ENV TZ="Europe/Berlin"
 RUN echo "${TZ}" > /etc/timezone
-=======
->>>>>>> b3519d32a68b10f164e74aa129fef24d0ab4cabe
 
 USER ckan
