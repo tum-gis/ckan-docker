@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-ARG BASEIMAGE_REPOSITORY=ghcr.io/it-at-m/ckan-sddi-urban
-ARG BASEIMAGE_VERSION=edge-2.9.9-dev
-=======
 ARG BASEIMAGE_REPOSITORY=ghcr.io/tum-gis/ckan-sddi-urban
 ARG BASEIMAGE_VERSION=edge-2.9.9
->>>>>>> b3519d32a68b10f164e74aa129fef24d0ab4cabe
 
 FROM ${BASEIMAGE_REPOSITORY}:${BASEIMAGE_VERSION}
 
