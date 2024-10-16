@@ -4,11 +4,11 @@
 FROM python:3.9-slim as ckanbuild
 
 # Used by Github Actions to tag the image with
-ENV IMAGE_TAG=2.10.3
+ENV IMAGE_TAG=2.11.0
 
 # Set CKAN version to build
 ENV GIT_URL=https://github.com/ckan/ckan.git
-ENV GIT_BRANCH=ckan-2.10.3
+ENV GIT_BRANCH=ckan-2.11.0
 
 # Set src dirs
 ENV SRC_DIR=/srv/app/src
@@ -229,7 +229,7 @@ ENV SRC_DIR=/srv/app/src
 ENV CKAN_DIR=${SRC_DIR}/ckan
 ENV DATA_DIR=/srv/app/data
 ENV PIP_SRC=${SRC_DIR}
-ENV GIT_BRANCH=ckan-2.10.3
+ENV GIT_BRANCH=ckan-2.11.0
 
 # Setting the locale
 ENV LC_ALL="en_US.UTF-8"
