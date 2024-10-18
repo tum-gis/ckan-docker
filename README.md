@@ -47,7 +47,6 @@ See [packages](https://github.com/orgs/tum-gis/packages?repo_name=ckan-docker) f
 - [:inbox\_tray: Image flavor overview](#inbox_tray-image-flavor-overview)
   - [`sddi-base`](#sddi-base)
   - [`sddi`](#sddi)
-  - [`sddi-social`](#sddi-social)
 - [:1234: Image versioning](#1234-image-versioning)
   - [Development image versions](#development-image-versions)
   - [CKAN and CKAN extension versions](#ckan-and-ckan-extension-versions)
@@ -71,8 +70,6 @@ exists in this repository, where the image can be pulled.
 ```bash
 docker pull ghcr.io/tum-gis/ckan-sddi-base
 docker pull ghcr.io/tum-gis/ckan-sddi
-docker pull ghcr.io/tum-gis/ckan-sddi-social
-
 ```
 
 ### `sddi-base`
@@ -95,15 +92,6 @@ This is the image most people will usually want.
 ghcr.io/tum-gis/ckan-sddi
 ```
 
-### `sddi-social`
-
-`sddi` + optional CKAN extension for social media features, that may require staff
-for moderation of social media content.
-
-```text
-ghcr.io/tum-gis/ckan-sddi-social
-```
-
 ## :1234: Image versioning
 
 The images in this repo are versioned and tagged according to the
@@ -115,7 +103,6 @@ All available tags are listed in the packages of each image:
 
 - [`sddi-base`](https://github.com/tum-gis/ckan-docker/pkgs/container/ckan-sddi-base)
 - [`sddi`](https://github.com/tum-gis/ckan-docker/pkgs/container/ckan-sddi)
-- [`sddi-social`](https://github.com/tum-gis/ckan-docker/pkgs/container/ckan-sddi-social)
 
 ### Development image versions
 
@@ -154,9 +141,6 @@ For instance, for commit 19a2e64 to PR tum-gis/ckan-docker#26 following images a
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-19a2e64`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-19a2e64-debug`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26`
-- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-debug`
-- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-19a2e64`
-- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-19a2e64-debug`
 
 This registry will be cleared periodically.
 
