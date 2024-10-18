@@ -6,19 +6,44 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 
-## [2.1.2] - 2024-04-17
+## [Unreleased] - 2024-10-18
+
 ### Added
+
+### Changed
+
+### Removed
+
+- `sddi-social` image flavor.
+
+### Fixed
+
+### Security
+
+### Deprecated
+
+### Known issues
+
+## [2.1.2] - 2024-04-17
+
+### Added
+
 - Variable that defines after how many seconds of user inactivity the user is logged out `who.timeout = 1800`
 
 ### Fixed
-- Various `ckanext-grouphierarchy-sddi` updates and fixing of styling bugs. See [CHANGELOG](https://github.com/tum-gis/ckanext-grouphierarchy-sddi/releases/tag/1.1.4) for changes.
+
+- Various `ckanext-grouphierarchy-sddi` updates and fixing of styling bugs.
+  See [CHANGELOG](https://github.com/tum-gis/ckanext-grouphierarchy-sddi/releases/tag/1.1.4) for changes.
   - Removed "Remember me" button on the login page
   - Fixing the missing variables for personalization of the main page
   - Repair the view of the dataset added by the organization on the main page
-  - 
+
 ## [2.1.1] - 2024-04-17
+
 ## [2.1.0] - 2024-04-17
+
 ## [2.0.1] - 2023-11-07
+
 ### Added
 
 - Expanding the Dataset Spatial Extend preview. tum-gis/ckan-docker#52
@@ -200,22 +225,6 @@ for production environments.**
 
 - Initial release to initialize Github packages.
 - **Images are not functional jet**!
-
-## [Unreleased] - YYYY-MM-DD
-
-### Added
-
-### Changed
-
-### Removed
-
-### Fixed
-
-### Security
-
-### Deprecated
-
-### Known issues
 
 ## [template] - YYYY-MM-DD
 
