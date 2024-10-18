@@ -1,9 +1,9 @@
 ###############################################################################
 # Build stage
 ###############################################################################
-ARG CKAN_VERSION_BUILD_STAGE=2.9.9-dev
-ARG CKAN_VERSION_BUILD_SPATIAL=2.9.9-focal
-ARG CKAN_VERSION_RUNTIME_STAGE=2.9.9-focal
+ARG CKAN_VERSION_BUILD_STAGE=2.11.0
+ARG CKAN_VERSION_BUILD_SPATIAL=2.11.0
+ARG CKAN_VERSION_RUNTIME_STAGE=2.11.0
 
 FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
 
@@ -114,7 +114,7 @@ RUN set -ex && \
     git+${CKANEXT_PASSWORD_POLICY_GITHUB_URL}.git@${CKANEXT_PASSWORD_POLICY_VERSION}#egg=ckanext-password-policy
 
 # ckanext-spatial #############################################################
-FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_BUILD_SPATIAL} as extbuild-spatial
+FROM ckan/ckan-base:${CKAN_VERSION_BUILD_SPATIAL} as extbuild-spatial
 
 ARG CKANEXT_SPATIAL_VERSION="c2118b9"
 ENV CKANEXT_SPATIAL_VERSION=${CKANEXT_SPATIAL_VERSION}
@@ -145,7 +145,7 @@ RUN set -ex && \
 ###############################################################################
 # Runtime stage
 ###############################################################################
-FROM ghcr.io/keitaroinc/ckan:${CKAN_VERSION_RUNTIME_STAGE} as runtime
+FROM ckan/ckan-base:${CKAN_VERSION_RUNTIME_STAGE} as runtime
 
 ENV CKAN__PLUGINS "image_view text_view recline_view webpage_view datastore datapusher \
   hierarchy_display hierarchy_form display_group relation \
@@ -210,12 +210,12 @@ RUN set -ex && \
 # ckanext-repeating ###########################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-repeating
-  
+
 # ckanext-clamav ##############################################################
 RUN set -ex && \
   pip install -r ${APP_DIR}/ext_wheels/ckanext-clamav.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-clamav
-  
+
 # ckanext-password-policy #####################################################
 RUN set -ex && \
   pip install -r ${APP_DIR}/ext_wheels/ckanext-password-policy.txt && \
