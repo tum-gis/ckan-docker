@@ -63,9 +63,9 @@ See [packages](https://github.com/orgs/tum-gis/packages?repo_name=ckan-docker) f
 
 ## :inbox_tray: Image flavor overview
 
-The CKAN-SDDI Docker images are released in three flavors, that are described below.
-For each flavor a one [package](https://github.com/orgs/tum-gis/packages?repo_name=ckan-docker)
-exists in this repository, where the image can be pulled.
+The CKAN-SDDI Docker images are released in two flavors, that are described below.
+For each flavor one [package](https://github.com/orgs/tum-gis/packages?repo_name=ckan-docker)
+exists in this repository.
 
 ```bash
 docker pull ghcr.io/tum-gis/ckan-sddi-base
@@ -96,7 +96,7 @@ ghcr.io/tum-gis/ckan-sddi
 
 The images in this repo are versioned and tagged according to the
 [releases](https://github.com/tum-gis/ckan-docker/releases) of this repository.
-The `latest` tag points to the latest release number. The `edge` version is built from the
+The `latest` tag points to the latest release semver. The `edge` version is built from the
 latest commit to the `main` branch of this repo.
 
 All available tags are listed in the packages of each image:
@@ -107,7 +107,11 @@ All available tags are listed in the packages of each image:
 ### Development image versions
 
 For development purposes the `devel` images, which are build from the latest commit to the `devel` branch are published.
-The `devel` images are used for testing and may contain errors.
+
+> [!CAUTION]
+> The `devel` images are used for testing and development. They may contain errors and security threats.
+> Do not use them in a production environment or when handling sensitive data.
+
 The CKAN and CKAN extension versions used for each image are listed in the table below.
 
 For debugging we provide a *debug* version for each image version.
@@ -117,8 +121,10 @@ Read more on CKAN's debug mode in the
 [official docs](https://docs.ckan.org/en/latest/maintaining/configuration.html#debug).
 Debug images are available starting from `v0.0.6`.
 
-> **Warning**: The debug image versions should not be used in a production environment!
+> [!CAUTION]
+> The `-debug` images are used for testing and development. They may contain errors and security threats.
 > With debug mode enabled, a visitor to your site could execute malicious commands.
+> Do not use them in a production environment or when handling sensitive data.
 
 Furthermore, for each commit to a [Pull request](https://github.com/tum-gis/ckan-docker/pulls) all image flavors are build.
 These images are published in the
@@ -140,7 +146,6 @@ For instance, for commit 19a2e64 to PR tum-gis/ckan-docker#26 following images a
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-debug`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-19a2e64`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-19a2e64-debug`
-- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26`
 
 This registry will be cleared periodically.
 
@@ -161,21 +166,21 @@ are alway pinned to a stable release number or commit hash.
 > **Note:** Version pinning is only applied for release versions. The `edge`
 > image may depend on upstream branches instead.
 
-| Extension | Version | `sddi-base` | `sddi` | `sddi-social` | Description |
-|---|---|:---:|:---:|:---:|---|
-| [`scheming`](https://github.com/MarijaKnezevic/ckanext-scheming) | `f98daec` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Configure and share CKAN dataset metadata forms. |
-| [`hierarchy`](https://github.com/ckan/ckanext-hierarchy) | `v1.2.0` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Allows to organize organizations and groups in a hierarchy tree (nested groups/orgs). |
-| [`grouphierarchysddi`](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) |  `1.1.4` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Extends `hierarchy` with pre-defined groups and topics of the SDDI concept. |
-| [`relation`](https://github.com/tum-gis/ckanext-relation-sddi) | `1.0.3` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Enables to create and visualize different types of relations (*realated_to*, *depends_on*, *part_of*) between catalog entries. |
-| [`spatial`](https://github.com/MarijaKnezevic/ckanext-spatial) | `c2118b9` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Provides the ability to search for datasets according to a given spatial extent. |
-| [`datesearch`](https://github.com/MarijaKnezevic/ckanext-datesearch) | `1.0.2` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Provides the ability to search for datasets according to a given time frame. The search includes all datasets, in which the time of validity overlaps in at least one second with the search time frame. |
-| [`repeating`](https://github.com/MarijaKnezevic/ckanext-repeating) | `1.0.0` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | This extension provides a way to store repeating fields in CKAN datasets, resources, organizations and groups. |
-| [`composite`](https://github.com/EnviDat/ckanext-composite) | `1e6d7bb` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | The extension allows to store structured dataset metadata, single or multiple fields. Only one level of subfields is possible. The subfields can be basic text, date type or dropboxes. |
-| [`restricted`](https://github.com/MarijaKnezevic/ckanext-restricted) | `1.0.0` |  | :heavy_check_mark: | :heavy_check_mark: | CKAN extension to restrict the accessibility to the resources of a dataset. This way the package metadata is accesible but not the data itself (resource). The resource access restriction level can be individualy defined for every package. |
-| [`dcat`](https://github.com/ckan/ckanext-dcat) | `v1.4.0` |  | :heavy_check_mark: | :heavy_check_mark: | Allow CKAN to expose and consume metadata from other catalogs using RDF documents serialized using DCAT. |
-| [`geoview`](https://github.com/ckan/ckanext-geoview) | `v0.0.20` |  | :heavy_check_mark: | :heavy_check_mark: | This extension contains view plugins to display geospatial files and services in CKAN. |
-| [`disqus`](https://github.com/ckan/ckanext-disqus) |  |  |  | :heavy_check_mark: | The Disqus extension allows site visitors to comment on individual packages using an AJAX-based commenting system. The downsides of this plugin are that comments are not stored locally and user information is not shared between CKAN and the commenting system. |
-| [`password_policy`](https://github.com/keitaroinc/ckanext-password-policy) | `5618dc9`|:heavy_check_mark:  |:heavy_check_mark:| :heavy_check_mark: | CKAN extension that adds password policy for all the users. |
+| Extension | Version | `sddi-base` | `sddi` | Description |
+|---|---|:---:|:---:|---|
+| [`scheming`](https://github.com/MarijaKnezevic/ckanext-scheming) | `f98daec` | :heavy_check_mark: | :heavy_check_mark: | Configure and share CKAN dataset metadata forms. |
+| [`hierarchy`](https://github.com/ckan/ckanext-hierarchy) | `v1.2.0` | :heavy_check_mark: | :heavy_check_mark: | Allows to organize organizations and groups in a hierarchy tree (nested groups/orgs). |
+| [`grouphierarchysddi`](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) |  `1.1.4` | :heavy_check_mark: | :heavy_check_mark: | Extends `hierarchy` with pre-defined groups and topics of the SDDI concept. |
+| [`relation`](https://github.com/tum-gis/ckanext-relation-sddi) | `1.0.3` | :heavy_check_mark: | :heavy_check_mark: | Enables to create and visualize different types of relations (*realated_to*, *depends_on*, *part_of*) between catalog entries. |
+| [`spatial`](https://github.com/MarijaKnezevic/ckanext-spatial) | `c2118b9` | :heavy_check_mark: | :heavy_check_mark: | Provides the ability to search for datasets according to a given spatial extent. |
+| [`datesearch`](https://github.com/MarijaKnezevic/ckanext-datesearch) | `1.0.2` | :heavy_check_mark: | :heavy_check_mark: | Provides the ability to search for datasets according to a given time frame. The search includes all datasets, in which the time of validity overlaps in at least one second with the search time frame. |
+| [`repeating`](https://github.com/MarijaKnezevic/ckanext-repeating) | `1.0.0` | :heavy_check_mark: | :heavy_check_mark: | This extension provides a way to store repeating fields in CKAN datasets, resources, organizations and groups. |
+| [`composite`](https://github.com/EnviDat/ckanext-composite) | `1e6d7bb` | :heavy_check_mark: | :heavy_check_mark: | The extension allows to store structured dataset metadata, single or multiple fields. Only one level of subfields is possible. The subfields can be basic text, date type or dropboxes. |
+| [`restricted`](https://github.com/MarijaKnezevic/ckanext-restricted) | `1.0.0` |  | :heavy_check_mark: | CKAN extension to restrict the accessibility to the resources of a dataset. This way the package metadata is accesible but not the data itself (resource). The resource access restriction level can be individualy defined for every package. |
+| [`dcat`](https://github.com/ckan/ckanext-dcat) | `v1.4.0` |  | :heavy_check_mark: | Allow CKAN to expose and consume metadata from other catalogs using RDF documents serialized using DCAT. |
+| [`geoview`](https://github.com/ckan/ckanext-geoview) | `v0.0.20` |  | :heavy_check_mark: | This extension contains view plugins to display geospatial files and services in CKAN. |
+| [`disqus`](https://github.com/ckan/ckanext-disqus) |  |  |  | The Disqus extension allows site visitors to comment on individual packages using an AJAX-based commenting system. The downsides of this plugin are that comments are not stored locally and user information is not shared between CKAN and the commenting system. |
+| [`password_policy`](https://github.com/keitaroinc/ckanext-password-policy) | `5618dc9`|:heavy_check_mark: |:heavy_check_mark:| CKAN extension that adds password policy for all the users. |
 
 ## :rocket: Usage
 
@@ -335,4 +340,4 @@ to the SDDI concepts, tools, documentations, education, and funding:
 
 ## :memo: License
 
-This Helm chart is distributed under the Apache License 2.0. See [LICENSE](LICENSE) for more information.
+The content of this repository is distributed under the Apache License 2.0. See [LICENSE](LICENSE) for more information.
