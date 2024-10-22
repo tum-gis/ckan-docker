@@ -97,7 +97,7 @@ RUN echo 'Cython < 3.0' > /tmp/constraint.txt
 RUN pip3_CONSTRAINT=/tmp/constraint.txt pip3 wheel --wheel-dir=/wheels PyYAML==5.4.1
 
 # ckanext-hierarchy ###########################################################
-ARG CKANEXT_HIERARCHY_VERSION="v1.2.0"
+ARG CKANEXT_HIERARCHY_VERSION="abb4e2d"
 ENV CKANEXT_HIERARCHY_VERSION=${CKANEXT_HIERARCHY_VERSION}
 
 RUN set -ex && \
@@ -131,7 +131,7 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-relation ############################################################
-ARG CKANEXT_RELATION_VERSION="1.0.3"
+ARG CKANEXT_RELATION_VERSION="1.1.0"
 ENV CKANEXT_RELATION_VERSION=${CKANEXT_RELATION_VERSION}
 
 RUN set -ex && \
@@ -144,16 +144,16 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-scheming ############################################################
-ARG CKANEXT_SCHEMING_VERSION="f98daec"
+ARG CKANEXT_SCHEMING_VERSION="27035f4"
 ENV CKANEXT_SCHEMING_VERSION=${CKANEXT_SCHEMING_VERSION}
-ENV CKANEXT_SCHEMING_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-scheming"
+ENV CKANEXT_SCHEMING_GITHUB_URL="https://github.com//ckan/ckanext-scheming"
 
 RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_SCHEMING_GITHUB_URL}.git@${CKANEXT_SCHEMING_VERSION}#egg=ckanext-scheming
 
 # ckanext datesearch ##########################################################
-ARG CKANEXT_DATESEARCH_VERSION="1.0.2"
+ARG CKANEXT_DATESEARCH_VERSION="1.1.0"
 ENV CKANEXT_DATESEARCH_VERSION=${CKANEXT_DATESEARCH_VERSION}
 ENV CKANEXT_DATESEARCH_VERSION_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-datesearch"
 
@@ -211,7 +211,7 @@ RUN set -ex && \
 
 # ckanext-spatial #############################################################
 ENV CKANEXT_SPATIAL_GITHUB_URL="https://github.com/ckan/ckanext-spatial"
-ENV CKANEXT_SPATIAL_VERSION="release-v2.1.0"
+ENV CKANEXT_SPATIAL_VERSION="8a00a2b"
 
 RUN set -ex && \
   curl -o /wheels/ckanext-spatial-requirements.txt \
