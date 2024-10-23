@@ -54,7 +54,6 @@ COPY ./patches ${SRC_DIR}/patches
 COPY ./scripts/apply_ckan_patches.sh ${SRC_DIR}/apply_ckan_patches.sh
 
 # Apply patches
-RUN cd ${SRC_DIR} && ls -lah ${SRC_DIR} && bash ${SRC_DIR}/apply_ckan_patches.sh
 RUN rm -rf /srv/app/src/ckan/.git
 
 # Create a constraint file that limits the Cython version to a compatible one, see https://github.com/yaml/pyyaml/issues/736
@@ -298,7 +297,6 @@ WORKDIR ${CKAN_DIR}
 
 # Install CKAN
 RUN pip3 install -e ${APP_DIR}/src/ckan
-RUN cp who.ini ${APP_DIR}
 RUN pip3 install --no-index --find-links=${APP_DIR}/wheels -r requirements.txt
 
 # ckanext-harvest ###########################################################
@@ -346,9 +344,6 @@ RUN set -ex && \
   pip3 install -e 'git+https://github.com/ckan/ckanext-spatial.git#egg=ckanext-spatial' && \
   pip3 install -r 'https://raw.githubusercontent.com/ckan/ckanext-spatial/master/requirements.txt'
 
-# Copy init scripts and additional files
-COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
-COPY --chown=ckan:ckan who.ini ${APP_DIR}/who.ini
 
 ENV CKAN__PLUGINS "envvars image_view text_view recline_view webpage_view datastore \
   harvest ckan_harvester \
