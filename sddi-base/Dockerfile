@@ -250,6 +250,15 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_HEROSLIDERADMIN_GITHUB_URL}.git@${CKANEXT_HEROSLIDERADMIN_COMMIT}#egg=ckanext-heroslideradmin
 
+# ckanext-clamav #############################################################
+ARG CKANEXT_CLAMAV_COMMIT="a1d23ac"
+ENV CKANEXT_CLAMAV_COMMIT=${CKANEXT_CLAMAV_COMMIT}
+ENV CKANEXT_CLAMAV_GITHUB_URL="https://github.com/DataShades/ckanext-clamav"
+
+RUN set -ex && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_CLAMAV_GITHUB_URL}.git@${CKANEXT_CLAMAV_COMMIT}#egg=ckanext-clamav
+
 
 ###############################################################################
 # Runtime stage
