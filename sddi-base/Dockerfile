@@ -265,13 +265,12 @@ ENV CKANEXT_FORTIFY_VERSION=${CKANEXT_FORTIFY_VERSION}
 ENV CKANEXT_FORTIFY_GITHUB_URL="https://github.com/salsadigitalauorg/ckanext-fortify"
 
 RUN set -ex && \
-  pip install -r \
-    https://raw.githubusercontent.com/salsadigitalauorg/ckanext-fortify/${CKANEXT_FORTIFY_VERSION}/requirements.txt && \
-  curl -o /wheels/ckanext-fortify.txt \
-    https://raw.githubusercontent.com/salsadigitalauorg/ckanext-fortify/${CKANEXT_FORTIFY_VERSION}/requirements.txt && \
-  pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_FORTIFY_GITHUB_URL}.git@${CKANEXT_FORTIFY_VERSION}#egg=ckanext-fortify
-
+  mkdir -p /wheels && \
+  pip install -r https://raw.githubusercontent.com/salsadigitalauorg/ckanext-fortify/${CKANEXT_FORTIFY_VERSION}/dev-requirements.txt && \
+  pip wheel --wheel-dir=/wheels -r https://raw.githubusercontent.com/salsadigitalauorg/ckanext-fortify/${CKANEXT_FORTIFY_VERSION}/requirements.txt && \
+  pip wheel --wheel-dir=/wheels git+${CKANEXT_FORTIFY_GITHUB_URL}.git@${CKANEXT_FORTIFY_VERSION}#egg=ckanext-fortify && \
+  curl -o /wheels/ckanext-fortify.txt https://raw.githubusercontent.com/salsadigitalauorg/ckanext-fortify/${CKANEXT_FORTIFY_VERSION}/requirements.txt && \
+  ls -lah /wheels
 
 
 ###############################################################################
