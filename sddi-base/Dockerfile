@@ -259,7 +259,6 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_CLAMAV_GITHUB_URL}.git@${CKANEXT_CLAMAV_COMMIT}#egg=ckanext-clamav
 
-
 ###############################################################################
 # Runtime stage
 ###############################################################################
