@@ -427,7 +427,14 @@ ENV CKAN__PLUGINS "envvars image_view text_view recline_view webpage_view datast
   datesearch \
   composite \
   repeating \
-  geo_view geojson_view wmts_view shp_view"
+  geo_view geojson_view wmts_view shp_view \
+  scheme_sddi \
+  theme_sddi \
+  heroslideradmin \
+  clamav \
+  fortify \
+  dcat \
+  security"
   # password_policy No module named 'ckan.lib.repoze_plugins' \
 
 RUN set -ex && \
