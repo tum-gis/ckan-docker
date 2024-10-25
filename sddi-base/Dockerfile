@@ -260,17 +260,26 @@ RUN set -ex && \
     git+${CKANEXT_CLAMAV_GITHUB_URL}.git@${CKANEXT_CLAMAV_COMMIT}#egg=ckanext-clamav
 
 # ckanext-fortify #####################################################
-ARG CKANEXT_FORTIFY_VERSION="bda5d12"
-ENV CKANEXT_FORTIFY_VERSION=${CKANEXT_FORTIFY_VERSION}
-ENV CKANEXT_FORTIFY_GITHUB_URL="https://github.com/salsadigitalauorg/ckanext-fortify"
+# ARG CKANEXT_FORTIFY_VERSION="bda5d12"
+# ENV CKANEXT_FORTIFY_VERSION=${CKANEXT_FORTIFY_VERSION}
+# ENV CKANEXT_FORTIFY_GITHUB_URL="https://github.com/salsadigitalauorg/ckanext-fortify"
+
+# RUN set -ex && \
+#   pip install -r \
+#     https://raw.githubusercontent.com/salsadigitalauorg/ckanext-fortify/${CKANEXT_FORTIFY_VERSION}/requirements.txt && \
+#   curl -o /wheels/ckanext-fortify.txt \
+#     https://raw.githubusercontent.com/salsadigitalauorg/ckanext-fortify/${CKANEXT_FORTIFY_VERSION}/requirements.txt && \
+#   pip wheel --wheel-dir=/wheels \
+#     git+${CKANEXT_FORTIFY_GITHUB_URL}.git@${CKANEXT_FORTIFY_VERSION}#egg=ckanext-fortify
+
+# ckanext-dcat ##########################################################
+ARG CKANEXT_DCATE_VERSION="v2.0.0"
+ENV CKANEXT_DCATE_VERSION=${CKANEXT_DCATE_VERSION}
+ENV CKANEXT_DCATE_GITHUB_URL="https://github.com/ckan/ckanext-dcat"
 
 RUN set -ex && \
-  mkdir -p /wheels && \
-  pip install -r https://raw.githubusercontent.com/salsadigitalauorg/ckanext-fortify/${CKANEXT_FORTIFY_VERSION}/dev-requirements.txt && \
-  pip wheel --wheel-dir=/wheels -r https://raw.githubusercontent.com/salsadigitalauorg/ckanext-fortify/${CKANEXT_FORTIFY_VERSION}/requirements.txt && \
-  pip wheel --wheel-dir=/wheels git+${CKANEXT_FORTIFY_GITHUB_URL}.git@${CKANEXT_FORTIFY_VERSION}#egg=ckanext-fortify && \
-  curl -o /wheels/ckanext-fortify.txt https://raw.githubusercontent.com/salsadigitalauorg/ckanext-fortify/${CKANEXT_FORTIFY_VERSION}/requirements.txt && \
-  ls -lah /wheels
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_DCATE_GITHUB_URL}.git@${CKANEXT_DCATE_VERSION}#egg=ckanext-dcat
 
 
 ###############################################################################
