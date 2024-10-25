@@ -269,13 +269,13 @@ RUN set -ex && \
         git+${CKANEXT_FORTIFY_GITHUB_URL}.git@${CKANEXT_FORTIFY_VERSION}#egg=ckanext-fortify
 
 # ckanext-dcat ##########################################################
-ARG CKANEXT_DCATE_VERSION="v2.0.0"
-ENV CKANEXT_DCATE_VERSION=${CKANEXT_DCATE_VERSION}
-ENV CKANEXT_DCATE_GITHUB_URL="https://github.com/ckan/ckanext-dcat"
+ARG CKANEXT_DCAT_VERSION="v2.0.0"
+ENV CKANEXT_DCAT_VERSION=${CKANEXT_DCAT_VERSION}
+ENV CKANEXT_DCAT_GITHUB_URL="https://github.com/ckan/ckanext-dcat"
 
 RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_DCATE_GITHUB_URL}.git@${CKANEXT_DCATE_VERSION}#egg=ckanext-dcat
+    git+${CKANEXT_DCAT_GITHUB_URL}.git@${CKANEXT_DCAT_VERSION}#egg=ckanext-dcat
 
 # ckanext-security ######################################################
 ARG CKANEXT_SECURITY_VERSION="80dc1d6"
