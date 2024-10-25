@@ -259,6 +259,18 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_CLAMAV_GITHUB_URL}.git@${CKANEXT_CLAMAV_COMMIT}#egg=ckanext-clamav
 
+# ckanext-fortify #############################################################
+ARG CKANEXT_FORTIFY_COMMIT="bda5d12"
+ENV CKANEXT_FORTIFY_COMMIT=${CKANEXT_FORTIFY_COMMIT}
+ENV CKANEXT_FORTIFY_GITHUB_URL="https://github.com/salsadigitalauorg/ckanext-fortify"
+
+RUN set -ex && \
+  pip install -r \
+    https://raw.githubusercontent.com/salsadigitalauorg/ckanext-fortify/${CKANEXT_FORTIFY_COMMIT}/dev-requirements.txt && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_FORTIFY_GITHUB_URL}.git@${CKANEXT_FORTIFY_COMMIT}#egg=ckanext-fortify
+
+
 ###############################################################################
 # Runtime stage
 ###############################################################################
