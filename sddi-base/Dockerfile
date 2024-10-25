@@ -223,6 +223,14 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_GEOVIEW_GITHUB_URL}.git@${CKANEXT_GEOVIEW_VERSION}#egg=ckanext-geoview
 
+# ckanext-scheme-sddi #############################################################
+ARG CKANEXT_SCHEME_SDDI_VERSION="v0.0.1"
+ENV CKANEXT_SCHEME_SDDI_VERSION=${CKANEXT_SCHEME_SDDI_VERSION}
+ENV CKANEXT_SCHEME_SDDI_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-scheme-sddi"
+
+RUN set -ex && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_SCHEME_SDDI_GITHUB_URL}.git@${CKANEXT_SCHEME_SDDI_VERSION}#egg=ckanext-scheme-sddi
 
 ###############################################################################
 # Runtime stage
