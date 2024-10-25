@@ -266,7 +266,7 @@ ENV CKANEXT_FORTIFY_GITHUB_URL="https://github.com/salsadigitalauorg/ckanext-for
 
 RUN set -ex && \
   pip install -r \
-    https://raw.githubusercontent.com/salsadigitalauorg/ckanext-fortify/${CKANEXT_FORTIFY_COMMIT}/dev-requirements.txt && \
+    https://raw.githubusercontent.com/salsadigitalauorg/ckanext-fortify/${CKANEXT_FORTIFY_COMMIT}/requirements.txt && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_FORTIFY_GITHUB_URL}.git@${CKANEXT_FORTIFY_COMMIT}#egg=ckanext-fortify
 
