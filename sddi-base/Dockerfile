@@ -287,8 +287,11 @@ ENV CKANEXT_SECURITY_VERSION=${CKANEXT_SECURITY_VERSION}
 ENV CKANEXT_SECURITY_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-security"
     
 RUN set -ex && \
+    curl -o /wheels/ckanext-security-requirements.txt \
+        https://raw.githubusercontent.com/MarijaKnezevic/ckanext-security/${CKANEXT_SECURITY_VERSION}/requirements.txt && \
+    pip install -r /wheels/ckanext-security-requirements.txt && \
     pip wheel --wheel-dir=/wheels \
-      git+${CKANEXT_SECURITY_GITHUB_URL}.git@${CKANEXT_SECURITY_VERSION}#egg=ckanext-security
+        git+${CKANEXT_SECURITY_GITHUB_URL}.git@${CKANEXT_SECURITY_VERSION}#egg=ckanext-security
 
 ###############################################################################
 # Runtime stage
