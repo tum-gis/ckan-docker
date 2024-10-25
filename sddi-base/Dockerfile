@@ -242,22 +242,22 @@ RUN set -ex && \
     git+${CKANEXT_THEME_SDDI_GITHUB_URL}.git@${CKANEXT_THEME_SDDI_VERSION}#egg=ckanext-theme-sddi
 
 # ckanext-heroslideradmin #############################################################
-ARG CKANEXT_HEROSLIDERADMIN_COMMIT="4b60e00"
-ENV CKANEXT_HEROSLIDERADMIN_COMMIT=${CKANEXT_HEROSLIDERADMIN_COMMIT}
+ARG CKANEXT_HEROSLIDERADMIN_VERSION="4b60e00"
+ENV CKANEXT_HEROSLIDERADMIN_VERSION=${CKANEXT_HEROSLIDERADMIN_VERSION}
 ENV CKANEXT_HEROSLIDERADMIN_GITHUB_URL="https://github.com/dathere/ckanext-heroslideradmin"
 
 RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_HEROSLIDERADMIN_GITHUB_URL}.git@${CKANEXT_HEROSLIDERADMIN_COMMIT}#egg=ckanext-heroslideradmin
+    git+${CKANEXT_HEROSLIDERADMIN_GITHUB_URL}.git@${CKANEXT_HEROSLIDERADMIN_VERSION}#egg=ckanext-heroslideradmin
 
 # ckanext-clamav #############################################################
-ARG CKANEXT_CLAMAV_COMMIT="a1d23ac"
-ENV CKANEXT_CLAMAV_COMMIT=${CKANEXT_CLAMAV_COMMIT}
+ARG CKANEXT_CLAMAV_VERSION="a1d23ac"
+ENV CKANEXT_CLAMAV_VERSION=${CKANEXT_CLAMAV_VERSION}
 ENV CKANEXT_CLAMAV_GITHUB_URL="https://github.com/DataShades/ckanext-clamav"
 
 RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_CLAMAV_GITHUB_URL}.git@${CKANEXT_CLAMAV_COMMIT}#egg=ckanext-clamav
+    git+${CKANEXT_CLAMAV_GITHUB_URL}.git@${CKANEXT_CLAMAV_VERSION}#egg=ckanext-clamav
 
 # ckanext-fortify #####################################################
 # ARG CKANEXT_FORTIFY_VERSION="bda5d12"
@@ -281,6 +281,14 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_DCATE_GITHUB_URL}.git@${CKANEXT_DCATE_VERSION}#egg=ckanext-dcat
 
+# ckanext-security ######################################################
+ARG CKANEXT_SECURITY_VERSION="80dc1d6"
+ENV CKANEXT_SECURITY_VERSION=${CKANEXT_SECURITY_VERSION}
+ENV CKANEXT_SECURITY_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-security"
+    
+RUN set -ex && \
+    pip wheel --wheel-dir=/wheels \
+      git+${CKANEXT_SECURITY_GITHUB_URL}.git@${CKANEXT_SECURITY_VERSION}#egg=ckanext-security
 
 ###############################################################################
 # Runtime stage
