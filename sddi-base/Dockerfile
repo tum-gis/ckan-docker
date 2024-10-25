@@ -241,6 +241,15 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_THEME_SDDI_GITHUB_URL}.git@${CKANEXT_THEME_SDDI_VERSION}#egg=ckanext-theme-sddi
 
+# ckanext-heroslideradmin #############################################################
+ARG CKANEXT_HEROSLIDERADMIN_COMMIT="4b60e00"
+ENV CKANEXT_HEROSLIDERADMIN_COMMIT=${CKANEXT_HEROSLIDERADMIN_COMMIT}
+ENV CKANEXT_HEROSLIDERADMIN_GITHUB_URL="https://github.com/dathere/ckanext-heroslideradmin"
+
+RUN set -ex && \
+  pip wheel --wheel-dir=/wheels \
+    git+${CKANEXT_HEROSLIDERADMIN_GITHUB_URL}.git@${CKANEXT_HEROSLIDERADMIN_COMMIT}#egg=ckanext-heroslideradmin
+
 
 ###############################################################################
 # Runtime stage
