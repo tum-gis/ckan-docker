@@ -264,7 +264,6 @@ ARG CKANEXT_FORTIFY_VERSION="bda5d12"
 ENV CKANEXT_FORTIFY_VERSION=${CKANEXT_FORTIFY_VERSION}
 ENV CKANEXT_FORTIFY_GITHUB_URL="https://github.com/salsadigitalauorg/ckanext-fortify"
 
-# Fetch requirements and install the extension
 RUN set -ex && \
     curl -o /wheels/ckanext-fortify-requirements.txt \
         https://raw.githubusercontent.com/salsadigitalauorg/ckanext-fortify/${CKANEXT_FORTIFY_VERSION}/requirements.txt && \
