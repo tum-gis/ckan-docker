@@ -247,15 +247,11 @@ ENV CKANEXT_THEME_SDDI_VERSION=${CKANEXT_THEME_SDDI_VERSION}
 ENV CKANEXT_THEME_SDDI_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-theme-sddi"
 
 RUN set -ex && \
-  mkdir -p /wheels && \
-  pip install -r ${CKANEXT_THEME_SDDI_GITHUB_URL}/raw/${CKANEXT_THEME_SDDI_VERSION}/dev-requirements.txt
-
-RUN set -ex && \
-  pip wheel --wheel-dir=/wheels -r ${CKANEXT_THEME_SDDI_GITHUB_URL}/raw/${CKANEXT_THEME_SDDI_VERSION}/requirements.txt && \
-  pip wheel --wheel-dir=/wheels git+${CKANEXT_THEME_SDDI_GITHUB_URL}.git@${CKANEXT_THEME_SDDI_VERSION}#egg=ckanext-theme-sddi && \
-  curl -o /wheels/ckanext-theme-sddi.txt ${CKANEXT_THEME_SDDI_GITHUB_URL}/raw/${CKANEXT_THEME_SDDI_VERSION}/requirements.txt && \
-  ls -lah /wheels
-
+    curl -o /wheels/ckanext-theme-sddi-dev-requirements.txt \
+        ${CKANEXT_THEME_SDDI_GITHUB_URL}/raw/${CKANEXT_THEME_SDDI_VERSION}/dev-requirements.txt && \
+    pip install -r /wheels/ckanext-theme-sddi-dev-requirements.txt && \
+    pip wheel --wheel-dir=/wheels \
+        git+${CKANEXT_THEME_SDDI_GITHUB_URL}.git@${CKANEXT_THEME_SDDI_VERSION}#egg=ckanext-theme-sddi
 
 # ckanext-heroslideradmin #############################################################
 ARG CKANEXT_HEROSLIDERADMIN_VERSION="4b60e00"
