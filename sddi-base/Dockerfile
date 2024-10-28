@@ -266,12 +266,11 @@ RUN set -ex && \
         git+${CKANEXT_HEROSLIDERADMIN_GITHUB_URL}.git@${CKANEXT_HEROSLIDERADMIN_VERSION}#egg=ckanext-heroslideradmin
 
 # ckanext-clamav #############################################################
-ARG CKANEXT_CLAMAV_VERSION="your_version_here"
+ARG CKANEXT_CLAMAV_VERSION="a1d23ac"
 ENV CKANEXT_CLAMAV_VERSION=${CKANEXT_CLAMAV_VERSION}
-ENV CKANEXT_CLAMAV_GITHUB_URL="https://github.com/ckan/ckanext-clamav"
+ENV CKANEXT_CLAMAV_GITHUB_URL="https://github.com/DataShades/ckanext-clamav"
 
 RUN set -ex && \
-    mkdir -p /wheels && \
     curl -o /wheels/ckanext-clamav-requirements.txt \
         ${CKANEXT_CLAMAV_GITHUB_URL}/raw/${CKANEXT_CLAMAV_VERSION}/requirements.txt && \
     pip install -r /wheels/ckanext-clamav-requirements.txt && \
