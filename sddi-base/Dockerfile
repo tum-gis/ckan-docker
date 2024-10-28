@@ -378,7 +378,7 @@ COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
 COPY --from=ckanbuild ${APP_DIR}/src/ckan ${CKAN_DIR}
 
 # Additional install steps for build stages artifacts
-RUN pip3 install --no-index --find-links=${APP_DIR}/wheels uWSGI==2.0.20 gevent==21.12.0
+RUN pip3 install --no-index --find-links=${APP_DIR}/wheels uWSGI==2.0.21 gevent==22.10.2 greenlet==2.0.1
 
 # Create a local user and group to run the app
 # Add a group with a specific GID (92)
