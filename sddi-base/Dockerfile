@@ -248,7 +248,7 @@ ENV CKANEXT_THEME_SDDI_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-the
 
 RUN set -ex && \
     curl -o /wheels/ckanext-theme-sddi-dev-requirements.txt \
-        ${CKANEXT_THEME_SDDI_GITHUB_URL}/raw/${CKANEXT_THEME_SDDI_VERSION}/dev-requirements.txt && \
+        ${CKANEXT_THEME_SDDI_GITHUB_URL}/raw/${CKANEXT_THEME_SDDI_VERSION}/requirements.txt && \
     pip install -r /wheels/ckanext-theme-sddi-dev-requirements.txt && \
     pip wheel --wheel-dir=/wheels \
         git+${CKANEXT_THEME_SDDI_GITHUB_URL}.git@${CKANEXT_THEME_SDDI_VERSION}#egg=ckanext-theme-sddi
@@ -259,8 +259,11 @@ ENV CKANEXT_HEROSLIDERADMIN_VERSION=${CKANEXT_HEROSLIDERADMIN_VERSION}
 ENV CKANEXT_HEROSLIDERADMIN_GITHUB_URL="https://github.com/dathere/ckanext-heroslideradmin"
 
 RUN set -ex && \
-  pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_HEROSLIDERADMIN_GITHUB_URL}.git@${CKANEXT_HEROSLIDERADMIN_VERSION}#egg=ckanext-heroslideradmin
+    curl -o /wheels/ckanext-heroslideradmin-requirements.txt \
+        ${CKANEXT_HEROSLIDERADMIN_GITHUB_URL}/raw/${CKANEXT_HEROSLIDERADMIN_VERSION}/requirements.txt && \
+    pip install -r /wheels/ckanext-heroslideradmin-requirements.txt && \
+    pip wheel --wheel-dir=/wheels \
+        git+${CKANEXT_HEROSLIDERADMIN_GITHUB_URL}.git@${CKANEXT_HEROSLIDERADMIN_VERSION}#egg=ckanext-heroslideradmin
 
 # ckanext-clamav #############################################################
 ARG CKANEXT_CLAMAV_VERSION="a1d23ac"
