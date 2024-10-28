@@ -476,14 +476,12 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.type = custom" && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.custom.url = https://tile.openstreetmap.de/{z}/{x}/{y}.png" && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.attribution = <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors." && \
-  # Security settings ######################################################
   ckan config-tool "${CKAN_INI}" "ckanext.security.redis.port = 6379" && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.redis.db = 1" && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.lock_timeout = 900" && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.login_max_count = 3" && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.brute_force_key = user_name" && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.disable_password_reset_override = true" && \
-  # Fortify Settings ########################################################## 
   ckan config-tool "${CKAN_INI}" "ckan.fortify.enable_password_policy = True" && \
   ckan config-tool "${CKAN_INI}" "ckan.fortify.password_policy.min_length = 12" && \
   echo "${TZ}" > /etc/timezone && \
