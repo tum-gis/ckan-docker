@@ -220,8 +220,12 @@ ENV CKANEXT_GEOVIEW_VERSION=${CKANEXT_GEOVIEW_VERSION}
 ENV CKANEXT_GEOVIEW_GITHUB_URL="https://github.com/ckan/ckanext-geoview"
 
 RUN set -ex && \
-  pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_GEOVIEW_GITHUB_URL}.git@${CKANEXT_GEOVIEW_VERSION}#egg=ckanext-geoview
+    curl -o /wheels/ckanext-geoview-dev-requirements.txt \
+        ${CKANEXT_GEOVIEW_GITHUB_URL}/raw/${CKANEXT_GEOVIEW_VERSION}/dev-requirements.txt && \
+    pip install -r /wheels/ckanext-geoview-dev-requirements.txt && \
+    pip wheel --wheel-dir=/wheels \
+        git+${CKANEXT_GEOVIEW_GITHUB_URL}.git@${CKANEXT_GEOVIEW_VERSION}#egg=ckanext-geoview
+
 
 # ckanext-scheme-sddi #############################################################
 ARG CKANEXT_SCHEME_SDDI_VERSION="0.0.1"
