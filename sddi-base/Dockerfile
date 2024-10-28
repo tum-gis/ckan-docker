@@ -58,7 +58,7 @@ RUN pip3_CONSTRAINT=/tmp/constraint.txt pip3 wheel --wheel-dir=/wheels PyYAML==5
 
 # RUN pip3-compile ckan/requirements.in
 RUN pip3 wheel --wheel-dir=/wheels -r ckan/requirements.txt
-RUN pip3 wheel --wheel-dir=/wheels uWSGI==2.0.20 gevent==21.12.0 greenlet==1.1.3
+RUN pip3 wheel --wheel-dir=/wheels uWSGI==2.0.21 gevent==22.10.2 greenlet==2.0.1
 
 ###############################################################################
 # Extbuild stage
