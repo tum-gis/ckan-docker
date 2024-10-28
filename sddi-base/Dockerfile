@@ -266,13 +266,16 @@ RUN set -ex && \
         git+${CKANEXT_HEROSLIDERADMIN_GITHUB_URL}.git@${CKANEXT_HEROSLIDERADMIN_VERSION}#egg=ckanext-heroslideradmin
 
 # ckanext-clamav #############################################################
-ARG CKANEXT_CLAMAV_VERSION="a1d23ac"
+ARG CKANEXT_CLAMAV_VERSION="your_version_here"
 ENV CKANEXT_CLAMAV_VERSION=${CKANEXT_CLAMAV_VERSION}
-ENV CKANEXT_CLAMAV_GITHUB_URL="https://github.com/DataShades/ckanext-clamav"
+ENV CKANEXT_CLAMAV_GITHUB_URL="https://github.com/ckan/ckanext-clamav"
 
 RUN set -ex && \
-  pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_CLAMAV_GITHUB_URL}.git@${CKANEXT_CLAMAV_VERSION}#egg=ckanext-clamav
+    curl -o /wheels/ckanext-clamav-requirements.txt \
+        https://raw.githubusercontent.com/ckan/ckanext-clamav/${CKANEXT_CLAMAV_VERSION}/requirements.txt && \
+    pip install -r /wheels/ckanext-clamav-requirements.txt && \
+    pip wheel --wheel-dir=/wheels \
+        git+${CKANEXT_CLAMAV_GITHUB_URL}.git@${CKANEXT_CLAMAV_VERSION}#egg=ckanext-clamav
 
 # ckanext-fortify ##############################
 ARG CKANEXT_FORTIFY_VERSION="bda5d12"
@@ -289,8 +292,11 @@ ENV CKANEXT_DCAT_VERSION=${CKANEXT_DCAT_VERSION}
 ENV CKANEXT_DCAT_GITHUB_URL="https://github.com/ckan/ckanext-dcat"
 
 RUN set -ex && \
-  pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_DCAT_GITHUB_URL}.git@${CKANEXT_DCAT_VERSION}#egg=ckanext-dcat
+    curl -o /wheels/ckanext-dcat-requirements.txt \
+        https://raw.githubusercontent.com/ckan/ckanext-dcat/${CKANEXT_DCAT_VERSION}/requirements.txt && \
+    pip install -r /wheels/ckanext-dcat-requirements.txt && \
+    pip wheel --wheel-dir=/wheels \
+        git+${CKANEXT_DCAT_GITHUB_URL}.git@${CKANEXT_DCAT_VERSION}#egg=ckanext-dcat
 
 # ckanext-security ######################################################
 ARG CKANEXT_SECURITY_VERSION="80dc1d6"
