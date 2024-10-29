@@ -112,19 +112,6 @@ ENV ENVVARS_GIT_BRANCH=0.0.2
 RUN set -ex && \
   pip3 wheel --wheel-dir=/wheels git+${ENVVARS_GIT_URL}@${ENVVARS_GIT_BRANCH}#egg=ckanext-envvars
 
-# ckanext-grouphierarchy ######################################################
-ARG CKANEXT_SDDI_VERSION="1.1.3"
-ENV CKANEXT_SDDI_VERSION=${CKANEXT_SDDI_VERSION}
-
-RUN set -ex && \
-  pip wheel --wheel-dir=/wheels \
-    git+https://github.com/tum-gis/ckanext-grouphierarchy-sddi.git@${CKANEXT_SDDI_VERSION}#egg=ckanext-grouphierarchy && \
-  pip wheel --wheel-dir=/wheels -r \
-    https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/${CKANEXT_SDDI_VERSION}/requirements.txt && \
-  curl -o /wheels/ckanext-grouphierarchy.txt \
-    https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/${CKANEXT_SDDI_VERSION}/requirements.txt && \
-  ls -lah /wheels
-
 # ckanext-relation ############################################################
 ARG CKANEXT_RELATION_VERSION="1.1.0"
 ENV CKANEXT_RELATION_VERSION=${CKANEXT_RELATION_VERSION}
@@ -155,39 +142,6 @@ ENV CKANEXT_DATESEARCH_VERSION_GITHUB_URL="https://github.com/MarijaKnezevic/cka
 RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_DATESEARCH_VERSION_GITHUB_URL}.git@${CKANEXT_DATESEARCH_VERSION}#egg=ckanext-datesearch
-
-# ckanext-composite ###########################################################
-ARG CKANEXT_COMPOSITE_VERSION="1e6d7bb"
-ENV CKANEXT_COMPOSITE_VERSION=${CKANEXT_COMPOSITE_VERSION}
-ENV CKANEXT_COMPOSITE_GITHUB_URL="https://github.com/EnviDat/ckanext-composite"
-
-RUN set -ex && \
-  pip install -r \
-    https://raw.githubusercontent.com/EnviDat/ckanext-composite/${CKANEXT_COMPOSITE_VERSION}/dev-requirements.txt && \
-  pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_COMPOSITE_GITHUB_URL}.git@${CKANEXT_COMPOSITE_VERSION}#egg=ckanext-composite
-
-# ckanext-repeating ###########################################################
-ARG CKANEXT_REPEATING_VERSION="1.0.0"
-ENV CKANEXT_REPEATING_VERSION=${CKANEXT_REPEATING_VERSION}
-ENV CKANEXT_REPEATING_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-repeating"
-
-RUN set -ex && \
-  pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_REPEATING_GITHUB_URL}.git@${CKANEXT_REPEATING_VERSION}#egg=ckanext-repeating
-
-# ckanext-password-policy #####################################################
-ARG CKANEXT_PASSWORD_POLICY_VERSION="5618dc9"
-ENV CKANEXT_PASSWORD_POLICY_VERSION=${CKANEXT_PASSWORD_POLICY_VERSION}
-ENV CKANEXT_PASSWORD_POLICY_GITHUB_URL="https://github.com/keitaroinc/ckanext-password-policy"
-
-RUN set -ex && \
-  pip install -r \
-    https://raw.githubusercontent.com/keitaroinc/ckanext-password-policy/${CKANEXT_PASSWORD_POLICY_VERSION}/requirements.txt && \
-  curl -o /wheels/ckanext-password-policy.txt \
-    https://raw.githubusercontent.com/keitaroinc/ckanext-password-policy/${CKANEXT_PASSWORD_POLICY_VERSION}/requirements.txt && \
-  pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_PASSWORD_POLICY_GITHUB_URL}.git@${CKANEXT_PASSWORD_POLICY_VERSION}#egg=ckanext-password-policy
 
 # ckanext-harvest ###########################################################
 ARG CKANEXT_HARVEST_VERSION="v1.5.6"
@@ -276,7 +230,6 @@ RUN set -ex && \
     pip install -r /wheels/ckanext-clamav-requirements.txt && \
     pip wheel --wheel-dir=/wheels \
         git+${CKANEXT_CLAMAV_GITHUB_URL}.git@${CKANEXT_CLAMAV_VERSION}#egg=ckanext-clamav
-
 
 # ckanext-fortify ##############################
 ARG CKANEXT_FORTIFY_VERSION="bda5d12"
@@ -402,11 +355,6 @@ RUN set -ex && \
   pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-hierarchy.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-hierarchy
 
-# ckanext-grouphierarchy ######################################################
-RUN set -ex && \
-  pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-grouphierarchy.txt && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-grouphierarchy
-
 # ckanext-envvars ############################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-envvars
@@ -419,36 +367,52 @@ RUN set -ex && \
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-datesearch
 
-# ckanext-composite ###########################################################
-RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-composite
-
-# ckanext-repeating ###########################################################
-RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-repeating
-
-# ckanext-password-policy #####################################################
-RUN set -ex && \
-  pip install -r ${APP_DIR}/ext_wheels/ckanext-password-policy.txt && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-password-policy
-
 # ckanext-spatial #############################################################
 RUN set -ex && \
   pip3 install -e 'git+https://github.com/ckan/ckanext-spatial.git#egg=ckanext-spatial' && \
   pip3 install -r 'https://raw.githubusercontent.com/ckan/ckanext-spatial/master/requirements.txt'
+
+# ckanext-geoview #############################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-geoview
+
+# ckanext-scheme-sddi #############################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-scheme-sddi
+
+# ckanext-theme-sddi #############################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-theme-sddi
+
+# ckanext-heroslideradmin #############################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-heroslideradmin
+ 
+# ckanext-clamav #############################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-clamav
+
+# ckanext-fortify ##############################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-fortify
+
+# ckanext-dcat ##########################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-dcat
+
+# ckanext-security ######################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-security
 
 
 ENV CKAN__PLUGINS "envvars image_view text_view recline_view webpage_view datastore \
   harvest ckan_harvester \
   hierarchy_display hierarchy_form \
   # datapusher Token required \
-  # display_group ValueError: Cannot determine url for /usr/local/lib/python3.9/site-packages/ckanext/grouphierarchy/fanstatic/hierarchy_theme.css \
   # relation  ImportError: cannot import name 'Mapping' from 'collections' \
   spatial_metadata spatial_query \
   scheming_datasets \
   datesearch \
-  composite \
-  repeating \
   geo_view geojson_view wmts_view shp_view \
   scheme_sddi \
   theme_sddi \
@@ -467,9 +431,7 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.spatial.srid = 4326" && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.search_backend = solr-bbox" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_schemas = ckanext.scheming:ckan_dataset.yaml" && \
-  ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json ckanext.repeating:presets.json ckanext.composite:presets.json" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
-  ckan config-tool "${CKAN_INI}" "licenses_group_url = https://raw.githubusercontent.com/tum-gis/ckanext-grouphierarchy-sddi/main/ckanext/grouphierarchy/licenses_SDDI.json" && \
   ckan config-tool "${CKAN_INI}" "ckanext.password_policy.password_length = 12" && \
   ckan config-tool "${CKAN_INI}" "ckanext.password_policy.failed_logins = 3" && \
   ckan config-tool "${CKAN_INI}" "ckanext.password_policy.user_locked_time = 600" && \
