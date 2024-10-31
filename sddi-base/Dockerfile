@@ -85,7 +85,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libxslt-dev
 
-RUN pip install -U markupsafe==2.0.1
+RUN pip install -U markupsafe==2.0.1 sqlalchemy==1.4.41
 
 # Create a constraint file that limits the Cython version to a compatible one, see https://github.com/yaml/pyyaml/issues/736
 RUN echo 'Cython < 3.0' > /tmp/constraint.txt
@@ -314,7 +314,7 @@ RUN apt-get update && apt-get install -y \
 # Cleanup to reduce image size
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN pip install markupsafe==2.0.1 setuptools wheel
+RUN pip install markupsafe==2.0.1 setuptools wheel sqlalchemy==1.4.41
 
 # Create a constraint file that limits the Cython version to a compatible one, see https://github.com/yaml/pyyaml/issues/736
 RUN echo 'Cython < 3.0' > /tmp/constraint.txt
