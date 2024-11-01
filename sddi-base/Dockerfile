@@ -106,8 +106,8 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-envvars
-ENV ENVVARS_GIT_URL=https://github.com/okfn/ckanext-envvars
-ENV ENVVARS_GIT_BRANCH=0.0.2
+ENV ENVVARS_GIT_URL=https://github.com/ckan/ckanext-envvars/
+ENV ENVVARS_GIT_BRANCH=v0.0.6
 
 RUN set -ex && \
   pip3 wheel --wheel-dir=/wheels git+${ENVVARS_GIT_URL}@${ENVVARS_GIT_BRANCH}#egg=ckanext-envvars
@@ -241,7 +241,7 @@ RUN set -ex && \
         git+${CKANEXT_FORTIFY_GITHUB_URL}.git@${CKANEXT_FORTIFY_VERSION}#egg=ckanext-fortify
 
 # ckanext-dcat ##########################################################
-ARG CKANEXT_DCAT_VERSION="v2.0.0"
+ARG CKANEXT_DCAT_VERSION="v2.1.0"
 ENV CKANEXT_DCAT_VERSION=${CKANEXT_DCAT_VERSION}
 ENV CKANEXT_DCAT_GITHUB_URL="https://github.com/ckan/ckanext-dcat"
 
@@ -398,12 +398,13 @@ RUN set -ex && \
 
 # ckanext-dcat ##########################################################
 RUN set -ex && \
+  pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-dcat-requirements.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-dcat
 
 # ckanext-security ######################################################
 RUN set -ex && \
+  pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-security-requirements.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-security
-
 
 ENV CKAN__PLUGINS "envvars image_view text_view recline_view webpage_view datastore \
   harvest ckan_harvester \
