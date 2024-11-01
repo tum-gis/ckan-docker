@@ -144,13 +144,13 @@ RUN set -ex && \
     git+${CKANEXT_DATESEARCH_VERSION_GITHUB_URL}.git@${CKANEXT_DATESEARCH_VERSION}#egg=ckanext-datesearch
 
 # ckanext-harvest ###########################################################
-ARG CKANEXT_HARVEST_VERSION="v1.5.6"
+ARG CKANEXT_HARVEST_VERSION="master"
 ENV CKANEXT_HARVEST_VERSION=${CKANEXT_HARVEST_VERSION}
 ENV CKANEXT_HARVEST_GITHUB_URL="https://github.com/ckan/ckanext-harvest.git"
 
 RUN set -ex && \
   mkdir -p /wheels && \
-  pip install -r https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/dev-requirements.txt
+  pip install -r https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt
 
 RUN set -ex && \
   pip wheel --wheel-dir=/wheels -r https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt && \
@@ -232,7 +232,7 @@ RUN set -ex && \
         git+${CKANEXT_CLAMAV_GITHUB_URL}.git@${CKANEXT_CLAMAV_VERSION}#egg=ckanext-clamav
 
 # ckanext-fortify ##############################
-ARG CKANEXT_FORTIFY_VERSION="bda5d12"
+ARG CKANEXT_FORTIFY_VERSION="3.0.0"
 ENV CKANEXT_FORTIFY_VERSION=${CKANEXT_FORTIFY_VERSION}
 ENV CKANEXT_FORTIFY_GITHUB_URL="https://github.com/salsadigitalauorg/ckanext-fortify"
 
@@ -241,7 +241,7 @@ RUN set -ex && \
         git+${CKANEXT_FORTIFY_GITHUB_URL}.git@${CKANEXT_FORTIFY_VERSION}#egg=ckanext-fortify
 
 # ckanext-dcat ##########################################################
-ARG CKANEXT_DCAT_VERSION="v2.1.0"
+ARG CKANEXT_DCAT_VERSION="v1.5.1"
 ENV CKANEXT_DCAT_VERSION=${CKANEXT_DCAT_VERSION}
 ENV CKANEXT_DCAT_GITHUB_URL="https://github.com/ckan/ckanext-dcat"
 
@@ -406,11 +406,9 @@ RUN set -ex && \
   pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-security-requirements.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-security
 
-ENV CKAN__PLUGINS "envvars image_view text_view recline_view webpage_view datastore \
+ENV CKAN__PLUGINS "envvars image_view text_view webpage_view datastore \
   harvest ckan_harvester \
   hierarchy_display hierarchy_form \
-  # datapusher Token required \
-  # relation  ImportError: cannot import name 'Mapping' from 'collections' \
   spatial_metadata spatial_query \
   scheming_datasets \
   datesearch \
@@ -419,10 +417,9 @@ ENV CKAN__PLUGINS "envvars image_view text_view recline_view webpage_view datast
   theme_sddi \
   heroslideradmin \
   clamav \
-  fortify \
-  dcat \
+  # fortify \
+  dcat dcat_rdf_harvester dcat_json_harvester dcat_json_interface \
   security"
-  # password_policy No module named 'ckan.lib.repoze_plugins' \
 
 RUN set -ex && \
   ckan generate config ${APP_DIR}/production.ini
@@ -449,6 +446,11 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.enable_totp = false" && \
   ckan config-tool "${CKAN_INI}" "ckan.fortify.enable_password_policy = True" && \
   ckan config-tool "${CKAN_INI}" "ckan.fortify.password_policy.min_length = 12" && \
+  ckan config-tool "${CKAN_INI}" "ckan.fortify.check_parent_org_allowed = True" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.dcat.enable_content_negotiation = True" && \
+  ckan config-tool "${CKAN_INI}" "ckan.harvest.log_scope = 0" && \
+  ckan config-tool "${CKAN_INI}" "ckan.harvest.log_level = debug" && \
+  ckan config-tool "${CKAN_INI}" "ckan.harvest.log_timeframe = 10" && \
   ckan config-tool "${CKAN_INI}" "PERMANENT_SESSION_LIFETIME = 600" && \
   echo "${TZ}" > /etc/timezone && \
   mkdir -p ${CKAN_STORAGE_PATH} && \
