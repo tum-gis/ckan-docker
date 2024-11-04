@@ -207,18 +207,6 @@ RUN set -ex && \
     pip wheel --wheel-dir=/wheels \
         git+${CKANEXT_THEME_SDDI_GITHUB_URL}.git@${CKANEXT_THEME_SDDI_VERSION}#egg=ckanext-theme-sddi
 
-# ckanext-heroslideradmin #############################################################
-ARG CKANEXT_HEROSLIDERADMIN_VERSION="4b60e00"
-ENV CKANEXT_HEROSLIDERADMIN_VERSION=${CKANEXT_HEROSLIDERADMIN_VERSION}
-ENV CKANEXT_HEROSLIDERADMIN_GITHUB_URL="https://github.com/dathere/ckanext-heroslideradmin"
-
-RUN set -ex && \
-    curl -o /wheels/ckanext-heroslideradmin-requirements.txt \
-        ${CKANEXT_HEROSLIDERADMIN_GITHUB_URL}/raw/${CKANEXT_HEROSLIDERADMIN_VERSION}/requirements.txt && \
-    pip install -r /wheels/ckanext-heroslideradmin-requirements.txt && \
-    pip wheel --wheel-dir=/wheels \
-        git+${CKANEXT_HEROSLIDERADMIN_GITHUB_URL}.git@${CKANEXT_HEROSLIDERADMIN_VERSION}#egg=ckanext-heroslideradmin
-
 # ckanext-clamav #############################################################
 ARG CKANEXT_CLAMAV_VERSION="a1d23ac"
 ENV CKANEXT_CLAMAV_VERSION=${CKANEXT_CLAMAV_VERSION}
@@ -230,15 +218,6 @@ RUN set -ex && \
     pip install -r /wheels/ckanext-clamav-requirements.txt && \
     pip wheel --wheel-dir=/wheels \
         git+${CKANEXT_CLAMAV_GITHUB_URL}.git@${CKANEXT_CLAMAV_VERSION}#egg=ckanext-clamav
-
-# ckanext-fortify ##############################
-ARG CKANEXT_FORTIFY_VERSION="3.0.0"
-ENV CKANEXT_FORTIFY_VERSION=${CKANEXT_FORTIFY_VERSION}
-ENV CKANEXT_FORTIFY_GITHUB_URL="https://github.com/salsadigitalauorg/ckanext-fortify"
-
-RUN set -ex && \
-    pip wheel --wheel-dir=/wheels \
-        git+${CKANEXT_FORTIFY_GITHUB_URL}.git@${CKANEXT_FORTIFY_VERSION}#egg=ckanext-fortify
 
 # ckanext-dcat ##########################################################
 ARG CKANEXT_DCAT_VERSION="v1.5.1"
@@ -386,15 +365,15 @@ RUN set -ex && \
 
 # ckanext-heroslideradmin #############################################################
 RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-heroslideradmin
- 
+  pip install -e "git+https://github.com/dathere/ckanext-heroslideradmin.git@4b60e00#egg=ckanext-heroslideradmin"
+
 # ckanext-clamav #############################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-clamav
 
 # ckanext-fortify ##############################
 RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-fortify
+  pip install -e "git+https://github.com/salsadigitalauorg/ckanext-fortify#egg=ckanext-fortify"
 
 # ckanext-dcat ##########################################################
 RUN set -ex && \
@@ -417,7 +396,7 @@ ENV CKAN__PLUGINS "envvars image_view text_view webpage_view datastore \
   theme_sddi \
   heroslideradmin \
   clamav \
-  # fortify \
+  fortify \
   dcat dcat_rdf_harvester dcat_json_harvester dcat_json_interface \
   security"
 
