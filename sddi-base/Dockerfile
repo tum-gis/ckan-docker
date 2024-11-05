@@ -288,6 +288,7 @@ RUN apt-get update && apt-get install -y \
     libproj-dev \
     proj-data \
     python3-cffi \
+    uwsgi-plugin-python3 \
     supervisor
 
 # Cleanup to reduce image size
