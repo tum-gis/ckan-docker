@@ -180,21 +180,6 @@ RUN set -ex && \
     pip wheel --wheel-dir=/wheels \
         git+${CKANEXT_GEOVIEW_GITHUB_URL}.git@${CKANEXT_GEOVIEW_VERSION}#egg=ckanext-geoview
 
-# ckanext-scheme-sddi #############################################################
-ARG CKANEXT_SCHEME_SDDI_VERSION="0.0.1"
-ENV CKANEXT_SCHEME_SDDI_VERSION=${CKANEXT_SCHEME_SDDI_VERSION}
-ENV CKANEXT_SCHEME_SDDI_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-scheme-sddi"
-
-RUN set -ex && \
-  mkdir -p /wheels && \
-  pip install -r ${CKANEXT_SCHEME_SDDI_GITHUB_URL}/raw/${CKANEXT_SCHEME_SDDI_VERSION}/dev-requirements.txt
-
-RUN set -ex && \
-  pip wheel --wheel-dir=/wheels -r ${CKANEXT_SCHEME_SDDI_GITHUB_URL}/raw/${CKANEXT_SCHEME_SDDI_VERSION}/requirements.txt && \
-  pip wheel --wheel-dir=/wheels git+${CKANEXT_SCHEME_SDDI_GITHUB_URL}.git@${CKANEXT_SCHEME_SDDI_VERSION}#egg=ckanext-scheme-sddi && \
-  curl -o /wheels/ckanext-scheme-sddi.txt ${CKANEXT_SCHEME_SDDI_GITHUB_URL}/raw/${CKANEXT_SCHEME_SDDI_VERSION}/requirements.txt && \
-  ls -lah /wheels
-
 # ckanext-theme-sddi #############################################################
 ARG CKANEXT_THEME_SDDI_VERSION="0.0.1"
 ENV CKANEXT_THEME_SDDI_VERSION=${CKANEXT_THEME_SDDI_VERSION}
@@ -362,7 +347,7 @@ RUN set -ex && \
 
 # ckanext-scheme-sddi #############################################################
 RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-scheme-sddi
+  pip install -e "git+https://github.com/MarijaKnezevic/ckanext-scheme-sddi@0.0.1#egg=ckanext-scheme-sddi"
 
 # ckanext-theme-sddi #############################################################
 RUN set -ex && \
@@ -414,6 +399,7 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.spatial.srid = 4326" && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.search_backend = solr-bbox" && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.use_postgis_sorting = true" && \
+  ckan config-tool "${CKAN_INI}" "scheming.dataset_schemas = ckanext.scheme_sddi:sddi_dataset.yaml" && \
   ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json ckanext.scheme_sddi:sddi_presets.json" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
   ckan config-tool "${CKAN_INI}" "ckanext.dathere_theme.column_count = 4" && \
