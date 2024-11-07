@@ -339,6 +339,10 @@ RUN set -ex && \
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-envvars
 
+# ckanext-relation ############################################################
+RUN set -ex && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-relation
+
 # ckanext-scheming ############################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-scheming
@@ -389,17 +393,18 @@ RUN set -ex && \
 ENV CKAN__PLUGINS "envvars image_view text_view webpage_view datastore \
   harvest ckan_harvester \
   hierarchy_display hierarchy_form \
+  relation \
   spatial_metadata spatial_query \
-  scheming_datasets \
   datesearch \
-  geo_view geojson_view wmts_view shp_view \
   scheme_sddi \
   theme_sddi \
-  heroslideradmin \
-  clamav \
+  scheming_datasets \
+  geo_view geojson_view wmts_view shp_view \
   fortify \
+  security \
+  heroslideradmin \
   dcat dcat_rdf_harvester dcat_json_harvester dcat_json_interface \
-  security"
+  clamav"
 
 RUN set -ex && \
   ckan generate config ${APP_DIR}/production.ini
@@ -409,7 +414,6 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.spatial.srid = 4326" && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.search_backend = solr-bbox" && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.use_postgis_sorting = true" && \
-  ckan config-tool "${CKAN_INI}" "scheming.dataset_schemas = ckanext.scheming:ckan_dataset.yaml" && \
   ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json ckanext.scheme_sddi:sddi_presets.json" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
   ckan config-tool "${CKAN_INI}" "ckanext.dathere_theme.column_count = 4" && \
