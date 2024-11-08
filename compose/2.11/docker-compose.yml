@@ -11,22 +11,23 @@ networks:
   backend:
 
 services:
-
-  sddi-base:
-    image: sddi-base:${CKAN_IMAGE_VERSION}
-    build:
-      context: ../../sddi-base
-      no_cache: true
-      pull: true
-  sddi-base-debug:
-    image: sddi-base:${CKAN_IMAGE_VERSION}-debug
-    build:
-      context: ../../sddi-base
-      dockerfile: Dockerfile.debug
-      no_cache: true
-      # pull: true
-    depends_on:
-      - sddi-base
+  # Remove the "sddi-base" and "sddi-social" services
+  # sddi-base:
+  #   image: sddi-base:${CKAN_IMAGE_VERSION}
+  #   build:
+  #     context: ../../sddi-base
+  #     no_cache: true
+  #     pull: true
+  
+  # sddi-base-debug:
+  #   image: sddi-base:${CKAN_IMAGE_VERSION}-debug
+  #   build:
+  #     context: ../../sddi-base
+  #     dockerfile: Dockerfile.debug
+  #     no_cache: true
+  #     # pull: true
+  #   depends_on:
+  #     - sddi-base
 
   sddi:
     image: sddi:${CKAN_IMAGE_VERSION}
@@ -37,18 +38,36 @@ services:
         BASEIMAGE_REPOSITORY: sddi-base
         BASEIMAGE_VERSION: ${CKAN_IMAGE_VERSION}
     depends_on:
-      - sddi-base
-  sddi-debug:
-    image: sddi:${CKAN_IMAGE_VERSION}-debug
-    build:
-      context: ../../sddi
-      dockerfile: Dockerfile.debug
-      no_cache: true
-      args:
-        BASEIMAGE_REPOSITORY: sddi-base
-        BASEIMAGE_VERSION: ${CKAN_IMAGE_VERSION}
-    depends_on:
-      - sddi-base
+      - db
+      - redis
+      - solr
+    networks:
+      - frontend
+      - backend
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ:?TZ not set}
+      # Basic settings
+      CKAN_SITE_URL: ${CKAN_SITE_URL:?CKAN_SITE_URL not set}
+      # Database
+      CKAN_SQLALCHEMY_URL: "postgresql://${CKAN_DB_USERNAME}:${CKAN_DB_PASSWORD}@${CKAN_DB_HOST}:${CKAN_DB_PORT}/${CKAN_DB_NAME}"
+      # Datastore
+      CKAN_DATASTORE_WRITE_URL: "postgresql://${DATASTORE_DB_RW_USERNAME}:${DATASTORE_DB_RW_PASSWORD}@${DATASTORE_DB_HOST}:${DATASTORE_DB_PORT}/${DATASTORE_DB_NAME}"
+      CKAN_DATASTORE_READ_URL: "postgresql://${DATASTORE_DB_RO_USERNAME}:${DATASTORE_DB_RO_PASSWORD}@${DATASTORE_DB_HOST}:${DATASTORE_DB_PORT}/${DATASTORE_DB_NAME}"
+      # Datapusher
+      CKAN_DATAPUSHER_URL: ${CKAN_DATAPUSHER_URL:?CKAN_DATAPUSHER_URL not set}
+      # Solr
+      CKAN_SOLR_URL: ${CKAN_SOLR_URL:?CKAN_SOLR_URL not set}
+      # Redis
+      CKAN_REDIS_URL: ${CKAN_REDIS_URL:?CKAN_REDIS_URL not set}
+      # Storage path
+      CKAN_STORAGE_PATH: "${CKAN_STORAGE_PATH:?CKAN_STORAGE_PATH not set}"
+    env_file:
+      - ckan.env
+    ports:
+      - 5000:5000
+
+  # Remove "sddi-social" service and any related references
   # sddi-social:
   #   image: sddi-social:${CKAN_IMAGE_VERSION}
   #   build:
@@ -72,7 +91,6 @@ services:
   #     - sddi
 
   # Caddy ---------------------------------------------------------------------
-  # CKAN ----------------------------------------------------------------------
   # PostGIS -------------------------------------------------------------------
   db:
     container_name: ${POSTGIS_CONTAINER_NAME}
@@ -114,57 +132,6 @@ services:
       DATAPUSHER_DB_NAME: ${DATAPUSHER_DB_NAME:?DATAPUSHER_DB_NAME not set}
       DATAPUSHER_DB_USERNAME: ${DATAPUSHER_DB_USERNAME:?DATAPUSHER_DB_USERNAME not set}
       DATAPUSHER_DB_PASSWORD: ${DATAPUSHER_DB_PASSWORD:?DATAPUSHER_DB_PASSWORD not set}
-
-  # CKAN ----------------------------------------------------------------------
-  ckan:
-    container_name: ${CKAN_CONTAINER_NAME}
-    image: sddi:${CKAN_IMAGE_VERSION}
-    build:
-      context: ../../sddi
-      args:
-        BASEIMAGE_REPOSITORY: sddi-base
-        BASEIMAGE_VERSION: ${CKAN_IMAGE_VERSION}
-      no_cache: true
-    volumes:
-      - "ckan_data:${CKAN_STORAGE_PATH:?CKAN_STORAGE_PATH not set}"
-    networks:
-      - frontend
-      - backend
-    restart: unless-stopped
-    # healthcheck:
-    #   test: ["CMD", "wget", "-qO", "/dev/null", "http://localhost:8983/solr/"]
-    environment:
-      TZ: ${TZ:?TZ not set}
-      # Basic settings
-      CKAN_SITE_URL: ${CKAN_SITE_URL:?CKAN_SITE_URL not set}
-      # Database
-      CKAN_SQLALCHEMY_URL: "postgresql://${CKAN_DB_USERNAME}:${CKAN_DB_PASSWORD}@${CKAN_DB_HOST}:${CKAN_DB_PORT}/${CKAN_DB_NAME}"
-      # Datastore
-      CKAN_DATASTORE_WRITE_URL: "postgresql://${DATASTORE_DB_RW_USERNAME}:${DATASTORE_DB_RW_PASSWORD}@${DATASTORE_DB_HOST}:${DATASTORE_DB_PORT}/${DATASTORE_DB_NAME}"
-      CKAN_DATASTORE_READ_URL: "postgresql://${DATASTORE_DB_RO_USERNAME}:${DATASTORE_DB_RO_PASSWORD}@${DATASTORE_DB_HOST}:${DATASTORE_DB_PORT}/${DATASTORE_DB_NAME}"
-      # Datapusher
-      CKAN_DATAPUSHER_URL: ${CKAN_DATAPUSHER_URL:?CKAN_DATAPUSHER_URL not set}
-      # Solr
-      CKAN_SOLR_URL: ${CKAN_SOLR_URL:?CKAN_SOLR_URL not set}
-      # Redis
-      CKAN_REDIS_URL: ${CKAN_REDIS_URL:?CKAN_REDIS_URL not set}
-      # Storage path
-      CKAN_STORAGE_PATH: "${CKAN_STORAGE_PATH:?CKAN_STORAGE_PATH not set}"
-    env_file:
-      - ckan.env
-    depends_on:
-      - sddi-base
-      - db
-      - redis
-      - solr
-      # db:
-      #   condition: service_healthy
-      # redis:
-      #   condition: service_healthy
-      # solr:
-      #   condition: service_healthy
-    ports:
-      - 5000:5000
 
   # Solr ----------------------------------------------------------------------
   solr:
