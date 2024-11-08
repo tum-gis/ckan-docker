@@ -345,7 +345,7 @@ RUN set -ex && \
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-geoview
 
-# ckanext-scheme-sddi #############################################################
+# ckanext-scheme-sddi ############################################################
 RUN set -ex && \
   pip install -e "git+https://github.com/MarijaKnezevic/ckanext-scheme-sddi@0.0.1#egg=ckanext-scheme-sddi"
 
