@@ -174,11 +174,11 @@ ENV DATA_DIR=/srv/app/data
 ENV PIP_SRC=${SRC_DIR}
 
 # Setting the locale
-ENV LC_ALL="en_US.UTF-8"
-RUN apt-get update && apt-get install --no-install-recommends -y locales
-RUN sed -i "/$LC_ALL/s/^# //g" /etc/locale.gen
-RUN dpkg-reconfigure --frontend=noninteractive locales
-RUN update-locale LANG=${LC_ALL}
+# ENV LC_ALL="en_US.UTF-8"
+# RUN apt-get update && apt-get install --no-install-recommends -y locales
+# RUN sed -i "/$LC_ALL/s/^# //g" /etc/locale.gen
+# RUN dpkg-reconfigure --frontend=noninteractive locales
+# RUN update-locale LANG=${LC_ALL}
 
 # Set timezone
 RUN echo "UTC" >  /etc/timezone
