@@ -172,18 +172,21 @@ ENV SRC_DIR=/srv/app/src
 ENV CKAN_DIR=${SRC_DIR}/ckan
 ENV DATA_DIR=/srv/app/data
 ENV PIP_SRC=${SRC_DIR}
-
-# Setting the locale
-# ENV LC_ALL="en_US.UTF-8"
-# RUN apt-get update && apt-get install --no-install-recommends -y locales
-# RUN sed -i "/$LC_ALL/s/^# //g" /etc/locale.gen
-# RUN dpkg-reconfigure --frontend=noninteractive locales
-# RUN update-locale LANG=${LC_ALL}
-
-# Set timezone
-RUN echo "UTC" >  /etc/timezone
 ENV CKAN_INI=${APP_DIR}/production.ini
 ENV CKAN_STORAGE_PATH=/var/lib/ckan
+ENV UWSGI_HARAKIRI=50
+
+USER root
+
+# Setting the locale
+ENV LC_ALL="en_US.UTF-8"
+RUN apt-get update && apt-get install --no-install-recommends -y locales
+RUN sed -i "/$LC_ALL/s/^# //g" /etc/locale.gen
+RUN dpkg-reconfigure --frontend=noninteractive locales
+RUN update-locale LANG=${LC_ALL}
+
+# Set timezone
+RUN echo "UTC" > /etc/timezone
 
 # Update the package lists and install required packages
 RUN apt-get update && apt-get install -y \
@@ -207,17 +210,11 @@ RUN apt-get update && apt-get install -y \
     proj-data \
     python3-cffi \
     uwsgi-plugin-python3 \
-    supervisor
+    supervisor \
+    sudo
 
 # Cleanup to reduce image size
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
-RUN set -ex pip install markupsafe==2.0.1 \
-                        setuptools \
-                        wheel \
-                        sqlalchemy==1.4.41 \
-                        gevent==22.10.2 \
-                        greenlet==2.0.1
 
 # Create SRC_DIR
 RUN mkdir -p ${SRC_DIR} && \
@@ -226,6 +223,20 @@ RUN mkdir -p ${SRC_DIR} && \
 
 # Get artifacts from build stages
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
+
+# Create local storage folder
+RUN mkdir -p ${CKAN_STORAGE_PATH} && \
+    chown -R ckan:ckan ${CKAN_STORAGE_PATH} && \
+    chown -R ckan:ckan ${APP_DIR}
+
+USER ckan
+
+RUN set -ex pip install markupsafe==2.0.1 \
+                        setuptools \
+                        wheel \
+                        sqlalchemy==1.4.41 \
+                        gevent==22.10.2 \
+                        greenlet==2.0.1
 
 WORKDIR ${CKAN_DIR}
 
@@ -337,20 +348,13 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.harvest.log_scope = 0" && \
   ckan config-tool "${CKAN_INI}" "ckan.harvest.log_level = debug" && \
   ckan config-tool "${CKAN_INI}" "ckan.harvest.log_timeframe = 10" && \
-  ckan config-tool "${CKAN_INI}" "PERMANENT_SESSION_LIFETIME = 600" && \
-  echo "${TZ}" > /etc/timezone && \
-  mkdir -p ${CKAN_STORAGE_PATH} && \
-  chown -R ckan:ckan ${APP_DIR} ${CKAN_STORAGE_PATH} && \
-  # Remove wheels
+  ckan config-tool "${CKAN_INI}" "PERMANENT_SESSION_LIFETIME = 600"
+
+# Remove wheels
+RUN set -ex && \
   rm -rf ${APP_DIR}/ext_wheels
 
 WORKDIR ${APP_DIR}
-
-ENV UWSGI_HARAKIRI=50
-
-# Create local storage folder
-RUN mkdir -p ${CKAN_STORAGE_PATH} && \
-    chown -R ckan:ckan ${CKAN_STORAGE_PATH}
 
 # Create entrypoint directory for children image scripts
 ONBUILD RUN mkdir /docker-entrypoint.d
