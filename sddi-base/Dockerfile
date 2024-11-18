@@ -226,8 +226,8 @@ COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
 
 # Create local storage folder
 RUN mkdir -p ${CKAN_STORAGE_PATH} && \
-    chown -R ckan:ckan ${CKAN_STORAGE_PATH} && \
-    chown -R ckan:ckan ${APP_DIR}
+    chown -R ckan:ckan-sys ${CKAN_STORAGE_PATH} && \
+    chown -R ckan:ckan-sys ${APP_DIR}
 
 USER ckan
 
