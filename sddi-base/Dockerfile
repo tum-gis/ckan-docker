@@ -306,6 +306,7 @@ RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-security
 
 ENV CKAN__PLUGINS "envvars image_view text_view webpage_view datastore \
+  activity \
   harvest ckan_harvester \
   hierarchy_display hierarchy_form \
   relation \
