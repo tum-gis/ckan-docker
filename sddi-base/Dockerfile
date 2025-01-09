@@ -78,7 +78,7 @@ RUN set -ex && \
     git+${CKANEXT_DATESEARCH_VERSION_GITHUB_URL}.git@${CKANEXT_DATESEARCH_VERSION}#egg=ckanext-datesearch
 
 # ckanext-harvest ###########################################################
-ARG CKANEXT_HARVEST_VERSION="v1.6.0"
+ARG CKANEXT_HARVEST_VERSION="update-manifest"
 ENV CKANEXT_HARVEST_VERSION=${CKANEXT_HARVEST_VERSION}
 ENV CKANEXT_HARVEST_GITHUB_URL="https://github.com/ckan/ckanext-harvest.git"
 
