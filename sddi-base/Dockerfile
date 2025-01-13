@@ -291,10 +291,6 @@ RUN set -ex && \
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-clamav
 
-# ckanext-fortify ##############################
-RUN set -ex && \
-  pip install -e "git+https://github.com/salsadigitalauorg/ckanext-fortify#egg=ckanext-fortify"
-
 # ckanext-dcat ##########################################################
 RUN set -ex && \
   pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-dcat-requirements.txt && \
@@ -316,7 +312,6 @@ ENV CKAN__PLUGINS "envvars image_view text_view webpage_view datastore \
   theme_sddi \
   scheming_datasets \
   geo_view geojson_view wmts_view shp_view \
-  fortify \
   security \
   heroslideradmin \
   dcat dcat_rdf_harvester dcat_json_harvester dcat_json_interface \
@@ -342,9 +337,6 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.brute_force_key = user_name" && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.disable_password_reset_override = true" && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.enable_totp = false" && \
-  ckan config-tool "${CKAN_INI}" "ckan.fortify.enable_password_policy = True" && \
-  ckan config-tool "${CKAN_INI}" "ckan.fortify.password_policy.min_length = 12" && \
-  ckan config-tool "${CKAN_INI}" "ckan.fortify.check_parent_org_allowed = True" && \
   ckan config-tool "${CKAN_INI}" "ckanext.dcat.enable_content_negotiation = True" && \
   ckan config-tool "${CKAN_INI}" "ckan.harvest.log_scope = 0" && \
   ckan config-tool "${CKAN_INI}" "ckan.harvest.log_level = debug" && \
