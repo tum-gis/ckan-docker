@@ -78,7 +78,7 @@ RUN set -ex && \
     git+${CKANEXT_DATESEARCH_VERSION_GITHUB_URL}.git@${CKANEXT_DATESEARCH_VERSION}#egg=ckanext-datesearch
 
 # ckanext-harvest ###########################################################
-ARG CKANEXT_HARVEST_VERSION="update-manifest"
+ARG CKANEXT_HARVEST_VERSION="v1.6.1"
 ENV CKANEXT_HARVEST_VERSION=${CKANEXT_HARVEST_VERSION}
 ENV CKANEXT_HARVEST_GITHUB_URL="https://github.com/ckan/ckanext-harvest.git"
 
@@ -341,9 +341,7 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.harvest.log_scope = 0" && \
   ckan config-tool "${CKAN_INI}" "ckan.harvest.log_level = debug" && \
   ckan config-tool "${CKAN_INI}" "ckan.harvest.log_timeframe = 10" && \
-  ckan config-tool "${CKAN_INI}" "PERMANENT_SESSION_LIFETIME = 600" && \
-  ckan config-tool "${CKAN_INI}" "ckan.auth.create_user_via_api = false" && \
-  ckan config-tool "${CKAN_INI}" "ckan.auth.create_user_via_web = false"
+  ckan config-tool "${CKAN_INI}" "PERMANENT_SESSION_LIFETIME = 600"
   
 # Remove wheels
 RUN set -ex && \
