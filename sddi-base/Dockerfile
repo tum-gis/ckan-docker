@@ -69,7 +69,7 @@ RUN set -ex && \
     git+${CKANEXT_SCHEMING_GITHUB_URL}.git@${CKANEXT_SCHEMING_VERSION}#egg=ckanext-scheming
 
 # ckanext datesearch ##########################################################
-ARG CKANEXT_DATESEARCH_VERSION="1.1.0"
+ARG CKANEXT_DATESEARCH_VERSION="master"
 ENV CKANEXT_DATESEARCH_VERSION=${CKANEXT_DATESEARCH_VERSION}
 ENV CKANEXT_DATESEARCH_VERSION_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-datesearch"
 
@@ -78,19 +78,19 @@ RUN set -ex && \
     git+${CKANEXT_DATESEARCH_VERSION_GITHUB_URL}.git@${CKANEXT_DATESEARCH_VERSION}#egg=ckanext-datesearch
 
 # ckanext-harvest ###########################################################
-ARG CKANEXT_HARVEST_VERSION="v1.6.1"
-ENV CKANEXT_HARVEST_VERSION=${CKANEXT_HARVEST_VERSION}
-ENV CKANEXT_HARVEST_GITHUB_URL="https://github.com/ckan/ckanext-harvest.git"
+# ARG CKANEXT_HARVEST_VERSION="v1.6.1"
+# ENV CKANEXT_HARVEST_VERSION=${CKANEXT_HARVEST_VERSION}
+# ENV CKANEXT_HARVEST_GITHUB_URL="https://github.com/ckan/ckanext-harvest.git"
 
-RUN set -ex && \
-  mkdir -p /wheels && \
-  pip install -r https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt
+# RUN set -ex && \
+#  mkdir -p /wheels && \
+#  pip install -r https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt
 
-RUN set -ex && \
-  pip wheel --wheel-dir=/wheels -r https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt && \
-  pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-harvest.git@${CKANEXT_HARVEST_VERSION}#egg=ckanext-harvest && \
-  curl -o /wheels/ckanext-harvest.txt https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt && \
-  ls -lah /wheels
+# RUN set -ex && \
+#  pip wheel --wheel-dir=/wheels -r https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt && \
+#  pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-harvest.git@${CKANEXT_HARVEST_VERSION}#egg=ckanext-harvest && \
+#  curl -o /wheels/ckanext-harvest.txt https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt && \
+#  ls -lah /wheels
 
 # ckanext-spatial #############################################################
 ENV CKANEXT_SPATIAL_GITHUB_URL="https://github.com/ckan/ckanext-spatial"
@@ -241,9 +241,9 @@ RUN set -ex pip install markupsafe==2.0.1 \
 WORKDIR ${CKAN_DIR}
 
 # ckanext-harvest ###########################################################
-RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-harvest && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-harvest.txt
+# RUN set -ex && \
+#  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-harvest && \
+#  pip install --no-index --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-harvest.txt
 
 # ckanext-hierarchy ###########################################################
 RUN set -ex && \
@@ -303,7 +303,7 @@ RUN set -ex && \
 
 ENV CKAN__PLUGINS "envvars image_view text_view webpage_view datastore \
   activity \
-  harvest ckan_harvester \
+  # harvest ckan_harvester \
   hierarchy_display hierarchy_form \
   relation \
   spatial_metadata spatial_query \
@@ -338,9 +338,9 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.disable_password_reset_override = true" && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.enable_totp = false" && \
   ckan config-tool "${CKAN_INI}" "ckanext.dcat.enable_content_negotiation = True" && \
-  ckan config-tool "${CKAN_INI}" "ckan.harvest.log_scope = 0" && \
-  ckan config-tool "${CKAN_INI}" "ckan.harvest.log_level = debug" && \
-  ckan config-tool "${CKAN_INI}" "ckan.harvest.log_timeframe = 10" && \
+# ckan config-tool "${CKAN_INI}" "ckan.harvest.log_scope = 0" && \
+# ckan config-tool "${CKAN_INI}" "ckan.harvest.log_level = debug" && \
+# ckan config-tool "${CKAN_INI}" "ckan.harvest.log_timeframe = 10" && \
   ckan config-tool "${CKAN_INI}" "PERMANENT_SESSION_LIFETIME = 600"
   
 # Remove wheels
