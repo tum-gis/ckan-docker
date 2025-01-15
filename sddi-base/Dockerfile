@@ -314,7 +314,7 @@ ENV CKAN__PLUGINS "envvars image_view text_view webpage_view datastore \
   geo_view geojson_view wmts_view shp_view \
   security \
   heroslideradmin \
-  dcat dcat_rdf_harvester dcat_json_harvester dcat_json_interface \
+  # dcat dcat_rdf_harvester dcat_json_harvester dcat_json_interface \
   clamav"
 
 RUN set -ex && \
