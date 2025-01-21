@@ -115,7 +115,7 @@ RUN set -ex && \
         git+${CKANEXT_GEOVIEW_GITHUB_URL}.git@${CKANEXT_GEOVIEW_VERSION}#egg=ckanext-geoview
 
 # ckanext-theme-sddi #############################################################
-ARG CKANEXT_THEME_SDDI_VERSION="main"
+ARG CKANEXT_THEME_SDDI_VERSION="update-manifest"
 ENV CKANEXT_THEME_SDDI_VERSION=${CKANEXT_THEME_SDDI_VERSION}
 ENV CKANEXT_THEME_SDDI_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-theme-sddi"
 
