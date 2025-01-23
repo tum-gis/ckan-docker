@@ -69,7 +69,7 @@ RUN set -ex && \
     git+${CKANEXT_SCHEMING_GITHUB_URL}.git@${CKANEXT_SCHEMING_VERSION}#egg=ckanext-scheming
 
 # ckanext datesearch ##########################################################
-ARG CKANEXT_DATESEARCH_VERSION="master"
+ARG CKANEXT_DATESEARCH_VERSION="1.1.1"
 ENV CKANEXT_DATESEARCH_VERSION=${CKANEXT_DATESEARCH_VERSION}
 ENV CKANEXT_DATESEARCH_VERSION_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-datesearch"
 
@@ -116,7 +116,7 @@ RUN set -ex && \
 
 # Trigger sddi build
 # ckanext-theme-sddi #############################################################
-ARG CKANEXT_THEME_SDDI_VERSION="main"
+ARG CKANEXT_THEME_SDDI_VERSION="0.0.2"
 ENV CKANEXT_THEME_SDDI_VERSION=${CKANEXT_THEME_SDDI_VERSION}
 ENV CKANEXT_THEME_SDDI_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-theme-sddi"
 
@@ -337,7 +337,7 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.login_max_count = 3" && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.brute_force_key = user_name" && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.disable_password_reset_override = true" && \
-  ckan config-tool "${CKAN_INI}" "ckanext.security.enable_totp = false" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.security.enable_totp = true" && \
   ckan config-tool "${CKAN_INI}" "ckanext.dcat.enable_content_negotiation = True" && \
 # ckan config-tool "${CKAN_INI}" "ckan.harvest.log_scope = 0" && \
 # ckan config-tool "${CKAN_INI}" "ckan.harvest.log_level = debug" && \
