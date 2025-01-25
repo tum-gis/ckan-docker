@@ -152,7 +152,7 @@ RUN set -ex && \
         git+${CKANEXT_DCAT_GITHUB_URL}.git@${CKANEXT_DCAT_VERSION}#egg=ckanext-dcat
 
 # ckanext-security ######################################################
-ARG CKANEXT_SECURITY_VERSION="80dc1d6"
+ARG CKANEXT_SECURITY_VERSION="upgrade-ckan-2.11"
 ENV CKANEXT_SECURITY_VERSION=${CKANEXT_SECURITY_VERSION}
 ENV CKANEXT_SECURITY_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-security"
     
@@ -338,13 +338,13 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.login_max_count = 3" && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.brute_force_key = user_name" && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.disable_password_reset_override = true" && \
-  ckan config-tool "${CKAN_INI}" "ckanext.security.enable_totp = false" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.security.enable_totp = true" && \
   ckan config-tool "${CKAN_INI}" "ckanext.dcat.enable_content_negotiation = True" && \
 # ckan config-tool "${CKAN_INI}" "ckan.harvest.log_scope = 0" && \
 # ckan config-tool "${CKAN_INI}" "ckan.harvest.log_level = debug" && \
 # ckan config-tool "${CKAN_INI}" "ckan.harvest.log_timeframe = 10" && \
   ckan config-tool "${CKAN_INI}" "PERMANENT_SESSION_LIFETIME = 600"
-  
+
 # Remove wheels
 RUN set -ex && \
   rm -rf ${APP_DIR}/ext_wheels
