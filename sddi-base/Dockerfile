@@ -304,13 +304,13 @@ RUN set -ex && \
 
 ENV CKAN__PLUGINS "envvars image_view text_view webpage_view datastore \
   activity \
+  security \
   # harvest ckan_harvester \
   hierarchy_display hierarchy_form \
   relation \
   spatial_metadata spatial_query \
   datesearch \
   scheme_sddi \
-  security \
   theme_sddi \
   scheming_datasets \
   geo_view geojson_view wmts_view shp_view \
