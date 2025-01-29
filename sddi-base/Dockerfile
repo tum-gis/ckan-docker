@@ -310,10 +310,10 @@ ENV CKAN__PLUGINS "envvars image_view text_view webpage_view datastore \
   spatial_metadata spatial_query \
   datesearch \
   scheme_sddi \
+  security \
   theme_sddi \
   scheming_datasets \
   geo_view geojson_view wmts_view shp_view \
-  security \
   heroslideradmin \
   # dcat dcat_rdf_harvester dcat_json_harvester dcat_json_interface \
   dcat dcat_json_interface \
