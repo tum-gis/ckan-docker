@@ -114,7 +114,6 @@ RUN set -ex && \
     pip wheel --wheel-dir=/wheels \
         git+${CKANEXT_GEOVIEW_GITHUB_URL}.git@${CKANEXT_GEOVIEW_VERSION}#egg=ckanext-geoview
 
-# Trigger sddi build
 # ckanext-theme-sddi #############################################################
 ARG CKANEXT_THEME_SDDI_VERSION="main"
 ENV CKANEXT_THEME_SDDI_VERSION=${CKANEXT_THEME_SDDI_VERSION}
