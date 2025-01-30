@@ -116,7 +116,7 @@ RUN set -ex && \
 
 # Trigger sddi build
 # ckanext-theme-sddi #############################################################
-ARG CKANEXT_THEME_SDDI_VERSION="0.0.2"
+ARG CKANEXT_THEME_SDDI_VERSION="main"
 ENV CKANEXT_THEME_SDDI_VERSION=${CKANEXT_THEME_SDDI_VERSION}
 ENV CKANEXT_THEME_SDDI_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-theme-sddi"
 
