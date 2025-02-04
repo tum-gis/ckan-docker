@@ -116,7 +116,7 @@ RUN set -ex && \
 
 # Trigger sddi build
 # ckanext-theme-sddi #############################################################
-ARG CKANEXT_THEME_SDDI_VERSION="main"
+ARG CKANEXT_THEME_SDDI_VERSION="0.0.3"
 ENV CKANEXT_THEME_SDDI_VERSION=${CKANEXT_THEME_SDDI_VERSION}
 ENV CKANEXT_THEME_SDDI_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-theme-sddi"
 
@@ -152,7 +152,7 @@ RUN set -ex && \
         git+${CKANEXT_DCAT_GITHUB_URL}.git@${CKANEXT_DCAT_VERSION}#egg=ckanext-dcat
 
 # ckanext-security ######################################################
-ARG CKANEXT_SECURITY_VERSION="upgrade-ckan-2.11"
+ARG CKANEXT_SECURITY_VERSION="afc39c2"
 ENV CKANEXT_SECURITY_VERSION=${CKANEXT_SECURITY_VERSION}
 ENV CKANEXT_SECURITY_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-security"
     
