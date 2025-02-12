@@ -54,6 +54,7 @@ jobs:
               DIGEST=$(curl -s -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" \
                 -H "Accept: application/vnd.oci.image.manifest.v1+json" \
                 "https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/manifests/$TAG" | jq -r '.config.digest')
+              echo "Deleting image: $TAG with digest: $DIGEST"
               if [ "$DIGEST" != "null" ]; then
                 GHCR_DELETE_URL="https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/manifests/$DIGEST"
                 curl -X DELETE -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" "$GHCR_DELETE_URL"
