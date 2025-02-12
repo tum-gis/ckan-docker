@@ -27,7 +27,7 @@ jobs:
           > delete_tags.txt  # Clear file before writing
           while read -r TAG; do
              echo "Read tag: $TAG"
-            if [[ $TAG =~ ^[(a-zA-Z0-9-]+-pr-)(\d+)(?:-[a-f0-9]+)?(?:-[a-zA-Z0-9]+)?$ ]]; then
+            if [[ $TAG =~ ^([a-zA-Z0-9-]+-pr-)(\d+)(?:-[a-f0-9]+)?(?:-[a-zA-Z0-9]+)?$ ]]; then
               echo "Matched tag: $TAG"
               PR_NUMBER=${BASH_REMATCH[2]}
               echo "PR Number: $PR_NUMBER"
