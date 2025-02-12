@@ -15,15 +15,15 @@ jobs:
       - name: Get Image Tags from GHCR
         run: |
           IMAGE_OWNER="${{ github.repository_owner }}"
-          IMAGE_NAME="ckan-sddi-dev"
+          IMAGE_NAME="ckan-sdd-dev"
           GHCR_API="https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/tags/list"
           TAGS=$(curl -s -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" "$GHCR_API" | jq -r '.tags[]')
-          echo "TAGS=$TAGS" >> $GITHUB_ENV
+          echo "$TAGS" > tags_list.txt
 
       - name: Identify Merged PRs
         run: |
           MAPPED_TAGS=()
-          for TAG in $TAGS; do
+          while read -r TAG; do
             if [[ $TAG =~ ^[a-zA-Z0-9]+-pr-(\d+)(?:-[a-f0-9]+)?$ ]]; then
               PR_NUMBER=${BASH_REMATCH[1]}
               RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
@@ -33,17 +33,26 @@ jobs:
                 MAPPED_TAGS+=("$TAG")
               fi
             fi
-          done
-          echo "DELETE_TAGS=${MAPPED_TAGS[*]}" >> $GITHUB_ENV
-          echo "Images to be deleted: ${MAPPED_TAGS[*]}"
+          done < tags_list.txt
+          printf "%s\n" "${MAPPED_TAGS[@]}" > delete_tags.txt
+          echo "Images to be deleted:" && cat delete_tags.txt
 
       - name: Delete Merged PR Images
-        if: env.DELETE_TAGS != ''
+        if: ${{ always() }}
         run: |
-          echo "Deleting the following images: $DELETE_TAGS"
-          for TAG in $DELETE_TAGS; do
-            IMAGE_OWNER="${{ github.repository_owner }}"
-            IMAGE_NAME="your-image-name"
-            GHCR_DELETE_URL="https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/manifests/$(curl -s -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" -H "Accept: application/vnd.oci.image.manifest.v1+json" "https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/manifests/$TAG" | jq -r '.config.digest')"
-            curl -X DELETE -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" "$GHCR_DELETE_URL"
-          done
+          if [ -s delete_tags.txt ]; then
+            echo "Deleting the following images:" && cat delete_tags.txt
+            while read -r TAG; do
+              IMAGE_OWNER="${{ github.repository_owner }}"
+              IMAGE_NAME="your-image-name"
+              DIGEST=$(curl -s -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" \
+                -H "Accept: application/vnd.oci.image.manifest.v1+json" \
+                "https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/manifests/$TAG" | jq -r '.config.digest')
+              if [ "$DIGEST" != "null" ]; then
+                GHCR_DELETE_URL="https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/manifests/$DIGEST"
+                curl -X DELETE -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" "$GHCR_DELETE_URL"
+              fi
+            done < delete_tags.txt
+          else
+            echo "No images to delete."
+          fi
