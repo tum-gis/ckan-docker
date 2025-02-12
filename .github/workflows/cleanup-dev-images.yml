@@ -28,7 +28,9 @@ jobs:
           while read -r TAG; do
              echo "Read tag: $TAG"
             if [[ $TAG =~ ^[a-zA-Z0-9-]+-pr-(\d+)(?:-[a-f0-9]+)?(?:-[a-zA-Z0-9]+)?$ ]]; then
+              echo "Matched tag: $TAG"
               PR_NUMBER=${BASH_REMATCH[1]}
+              echo "PR Number: $PR_NUMBER"
               RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                 "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER")
               MERGED=$(echo "$RESPONSE" | jq -r '.merged')
