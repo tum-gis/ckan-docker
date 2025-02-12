@@ -25,6 +25,7 @@ jobs:
       - name: Identify Merged PRs
         run: |
           > delete_tags.txt  # Clear file before writing
+          echo "Print Image Tags to test:" && cat tags_list.txt
           while read -r TAG; do
              echo "Read tag: $TAG"
             if [[ $TAG =~ ^([a-zA-Z0-9-]+-pr-)(\d+)(?:-[a-f0-9]+)?(?:-[a-zA-Z0-9]+)?$ ]]; then
@@ -38,6 +39,8 @@ jobs:
               if [[ "$MERGED" == "true" ]]; then
                 echo "$TAG" >> delete_tags.txt
               fi
+            else
+              echo "$TAG not matched."
             fi
           done < tags_list.txt
           echo "Images to be deleted:" && cat delete_tags.txt
