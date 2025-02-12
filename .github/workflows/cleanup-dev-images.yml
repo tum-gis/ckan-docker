@@ -1,0 +1,49 @@
+name: Cleanup dev images of merged PRs
+
+on:
+  schedule:
+    - cron: "0 2 * * *" # Runs daily at 2 AM UTC
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  cleanup-ghcr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Get Image Tags from GHCR
+        run: |
+          IMAGE_OWNER="${{ github.repository_owner }}"
+          IMAGE_NAME="ckan-sddi-dev"
+          GHCR_API="https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/tags/list"
+          TAGS=$(curl -s -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" "$GHCR_API" | jq -r '.tags[]')
+          echo "TAGS=$TAGS" >> $GITHUB_ENV
+
+      - name: Identify Merged PRs
+        run: |
+          MAPPED_TAGS=()
+          for TAG in $TAGS; do
+            if [[ $TAG =~ ^[a-zA-Z0-9]+-pr-(\d+)(?:-[a-f0-9]+)?$ ]]; then
+              PR_NUMBER=${BASH_REMATCH[1]}
+              RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER")
+              MERGED=$(echo "$RESPONSE" | jq -r '.merged')
+              if [[ "$MERGED" == "true" ]]; then
+                MAPPED_TAGS+=("$TAG")
+              fi
+            fi
+          done
+          echo "DELETE_TAGS=${MAPPED_TAGS[*]}" >> $GITHUB_ENV
+          echo "Images to be deleted: ${MAPPED_TAGS[*]}"
+
+      - name: Delete Merged PR Images
+        if: env.DELETE_TAGS != ''
+        run: |
+          echo "Deleting the following images: $DELETE_TAGS"
+          for TAG in $DELETE_TAGS; do
+            IMAGE_OWNER="${{ github.repository_owner }}"
+            IMAGE_NAME="your-image-name"
+            GHCR_DELETE_URL="https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/manifests/$(curl -s -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" -H "Accept: application/vnd.oci.image.manifest.v1+json" "https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/manifests/$TAG" | jq -r '.config.digest')"
+            curl -X DELETE -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" "$GHCR_DELETE_URL"
+          done
