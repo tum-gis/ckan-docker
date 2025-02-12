@@ -15,7 +15,7 @@ jobs:
       - name: Get Image Tags from GHCR
         run: |
           IMAGE_OWNER="${{ github.repository_owner }}"
-          IMAGE_NAME="ckan-sdd-dev"
+          IMAGE_NAME="ckan-sddi-dev"
           GHCR_API="https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/tags/list"
           TAGS=$(curl -s -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" "$GHCR_API" | jq -r '.tags[]')
           echo "$TAGS" > tags_list.txt
