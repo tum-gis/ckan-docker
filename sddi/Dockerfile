@@ -151,7 +151,7 @@ RUN set -ex && \
         git+${CKANEXT_DCAT_GITHUB_URL}.git@${CKANEXT_DCAT_VERSION}#egg=ckanext-dcat
 
 # ckanext-security ######################################################
-ARG CKANEXT_SECURITY_VERSION="afc39c2"
+ARG CKANEXT_SECURITY_VERSION="5724341"
 ENV CKANEXT_SECURITY_VERSION=${CKANEXT_SECURITY_VERSION}
 ENV CKANEXT_SECURITY_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-security"
     
