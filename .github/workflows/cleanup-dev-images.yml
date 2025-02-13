@@ -58,6 +58,6 @@ jobs:
           validate: true
           log-level: info
           delete-untagged: true
-          delete-ghost-images: true
-          delete-partial-images: true
-          delete-orphaned-images: true
+          # delete-ghost-images: true
+          # delete-partial-images: true
+          # delete-orphaned-images: true
