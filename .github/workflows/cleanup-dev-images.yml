@@ -22,7 +22,10 @@ jobs:
       - name: Get Image Tags from GHCR
         run: |
           GHCR_API="https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/tags/list"
-          curl -s -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" "$GHCR_API" | jq -r '.tags[]' > tags_list.txt
+          curl -s -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" "$GHCR_API" > api_output.txt
+          echo "API output" && cat api_output.txt
+          cat api_output.txt | jq -r '.tags[]' > tags_list.txt
+
           echo "Fetched Image Tags:" && cat tags_list.txt
 
       - name: Identify Merged or Closed PRs
