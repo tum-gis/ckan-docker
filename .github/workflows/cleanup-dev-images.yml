@@ -64,9 +64,9 @@ jobs:
           package: ${{ env.IMAGE_NAME }}
           tags: ${{ env.DELETE_TAGS }}
           # use-regex: true
-          validate: true
+          # validate: true
           log-level: info
-          delete-untagged: true
-          delete-ghost-images: true
-          delete-partial-images: true
-          delete-orphaned-images: true
+          # delete-untagged: true
+          # delete-ghost-images: true
+          # delete-partial-images: true
+          # delete-orphaned-images: true
