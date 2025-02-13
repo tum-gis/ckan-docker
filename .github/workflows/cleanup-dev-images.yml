@@ -19,17 +19,34 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install GitHub CLI
-        run: sudo apt-get install gh
-
-      - name: Get all image tags
-        run: |
-          gh api -H "Accept: application/vnd.github.v3+json" \
-            /orgs/${{ env.REPO_OWNER }}/packages/container/${{ env.REPO_NAME }}/versions \
-            | jq -r '.[].metadata.container.tags[]' > tags.txt
-          cat tags.txt
+      - name: Query GHCR Tags
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_REPO: "ghcr.io/${{ env.IMAGE_OWNER }}/${{ env.IMAGE_NAME }}"
+        run: |
+          echo "Fetching tags for $GHCR_REPO"
+          TOKEN=$(curl -u "${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}" -s "https://ghcr.io/token?scope=repository:$GHCR_REPO:pull" | jq -r '.token')
+          TAGS=$(curl -s -H "Authorization: Bearer $TOKEN" "https://ghcr.io/v2/${{ inputs.repository }}/tags/list" | jq -r '.tags[]')
+          echo "$TAGS" | tee ghcr_tags.txt
+
+      - name: Upload tags as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ghcr-tags
+          path: ghcr_tags.txt
+
+
+
+      # - name: Install GitHub CLI
+      #   run: sudo apt-get install gh
+
+      # - name: Get all image tags
+      #   run: |
+      #     gh api -H "Accept: application/vnd.github.v3+json" \
+      #       /orgs/${{ env.REPO_OWNER }}/packages/container/${{ env.REPO_NAME }}/versions \
+      #       | jq -r '.[].metadata.container.tags[]' > tags.txt
+      #     cat tags.txt
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get Image Tags from GHCR
         run: |
