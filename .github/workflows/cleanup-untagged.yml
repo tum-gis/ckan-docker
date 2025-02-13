@@ -1,0 +1,31 @@
+name: Cleanup dev images of merged PRs
+
+on:
+  schedule:
+    - cron: "0 2 * * *" # Runs daily at 2 AM UTC
+  workflow_dispatch: # Allows manual triggering
+
+env:
+  IMAGE_NAME: ckan-sddi-dev
+  IMAGE_OWNER: ${{ github.repository_owner }}
+
+jobs:
+
+  cleanup-ghcr:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - name: Delete Merged PR Images
+        uses: dataaxiom/ghcr-cleanup-action@v1
+        with:
+          dry-run: false
+          package: ${{ env.IMAGE_NAME }}
+          tags: ${{ env.DELETE_TAGS }}
+          # use-regex: true
+          # validate: true
+          log-level: info
+          # delete-untagged: true
+          # delete-ghost-images: true
+          # delete-partial-images: true
+          # delete-orphaned-images: true
