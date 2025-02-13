@@ -6,8 +6,7 @@ on:
   workflow_dispatch: # Allows manual triggering
 
 env:
-  IMAGE_NAME: ckan-sddi-dev
-  IMAGE_OWNER: ${{ github.repository_owner }}
+  PACKAGE_NAME: ckan-sddi-dev
 
 jobs:
 
@@ -16,53 +15,11 @@ jobs:
     permissions:
       packages: write
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Get Image Tags from GHCR
-        run: |
-          GHCR_API="https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/tags/list"
-          curl -s -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" "$GHCR_API" | jq -r '.tags[]' > tags_list.txt
-          echo "Fetched Image Tags:" && cat tags_list.txt
-
-      - name: Identify Merged PRs
-        run: |
-          > delete_tags.txt  # Clear file before writing
-          echo "Print Image Tags to test:" && cat tags_list.txt
-          while read -r TAG; do
-             echo "Read tag: $TAG"
-            if [[ $TAG =~ ^([a-zA-Z0-9-]+-pr-)([0-9]+) ]]; then
-              echo "Matched tag: $TAG"
-              PR_NUMBER=${BASH_REMATCH[2]}
-              echo "PR Number: $PR_NUMBER"
-              RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER")
-              MERGED=$(echo "$RESPONSE" | jq -r '.merged')
-              echo "Merged tags: $TAG $MERGED"
-              if [[ "$MERGED" == "true" ]]; then
-                echo "$TAG" >> delete_tags.txt
-              fi
-            else
-              echo "$TAG not matched."
-            fi
-          done < tags_list.txt
-          echo "Images to be deleted:" && cat delete_tags.txt
-
-      - name: Delete Merged PR Images
-        if: ${{ always() }}
-        run: |
-          if [ -s delete_tags.txt ]; then
-            echo "Deleting the following images:" && cat delete_tags.txt
-            while read -r TAG; do
-              DIGEST=$(curl -s -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" \
-                -H "Accept: application/vnd.oci.image.manifest.v1+json" \
-                "https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/manifests/$TAG" | jq -r '.config.digest')
-              echo "Deleting image: $TAG with digest: $DIGEST"
-              if [ "$DIGEST" != "null" ]; then
-                GHCR_DELETE_URL="https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/manifests/$DIGEST"
-                curl -X DELETE -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" "$GHCR_DELETE_URL"
-              fi
-            done < delete_tags.txt
-          else
-            echo "No images to delete."
-          fi
+      - uses: dataaxiom/ghcr-cleanup-action@v1
+        with:
+          dry-run: true
+          package: ${{ env.PACKAGE_NAME }}
+          delete-tags: "^([a-zA-Z0-9-]+-pr-)([0-9]+)"
+          use-regex: true
+          validate: true
+          log-level: debug
