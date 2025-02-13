@@ -19,6 +19,16 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Get all image tags
+        run: |
+          gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+          gh api -H "Accept: application/vnd.github.v3+json" \
+            /orgs/${{ env.REPO_OWNER }}/packages/container/${{ env.REPO_NAME }}/versions \
+            | jq -r '.[].metadata.container.tags[]' > tags.txt
+          cat tags.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Get Image Tags from GHCR
         run: |
           GHCR_API="https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/tags/list"
