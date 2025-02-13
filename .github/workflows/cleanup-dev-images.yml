@@ -21,7 +21,7 @@ jobs:
 
       - name: Get all image tags
         run: |
-          gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+          gh auth login
           gh api -H "Accept: application/vnd.github.v3+json" \
             /orgs/${{ env.REPO_OWNER }}/packages/container/${{ env.REPO_NAME }}/versions \
             | jq -r '.[].metadata.container.tags[]' > tags.txt
