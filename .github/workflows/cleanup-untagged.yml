@@ -1,4 +1,4 @@
-name: Cleanup dev images of merged PRs
+name: Cleanup dev images
 
 on:
   schedule:
