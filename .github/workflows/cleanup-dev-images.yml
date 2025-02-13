@@ -19,6 +19,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Install GitHub CLI
+        run: sudo apt-get install gh
+
       - name: Get all image tags
         run: |
           gh api -H "Accept: application/vnd.github.v3+json" \
