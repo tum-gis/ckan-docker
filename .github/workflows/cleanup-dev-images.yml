@@ -25,7 +25,7 @@ jobs:
           curl -s -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" "$GHCR_API" | jq -r '.tags[]' > tags_list.txt
           echo "Fetched Image Tags:" && cat tags_list.txt
 
-      - name: Identify Merged PRs
+      - name: Identify Merged or Closed PRs
         run: |
           > delete_tags.txt  # Clear file before writing
           while read -r TAG; do
@@ -36,11 +36,13 @@ jobs:
               RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                 "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER")
               MERGED=$(echo "$RESPONSE" | jq -r '.merged')
-              if [[ "$MERGED" == "true" ]]; then
+              STATE=$(echo "$RESPONSE" | jq -r '.state')
+
+              if [[ "$MERGED" == "true" || "$STATE" == "closed" ]]; then
                 echo "$TAG" >> delete_tags.txt
-                echo "Merged tags: $TAG $MERGED"
+                echo "Marked for deletion: $TAG (Merged: $MERGED, State: $STATE)"
               else
-                echo "Not merged tags: $TAG $MERGED"
+                echo "Skipping: $TAG (Merged: $MERGED, State: $STATE)"
               fi
             else
               echo "$TAG not matched."
@@ -51,7 +53,6 @@ jobs:
 
           # Store the content of delete_tags.txt as a comma-separated list
           DELETE_TAGS=$(paste -sd "," delete_tags.txt)
-          echo "DELETE_TAGS=$DELETE_TAGS" >> $GITHUB_ENV
 
       - name: Delete Merged PR Images
         uses: dataaxiom/ghcr-cleanup-action@v1
