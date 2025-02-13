@@ -29,6 +29,7 @@ jobs:
         run: |
           > delete_tags.txt  # Clear file before writing
           while read -r TAG; do
+            echo "Read tag: $TAG"echo "Read tag: $TAG"
             if [[ $TAG =~ ^([a-zA-Z0-9-]+-pr-)([0-9]+) ]]; then
               PR_NUMBER=${BASH_REMATCH[2]}
               RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
@@ -36,6 +37,7 @@ jobs:
               MERGED=$(echo "$RESPONSE" | jq -r '.merged')
               if [[ "$MERGED" == "true" ]]; then
                 echo "$TAG" >> delete_tags.txt
+                echo "Merged tags: $TAG $MERGED"
               fi
             else
               echo "$TAG not matched."
