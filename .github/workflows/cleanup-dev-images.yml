@@ -28,7 +28,6 @@ jobs:
       - name: Identify Merged PRs
         run: |
           > delete_tags.txt  # Clear file before writing
-          echo "Print Image Tags to test:" && cat tags_list.txt
           while read -r TAG; do
             if [[ $TAG =~ ^([a-zA-Z0-9-]+-pr-)([0-9]+) ]]; then
               PR_NUMBER=${BASH_REMATCH[2]}
@@ -58,3 +57,7 @@ jobs:
           # use-regex: true
           validate: true
           log-level: info
+          delete-untagged: true
+          delete-ghost-images: true
+          delete-partial-images: true
+          delete-orphaned-images: true
