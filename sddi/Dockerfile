@@ -1,20 +1,20 @@
 ###############################################################################
 # Extbuild stage
 ###############################################################################
-FROM ckan/ckan-base:2.11.1 as extbuild
+ARG CKAN_VERSION_BUILD_STAGE=2.11.1
+ARG CKAN_VERSION_BUILD_SPATIAL=2.11.1-focal
+ARG CKAN_VERSION_RUNTIME_STAGE=2.11.1-focal
+
+FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
 
 USER root
 
 RUN apt-get update && apt-get install -y \
-    git \
     curl \
-    libpq-dev \
     gcc \
     make \
-    g++ \
     autoconf \
     automake \
-    libtool \
     patch \
     musl-dev \
     libpcre3-dev \
@@ -40,11 +40,11 @@ RUN set -ex && \
   ls -lah /wheels
 
 # ckanext-envvars
-ENV ENVVARS_GIT_URL=https://github.com/ckan/ckanext-envvars/
-ENV ENVVARS_GIT_BRANCH=v0.0.6
+ARG CKANEXT_ENVVARS_VERSION="v0.0.6"
+ENV CKANEXT_ENVVARS_VERSION=${CKANEXT_ENVVARS_VERSION}
 
 RUN set -ex && \
-  pip3 wheel --wheel-dir=/wheels git+${ENVVARS_GIT_URL}@${ENVVARS_GIT_BRANCH}#egg=ckanext-envvars
+  pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-envvars.git@${CKANEXT_ENVVARS_VERSION}#egg=ckanext-envvars
 
 # ckanext-relation ############################################################
 ARG CKANEXT_RELATION_VERSION="1.1.0"
@@ -76,21 +76,6 @@ ENV CKANEXT_DATESEARCH_VERSION_GITHUB_URL="https://github.com/MarijaKnezevic/cka
 RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_DATESEARCH_VERSION_GITHUB_URL}.git@${CKANEXT_DATESEARCH_VERSION}#egg=ckanext-datesearch
-
-# ckanext-harvest ###########################################################
-# ARG CKANEXT_HARVEST_VERSION="v1.6.1"
-# ENV CKANEXT_HARVEST_VERSION=${CKANEXT_HARVEST_VERSION}
-# ENV CKANEXT_HARVEST_GITHUB_URL="https://github.com/ckan/ckanext-harvest.git"
-
-# RUN set -ex && \
-#  mkdir -p /wheels && \
-#  pip install -r https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt
-
-# RUN set -ex && \
-#  pip wheel --wheel-dir=/wheels -r https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt && \
-#  pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-harvest.git@${CKANEXT_HARVEST_VERSION}#egg=ckanext-harvest && \
-#  curl -o /wheels/ckanext-harvest.txt https://raw.githubusercontent.com/ckan/ckanext-harvest/${CKANEXT_HARVEST_VERSION}/requirements.txt && \
-#  ls -lah /wheels
 
 # ckanext-spatial #############################################################
 ENV CKANEXT_SPATIAL_GITHUB_URL="https://github.com/ckan/ckanext-spatial"
@@ -165,7 +150,7 @@ RUN set -ex && \
 ###############################################################################
 # Runtime stage
 ###############################################################################
-FROM ckan/ckan-base:2.11.1
+FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE}
 
 ENV APP_DIR=/srv/app
 ENV SRC_DIR=/srv/app/src
@@ -180,21 +165,13 @@ USER root
 
 # Setting the locale
 ENV LC_ALL="en_US.UTF-8"
-RUN apt-get update && apt-get install --no-install-recommends -y locales
-RUN sed -i "/$LC_ALL/s/^# //g" /etc/locale.gen
-RUN dpkg-reconfigure --frontend=noninteractive locales
 RUN update-locale LANG=${LC_ALL}
-
-# Set timezone
-RUN echo "UTC" > /etc/timezone
 
 # Update the package lists and install required packages
 RUN apt-get update && apt-get install -y \
     bash \
-    git \
     gettext \
     curl \
-    wget \
     unzip \
     postgresql-client \
     libmagic1 \
@@ -216,18 +193,11 @@ RUN apt-get update && apt-get install -y \
 # Cleanup to reduce image size
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Create SRC_DIR
-RUN mkdir -p ${SRC_DIR} && \
-    # Link python to python3
-    ln -s /usr/bin/python3 /usr/bin/python
+# Link python to python3
+RUN ln -s /usr/bin/python3 /usr/bin/python
 
 # Get artifacts from build stages
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
-
-# Create local storage folder
-RUN mkdir -p ${CKAN_STORAGE_PATH} && \
-    chown -R ckan:ckan-sys ${CKAN_STORAGE_PATH} && \
-    chown -R ckan:ckan-sys ${APP_DIR}
 
 USER ckan
 
@@ -239,11 +209,6 @@ RUN set -ex pip install markupsafe==2.0.1 \
                         greenlet==2.0.1
 
 WORKDIR ${CKAN_DIR}
-
-# ckanext-harvest ###########################################################
-# RUN set -ex && \
-#  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-harvest && \
-#  pip install --no-index --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-harvest.txt
 
 # ckanext-hierarchy ###########################################################
 RUN set -ex && \
@@ -268,8 +233,8 @@ RUN set -ex && \
 
 # ckanext-spatial #############################################################
 RUN set -ex && \
-  pip3 install -e 'git+https://github.com/ckan/ckanext-spatial.git#egg=ckanext-spatial' && \
-  pip3 install -r 'https://raw.githubusercontent.com/ckan/ckanext-spatial/master/requirements.txt'
+  pip install -e 'git+https://github.com/ckan/ckanext-spatial.git#egg=ckanext-spatial' && \
+  pip install -r 'https://raw.githubusercontent.com/ckan/ckanext-spatial/master/requirements.txt'
 
 # ckanext-geoview #############################################################
 RUN set -ex && \
@@ -340,9 +305,6 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.disable_password_reset_override = true" && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.enable_totp = true" && \
   ckan config-tool "${CKAN_INI}" "ckanext.dcat.enable_content_negotiation = True" && \
-# ckan config-tool "${CKAN_INI}" "ckan.harvest.log_scope = 0" && \
-# ckan config-tool "${CKAN_INI}" "ckan.harvest.log_level = debug" && \
-# ckan config-tool "${CKAN_INI}" "ckan.harvest.log_timeframe = 10" && \
   ckan config-tool "${CKAN_INI}" "PERMANENT_SESSION_LIFETIME = 600"
 
 # Remove wheels
