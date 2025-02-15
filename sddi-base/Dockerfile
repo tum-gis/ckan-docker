@@ -123,6 +123,7 @@ RUN ln -s /usr/bin/python3 /usr/bin/python
 
 # Get artifacts from build stages
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
+COPY --chown=ckan:ckan uwsgi.conf ${APP_DIR}/uwsgi.conf
 
 RUN chown -R ckan:ckan-sys ${APP_DIR}
 
