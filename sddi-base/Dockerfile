@@ -1,12 +1,15 @@
 ###############################################################################
 # Extbuild stage
 ###############################################################################
-FROM ckan/ckan-base:2.11.1 as extbuild
+ARG CKAN_VERSION_BUILD_STAGE=2.11.1
+ARG CKAN_VERSION_BUILD_SPATIAL=2.11.1-focal
+ARG CKAN_VERSION_RUNTIME_STAGE=2.11.1-focal
+
+FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
 
 USER root
 
 RUN apt-get update && apt-get install -y \
-    git \
     curl \
     libpq-dev \
     gcc \
@@ -44,7 +47,7 @@ ENV ENVVARS_GIT_URL=https://github.com/ckan/ckanext-envvars/
 ENV ENVVARS_GIT_BRANCH=v0.0.6
 
 RUN set -ex && \
-  pip3 wheel --wheel-dir=/wheels git+${ENVVARS_GIT_URL}@${ENVVARS_GIT_BRANCH}#egg=ckanext-envvars
+  pip wheel --wheel-dir=/wheels git+${ENVVARS_GIT_URL}@${ENVVARS_GIT_BRANCH}#egg=ckanext-envvars
 
 # ckanext-scheming ############################################################
 ARG CKANEXT_SCHEMING_VERSION="27035f4"
@@ -94,7 +97,7 @@ RUN set -ex && \
 ###############################################################################
 # Runtime stage
 ###############################################################################
-FROM ckan/ckan-base:2.11.1
+FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE}
 
 ENV APP_DIR=/srv/app
 ENV SRC_DIR=/srv/app/src
@@ -109,21 +112,13 @@ USER root
 
 # Setting the locale
 ENV LC_ALL="en_US.UTF-8"
-RUN apt-get update && apt-get install --no-install-recommends -y locales
-RUN sed -i "/$LC_ALL/s/^# //g" /etc/locale.gen
-RUN dpkg-reconfigure --frontend=noninteractive locales
 RUN update-locale LANG=${LC_ALL}
-
-# Set timezone
-RUN echo "UTC" > /etc/timezone
 
 # Update the package lists and install required packages
 RUN apt-get update && apt-get install -y \
     bash \
-    git \
     gettext \
     curl \
-    wget \
     unzip \
     postgresql-client \
     libmagic1 \
@@ -145,10 +140,8 @@ RUN apt-get update && apt-get install -y \
 # Cleanup to reduce image size
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Create SRC_DIR
-RUN mkdir -p ${SRC_DIR} && \
-    # Link python to python3
-    ln -s /usr/bin/python3 /usr/bin/python
+# Link python to python3
+RUN ln -s /usr/bin/python3 /usr/bin/python
 
 # Get artifacts from build stages
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels

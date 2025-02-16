@@ -10,11 +10,15 @@ FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
 USER root
 
 RUN apt-get update && apt-get install -y \
+    git \
     curl \
+    libpq-dev \
     gcc \
     make \
+    g++ \
     autoconf \
     automake \
+    libtool \
     patch \
     musl-dev \
     libpcre3-dev \
@@ -39,7 +43,7 @@ RUN set -ex && \
   curl -o /wheels/ckanext-hierarchy.txt https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKANEXT_HIERARCHY_VERSION}/requirements.txt && \
   ls -lah /wheels
 
-# ckanext-envvars
+# ckanext-envvars #############################################################
 ARG CKANEXT_ENVVARS_VERSION="v0.0.6"
 ENV CKANEXT_ENVVARS_VERSION=${CKANEXT_ENVVARS_VERSION}
 
@@ -199,6 +203,11 @@ RUN ln -s /usr/bin/python3 /usr/bin/python
 # Get artifacts from build stages
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
 
+# Create local storage folder
+RUN mkdir -p ${CKAN_STORAGE_PATH} && \
+  chown -R ckan:ckan-sys ${CKAN_STORAGE_PATH} && \
+  chown -R ckan:ckan-sys ${APP_DIR}
+
 USER ckan
 
 RUN set -ex pip install markupsafe==2.0.1 \
@@ -270,7 +279,6 @@ ENV CKAN__PLUGINS "envvars image_view text_view webpage_view datastore \
   tracking \
   activity \
   security \
-  # harvest ckan_harvester \
   hierarchy_display hierarchy_form \
   relation \
   spatial_metadata spatial_query \
@@ -280,7 +288,6 @@ ENV CKAN__PLUGINS "envvars image_view text_view webpage_view datastore \
   scheming_datasets \
   geo_view geojson_view wmts_view shp_view \
   heroslideradmin \
-  # dcat dcat_rdf_harvester dcat_json_harvester dcat_json_interface \
   dcat dcat_json_interface \
   clamav"
 
