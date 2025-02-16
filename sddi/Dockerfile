@@ -321,7 +321,7 @@ RUN set -ex && \
 WORKDIR ${APP_DIR}
 
 # Create entrypoint directory for children image scripts
-ONBUILD RUN mkdir /docker-entrypoint.d
+ONBUILD RUN mkdir -p /docker-entrypoint.d
 
 EXPOSE 5000
 
