@@ -2,8 +2,6 @@
 # Extbuild stage
 ###############################################################################
 ARG CKAN_VERSION_BUILD_STAGE=2.11.1
-ARG CKAN_VERSION_BUILD_SPATIAL=2.11.1-focal
-ARG CKAN_VERSION_RUNTIME_STAGE=2.11.1-focal
 
 FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
 
@@ -42,12 +40,12 @@ RUN set -ex && \
   curl -o /wheels/ckanext-hierarchy.txt https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKANEXT_HIERARCHY_VERSION}/requirements.txt && \
   ls -lah /wheels
 
-# ckanext-envvars
-ENV ENVVARS_GIT_URL=https://github.com/ckan/ckanext-envvars/
-ENV ENVVARS_GIT_BRANCH=v0.0.6
+# ckanext-envvars #############################################################
+ARG CKANEXT_ENVVARS_VERSION="v0.0.6"
+ENV CKANEXT_ENVVARS_VERSION=${CKANEXT_ENVVARS_VERSION}
 
 RUN set -ex && \
-  pip wheel --wheel-dir=/wheels git+${ENVVARS_GIT_URL}@${ENVVARS_GIT_BRANCH}#egg=ckanext-envvars
+  pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-envvars.git@${CKANEXT_ENVVARS_VERSION}#egg=ckanext-envvars
 
 # ckanext-scheming ############################################################
 ARG CKANEXT_SCHEMING_VERSION="27035f4"
@@ -97,7 +95,7 @@ RUN set -ex && \
 ###############################################################################
 # Runtime stage
 ###############################################################################
-FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE}
+FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as runtime
 
 ENV APP_DIR=/srv/app
 ENV SRC_DIR=/srv/app/src
@@ -189,6 +187,7 @@ RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-dcat
 
 ENV CKAN__PLUGINS "envvars image_view text_view webpage_view datastore \
+  tracking \
   activity \
   hierarchy_display hierarchy_form \
   scheming_datasets \
@@ -204,7 +203,6 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_schemas = ckanext.scheme_sddi:sddi_dataset.yaml" && \
   ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json ckanext.scheme_sddi:sddi_presets.json" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
-  ckan config-tool "${CKAN_INI}" "ckanext.dathere_theme.column_count = 4" && \
   ckan config-tool "${CKAN_INI}" "ckanext.dcat.enable_content_negotiation = True" && \
   ckan config-tool "${CKAN_INI}" "PERMANENT_SESSION_LIFETIME = 600"
 
