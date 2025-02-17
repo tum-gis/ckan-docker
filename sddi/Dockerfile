@@ -131,9 +131,6 @@ RUN apt-get update && apt-get install -y \
 # Cleanup to reduce image size
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Link python to python3
-RUN ln -s /usr/bin/python3 /usr/bin/python
-
 # Get artifacts from build stages
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
 
