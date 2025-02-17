@@ -200,8 +200,6 @@ RUN set -ex && \
 
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
-  ckan config-tool "${CKAN_INI}" "scheming.dataset_schemas = ckanext.scheme_sddi:sddi_dataset.yaml" && \
-  ckan config-tool "${CKAN_INI}" "scheming.presets = ckanext.scheming:presets.json ckanext.scheme_sddi:sddi_presets.json" && \
   ckan config-tool "${CKAN_INI}" "scheming.dataset_fallback = false" && \
   ckan config-tool "${CKAN_INI}" "ckanext.dcat.enable_content_negotiation = True" && \
   ckan config-tool "${CKAN_INI}" "PERMANENT_SESSION_LIFETIME = 600"
