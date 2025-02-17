@@ -229,7 +229,6 @@ WORKDIR ${APP_DIR}
 ONBUILD RUN mkdir -p /docker-entrypoint.d
 
 EXPOSE 5000
-
 HEALTHCHECK --interval=60s --timeout=5s --retries=5 CMD curl --fail http://localhost:5000/api/3/action/status_show || exit CMD ["/srv/app/start_ckan.sh"]
 
 CMD ["/srv/app/start_ckan.sh"]
