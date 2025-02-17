@@ -1,9 +1,9 @@
 ###############################################################################
 # Extbuild stage
 ###############################################################################
+ARG BASEIMAGE_REPOSITORY=ghcr.io/tum-gis/ckan-sddi-base
+ARG BASEIMAGE_VERSION=latest
 ARG CKAN_VERSION_BUILD_STAGE=2.11.1
-ARG CKAN_VERSION_BUILD_SPATIAL=2.11.1-focal
-ARG CKAN_VERSION_RUNTIME_STAGE=2.11.1-focal
 
 FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
 
@@ -29,27 +29,6 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip install -U markupsafe==2.0.1 sqlalchemy==1.4.41
 
-# ckanext-hierarchy ###########################################################
-ARG CKANEXT_HIERARCHY_VERSION="abb4e2d"
-ENV CKANEXT_HIERARCHY_VERSION=${CKANEXT_HIERARCHY_VERSION}
-
-RUN set -ex && \
-    mkdir -p /wheels && \
-    pip install -r https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKANEXT_HIERARCHY_VERSION}/dev-requirements.txt
-
-RUN set -ex && \
-  pip wheel --wheel-dir=/wheels -r https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKANEXT_HIERARCHY_VERSION}/requirements.txt && \
-  pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-hierarchy.git@${CKANEXT_HIERARCHY_VERSION}#egg=ckanext-hierarchy && \
-  curl -o /wheels/ckanext-hierarchy.txt https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKANEXT_HIERARCHY_VERSION}/requirements.txt && \
-  ls -lah /wheels
-
-# ckanext-envvars #############################################################
-ARG CKANEXT_ENVVARS_VERSION="v0.0.6"
-ENV CKANEXT_ENVVARS_VERSION=${CKANEXT_ENVVARS_VERSION}
-
-RUN set -ex && \
-  pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-envvars.git@${CKANEXT_ENVVARS_VERSION}#egg=ckanext-envvars
-
 # ckanext-relation ############################################################
 ARG CKANEXT_RELATION_VERSION="1.1.0"
 ENV CKANEXT_RELATION_VERSION=${CKANEXT_RELATION_VERSION}
@@ -62,15 +41,6 @@ RUN set -ex && \
   curl -o /wheels/ckanext-relation.txt \
     https://raw.githubusercontent.com/tum-gis/ckanext-relation-sddi/${CKANEXT_RELATION_VERSION}/requirements.txt && \
   ls -lah /wheels
-
-# ckanext-scheming ############################################################
-ARG CKANEXT_SCHEMING_VERSION="27035f4"
-ENV CKANEXT_SCHEMING_VERSION=${CKANEXT_SCHEMING_VERSION}
-ENV CKANEXT_SCHEMING_GITHUB_URL="https://github.com//ckan/ckanext-scheming"
-
-RUN set -ex && \
-  pip wheel --wheel-dir=/wheels \
-    git+${CKANEXT_SCHEMING_GITHUB_URL}.git@${CKANEXT_SCHEMING_VERSION}#egg=ckanext-scheming
 
 # ckanext datesearch ##########################################################
 ARG CKANEXT_DATESEARCH_VERSION="1.1.1"
@@ -91,18 +61,6 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
     git+${CKANEXT_SPATIAL_GITHUB_URL}.git@${CKANEXT_SPATIAL_VERSION}#egg=ckanext-spatial
 
-# ckanext-geoview #############################################################
-ARG CKANEXT_GEOVIEW_VERSION="v0.2.2"
-ENV CKANEXT_GEOVIEW_VERSION=${CKANEXT_GEOVIEW_VERSION}
-ENV CKANEXT_GEOVIEW_GITHUB_URL="https://github.com/ckan/ckanext-geoview"
-
-RUN set -ex && \
-    curl -o /wheels/ckanext-geoview-dev-requirements.txt \
-        ${CKANEXT_GEOVIEW_GITHUB_URL}/raw/${CKANEXT_GEOVIEW_VERSION}/dev-requirements.txt && \
-    pip install -r /wheels/ckanext-geoview-dev-requirements.txt && \
-    pip wheel --wheel-dir=/wheels \
-        git+${CKANEXT_GEOVIEW_GITHUB_URL}.git@${CKANEXT_GEOVIEW_VERSION}#egg=ckanext-geoview
-
 # ckanext-theme-sddi #############################################################
 ARG CKANEXT_THEME_SDDI_VERSION="0.0.3"
 ENV CKANEXT_THEME_SDDI_VERSION=${CKANEXT_THEME_SDDI_VERSION}
@@ -114,30 +72,6 @@ RUN set -ex && \
     pip install -r /wheels/ckanext-theme-sddi-dev-requirements.txt && \
     pip wheel --wheel-dir=/wheels \
         git+${CKANEXT_THEME_SDDI_GITHUB_URL}.git@${CKANEXT_THEME_SDDI_VERSION}#egg=ckanext-theme-sddi
-
-# ckanext-clamav #############################################################
-ARG CKANEXT_CLAMAV_VERSION="a1d23ac"
-ENV CKANEXT_CLAMAV_VERSION=${CKANEXT_CLAMAV_VERSION}
-ENV CKANEXT_CLAMAV_GITHUB_URL="https://github.com/DataShades/ckanext-clamav"
-
-RUN set -ex && \
-    curl -o /wheels/ckanext-clamav-requirements.txt \
-        ${CKANEXT_CLAMAV_GITHUB_URL}/raw/${CKANEXT_CLAMAV_VERSION}/requirements.txt && \
-    pip install -r /wheels/ckanext-clamav-requirements.txt && \
-    pip wheel --wheel-dir=/wheels \
-        git+${CKANEXT_CLAMAV_GITHUB_URL}.git@${CKANEXT_CLAMAV_VERSION}#egg=ckanext-clamav
-
-# ckanext-dcat ##########################################################
-ARG CKANEXT_DCAT_VERSION="v1.5.1"
-ENV CKANEXT_DCAT_VERSION=${CKANEXT_DCAT_VERSION}
-ENV CKANEXT_DCAT_GITHUB_URL="https://github.com/ckan/ckanext-dcat"
-
-RUN set -ex && \
-    curl -o /wheels/ckanext-dcat-requirements.txt \
-        https://raw.githubusercontent.com/ckan/ckanext-dcat/${CKANEXT_DCAT_VERSION}/requirements.txt && \
-    pip install -r /wheels/ckanext-dcat-requirements.txt && \
-    pip wheel --wheel-dir=/wheels \
-        git+${CKANEXT_DCAT_GITHUB_URL}.git@${CKANEXT_DCAT_VERSION}#egg=ckanext-dcat
 
 # ckanext-security ######################################################
 ARG CKANEXT_SECURITY_VERSION="5724341"
@@ -154,7 +88,7 @@ RUN set -ex && \
 ###############################################################################
 # Runtime stage
 ###############################################################################
-FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE}
+FROM ${BASEIMAGE_REPOSITORY}:${BASEIMAGE_VERSION}
 
 ENV APP_DIR=/srv/app
 ENV SRC_DIR=/srv/app/src
@@ -219,22 +153,9 @@ RUN set -ex pip install markupsafe==2.0.1 \
 
 WORKDIR ${CKAN_DIR}
 
-# ckanext-hierarchy ###########################################################
-RUN set -ex && \
-  pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-hierarchy.txt && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-hierarchy
-
-# ckanext-envvars ############################################################
-RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-envvars
-
 # ckanext-relation ############################################################
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-relation
-
-# ckanext-scheming ############################################################
-RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-scheming
 
 # ckanext-datesearch ##########################################################
 RUN set -ex && \
@@ -244,10 +165,6 @@ RUN set -ex && \
 RUN set -ex && \
   pip install -e 'git+https://github.com/ckan/ckanext-spatial.git#egg=ckanext-spatial' && \
   pip install -r 'https://raw.githubusercontent.com/ckan/ckanext-spatial/master/requirements.txt'
-
-# ckanext-geoview #############################################################
-RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-geoview
 
 # ckanext-scheme-sddi ############################################################
 RUN set -ex && \
@@ -260,15 +177,6 @@ RUN set -ex && \
 # ckanext-heroslideradmin #############################################################
 RUN set -ex && \
   pip install -e "git+https://github.com/dathere/ckanext-heroslideradmin.git@4b60e00#egg=ckanext-heroslideradmin"
-
-# ckanext-clamav #############################################################
-RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-clamav
-
-# ckanext-dcat ##########################################################
-RUN set -ex && \
-  pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-dcat-requirements.txt && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-dcat
 
 # ckanext-security ######################################################
 RUN set -ex && \
