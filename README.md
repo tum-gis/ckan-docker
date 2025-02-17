@@ -176,8 +176,8 @@ are alway pinned to a stable release number or commit hash.
 | [`ckanext-datesearch`](https://github.com/MarijaKnezevic/ckanext-datesearch) | `1.1.0`|| :heavy_check_mark: | Provides the ability to search for datasets according to a given time frame. The search includes all datasets, in which the time of validity overlaps in at least one second with the search time frame. |
 | [`ckanext-spatial`](https://github.com/ckan/ckanext-spatial) | `v2.2.0` | |:heavy_check_mark: | Enables geospatial capabilities to CKAN instance. |
 | [`ckanext-scheme-sddi`](https://github.com/MarijaKnezevic/ckanext-scheme-sddi) | `0.0.1` || :heavy_check_mark: | This plugin is extending CKAN schema definition, validation, and custom field support accordingly to SDDI needs. |
-| [`ckanext-theme-sddi`](https://github.com/MarijaKnezevic/ckanext-theme-sddi) | `0.0.3` | |:heavy_check_mark: | This plugin is customizing the look of SDDI CKAN instance with theme management capabilities for improved branding and user needs.|
-| [`ckanext-security` ](https://github.com/MarijaKnezevic/ckanext-security) | `afc39c2` || :heavy_check_mark: | CKAN extension that enhances data access control. In the SDDI context, context is used to define the maximum number of failed logon attempts and to automatically log off after a period of inactivity.|
+| [`ckanext-theme-sddi`](https://github.com/MarijaKnezevic/ckanext-theme-sddi) | `0.0.4` | |:heavy_check_mark: | This plugin is customizing the look of SDDI CKAN instance with theme management capabilities for improved branding and user needs.|
+| [`ckanext-security` ](https://github.com/MarijaKnezevic/ckanext-security) | `0.0.1` || :heavy_check_mark: | CKAN extension that enhances data access control. In the SDDI context, context is used to define the maximum number of failed logon attempts and to automatically log off after a period of inactivity.|
 | [`ckanext-heroslideradmin` ](https://github.com/dathere/ckanext-heroslideradmin) | `4b60e00` | |:heavy_check_mark: |  CKAN extension that enables the management of a hero slider on your CKAN site, allowing for dynamic display of featured content and improved visual engagement.|
 
 ## :rocket: Usage
