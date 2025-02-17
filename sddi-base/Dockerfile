@@ -68,7 +68,7 @@ RUN set -ex && \
     pip wheel --wheel-dir=/wheels \
         git+${CKANEXT_GEOVIEW_GITHUB_URL}.git@${CKANEXT_GEOVIEW_VERSION}#egg=ckanext-geoview
 
-# ckanext-clamav #############################################################
+# ckanext-clamav ############################################################
 ARG CKANEXT_CLAMAV_VERSION="a1d23ac"
 ENV CKANEXT_CLAMAV_VERSION=${CKANEXT_CLAMAV_VERSION}
 ENV CKANEXT_CLAMAV_GITHUB_URL="https://github.com/DataShades/ckanext-clamav"
