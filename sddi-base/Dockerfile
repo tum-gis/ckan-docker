@@ -10,9 +10,6 @@ USER root
 RUN apt-get update && apt-get install -y \
     curl \
     libpq-dev \
-    gcc \
-    make \
-    g++ \
     autoconf \
     automake \
     libtool \
@@ -97,13 +94,9 @@ RUN set -ex && \
 ###############################################################################
 FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as runtime
 
-ENV APP_DIR=/srv/app
-ENV SRC_DIR=/srv/app/src
 ENV CKAN_DIR=${SRC_DIR}/ckan
 ENV DATA_DIR=/srv/app/data
-ENV PIP_SRC=${SRC_DIR}
 ENV CKAN_INI=${APP_DIR}/production.ini
-ENV CKAN_STORAGE_PATH=/var/lib/ckan
 ENV UWSGI_HARAKIRI=50
 
 USER root
@@ -118,7 +111,6 @@ RUN apt-get update && apt-get install -y \
     gettext \
     curl \
     unzip \
-    postgresql-client \
     libmagic1 \
     libpcre3 \
     libxslt1.1 \
@@ -131,9 +123,7 @@ RUN apt-get update && apt-get install -y \
     libproj-dev \
     proj-data \
     python3-cffi \
-    uwsgi-plugin-python3 \
-    supervisor \
-    sudo
+    uwsgi-plugin-python3
 
 # Cleanup to reduce image size
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -150,13 +140,6 @@ RUN mkdir -p ${CKAN_STORAGE_PATH} && \
     chown -R ckan:ckan-sys ${APP_DIR}
 
 USER ckan
-
-RUN set -ex pip install markupsafe==2.0.1 \
-                        setuptools \
-                        wheel \
-                        sqlalchemy==1.4.41 \
-                        gevent==22.10.2 \
-                        greenlet==2.0.1
 
 WORKDIR ${CKAN_DIR}
 
