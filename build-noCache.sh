@@ -41,22 +41,3 @@ docker build . \
 
 printf "\n\n"
 
-# sddi-social #################################################################
-cd ../sddi-social
-
-# sddi-social:TAG
-docker build . \
-  --no-cache \
-  --build-arg "BASEIMAGE_REPOSITORY=$IMAGE_REPOSITORY/ckan-sddi" \
-  --build-arg BASEIMAGE_VERSION=${IMAGE_TAG} \
-  -t "$IMAGE_REPOSITORY/ckan-sddi-social:${IMAGE_TAG}"
-
-# sddi-social:TAG-debug
-docker build . \
-  --no-cache \
-  --build-arg "BASEIMAGE_REPOSITORY=$IMAGE_REPOSITORY/ckan-sddi" \
-  --build-arg BASEIMAGE_VERSION=${IMAGE_TAG}-debug \
-  -t "$IMAGE_REPOSITORY/ckan-sddi-social:${IMAGE_TAG}-debug"
-
-cd ..
-printf "\n\n"
