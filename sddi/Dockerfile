@@ -124,7 +124,7 @@ RUN set -ex && \
 
 # ckanext-scheme-sddi ############################################################
 RUN set -ex && \
-  pip install -e "git+https://github.com/MarijaKnezevic/ckanext-scheme-sddi@0.0.1#egg=ckanext-scheme-sddi"
+  pip install -e "git+https://github.com/MarijaKnezevic/ckanext-scheme-sddi@0.0.2#egg=ckanext-scheme-sddi"
 
 # ckanext-theme-sddi #############################################################
 RUN set -ex && \
