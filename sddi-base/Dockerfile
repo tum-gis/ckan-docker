@@ -134,6 +134,8 @@ RUN ln -s /usr/bin/python3 /usr/bin/python
 # Get artifacts from build stages
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
 
+RUN chown -R ckan:ckan-sys ${APP_DIR}
+
 USER ckan
 
 WORKDIR ${CKAN_DIR}
