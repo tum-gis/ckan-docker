@@ -97,36 +97,13 @@ USER root
 ENV LC_ALL="en_US.UTF-8"
 RUN update-locale LANG=${LC_ALL}
 
-# Update the package lists and install required packages
-RUN apt-get update && apt-get install -y \
-    bash \
-    gettext \
-    curl \
-    unzip \
-    libmagic1 \
-    libpcre3 \
-    libxslt1.1 \
-    libxml2 \
-    tzdata \
-    apache2-utils \
-    musl-dev \
-    libssl-dev \
-    proj-bin \
-    libproj-dev \
-    proj-data \
-    python3-cffi \
-    uwsgi-plugin-python3
-
 # Cleanup to reduce image size
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Get artifacts from build stages
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
 
-# Create local storage folder
-RUN mkdir -p ${CKAN_STORAGE_PATH} && \
-  chown -R ckan:ckan-sys ${CKAN_STORAGE_PATH} && \
-  chown -R ckan:ckan-sys ${APP_DIR}
+RUN chown -R ckan:ckan-sys ${APP_DIR}
 
 USER ckan
 
@@ -147,7 +124,7 @@ RUN set -ex && \
 
 # ckanext-scheme-sddi ############################################################
 RUN set -ex && \
-  pip install -e "git+https://github.com/MarijaKnezevic/ckanext-scheme-sddi@0.0.2#egg=ckanext-scheme-sddi"
+  pip install -e "git+https://github.com/MarijaKnezevic/ckanext-scheme-sddi@0.0.1#egg=ckanext-scheme-sddi"
 
 # ckanext-theme-sddi #############################################################
 RUN set -ex && \
