@@ -1,0 +1,222 @@
+version: "3.8"
+name: ckan-sddi
+
+volumes:
+  ckan_data:
+  pg_data:
+  solr_data:
+
+networks:
+  frontend:
+  backend:
+
+services:
+
+  sddi-base:
+    image: sddi-base:${CKAN_IMAGE_VERSION}
+    build:
+      context: ../../sddi-base
+      no_cache: true
+      pull: true
+  # sddi-base-debug:
+  #   image: sddi-base:${CKAN_IMAGE_VERSION}-debug
+  #   build:
+  #     context: ../../sddi-base
+  #     dockerfile: Dockerfile.debug
+  #     no_cache: true
+  #     # pull: true
+  #   depends_on:
+  #     - sddi-base
+
+  sddi:
+    image: sddi:${CKAN_IMAGE_VERSION}
+    build:
+      context: ../../sddi
+      no_cache: true
+      args:
+        BASEIMAGE_REPOSITORY: sddi-base
+        BASEIMAGE_VERSION: ${CKAN_IMAGE_VERSION}
+    depends_on:
+      - sddi-base
+  # sddi-debug:
+  #   image: sddi:${CKAN_IMAGE_VERSION}-debug
+  #   build:
+  #     context: ../../sddi
+  #     dockerfile: Dockerfile.debug
+  #     no_cache: true
+  #     args:
+  #       BASEIMAGE_REPOSITORY: sddi-base
+  #       BASEIMAGE_VERSION: ${CKAN_IMAGE_VERSION}
+  #   depends_on:
+  #     - sddi-base
+  # sddi-social:
+  #   image: sddi-social:${CKAN_IMAGE_VERSION}
+  #   build:
+  #     context: ../../sddi-social
+  #     no_cache: true
+  #     args:
+  #       BASEIMAGE_REPOSITORY: sddi
+  #       BASEIMAGE_VERSION: ${CKAN_IMAGE_VERSION}
+  #   depends_on:
+  #     - sddi
+  # sddi-social-debug:
+  #   image: sddi-social:${CKAN_IMAGE_VERSION}-debug
+  #   build:
+  #     context: ../../sddi-social
+  #     dockerfile: Dockerfile.debug
+  #     no_cache: true
+  #     args:
+  #       BASEIMAGE_REPOSITORY: sddi
+  #       BASEIMAGE_VERSION: ${CKAN_IMAGE_VERSION}
+  #   depends_on:
+  #     - sddi
+
+  # Caddy ---------------------------------------------------------------------
+  # CKAN ----------------------------------------------------------------------
+  # PostGIS -------------------------------------------------------------------
+  db:
+    container_name: ${POSTGIS_CONTAINER_NAME}
+    image: postgis/postgis:${POSTGIS_VERSION:?POSTGIS_VERSION not set}
+    restart: unless-stopped
+    networks:
+      backend:
+        aliases:
+          - ${CKAN_DB_HOST}
+    ports:
+      - 5432:5432
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./postgis/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${CKAN_DB_USERNAME:?CKAN_DB_USERNAME not set} -d ${CKAN_DB_NAME:?CKAN_DB_NAME not set}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    environment:
+      TZ: ${TZ:?TZ not set}
+      PGDATA: /var/lib/postgresql/data/db
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB not set}
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER not set}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD not set}
+      CKAN_DB_NAME: ${CKAN_DB_NAME:?CKAN_DB_NAME not set}
+      CKAN_DB_USERNAME: ${CKAN_DB_USERNAME:?CKAN_DB_USERNAME not set}
+      CKAN_DB_PASSWORD: ${CKAN_DB_PASSWORD:?CKAN_DB_PASSWORD not set}
+      DATASTORE_DB_NAME: ${DATASTORE_DB_NAME:?DATASTORE_DB_NAME not set}
+      DATASTORE_DB_RW_USERNAME: ${DATASTORE_DB_RW_USERNAME:?DATASTORE_DB_RW_USERNAME not set}
+      DATASTORE_DB_RW_PASSWORD: ${DATASTORE_DB_RW_PASSWORD:?DATASTORE_DB_RW_PASSWORD not set}
+      DATASTORE_DB_RO_USERNAME: ${DATASTORE_DB_RO_USERNAME:?DATASTORE_DB_RO_USERNAME not set}
+      DATASTORE_DB_RO_PASSWORD: ${DATASTORE_DB_RO_PASSWORD:?DATASTORE_DB_RO_PASSWORD not set}
+      DATAPUSHER_DB_NAME: ${DATAPUSHER_DB_NAME:?DATAPUSHER_DB_NAME not set}
+      DATAPUSHER_DB_USERNAME: ${DATAPUSHER_DB_USERNAME:?DATAPUSHER_DB_USERNAME not set}
+      DATAPUSHER_DB_PASSWORD: ${DATAPUSHER_DB_PASSWORD:?DATAPUSHER_DB_PASSWORD not set}
+
+  # CKAN ----------------------------------------------------------------------
+  ckan:
+    container_name: ${CKAN_CONTAINER_NAME}
+    image: sddi:${CKAN_IMAGE_VERSION}
+    build:
+      context: ../../sddi
+      args:
+        BASEIMAGE_REPOSITORY: sddi-base
+        BASEIMAGE_VERSION: ${CKAN_IMAGE_VERSION}
+      no_cache: true
+    volumes:
+      - "ckan_data:${CKAN_STORAGE_PATH:?CKAN_STORAGE_PATH not set}"
+    networks:
+      - frontend
+      - backend
+    restart: unless-stopped
+    # healthcheck:
+    #   test: ["CMD", "wget", "-qO", "/dev/null", "http://localhost:8983/solr/"]
+    environment:
+      TZ: ${TZ:?TZ not set}
+      # Basic settings
+      CKAN_SITE_URL: ${CKAN_SITE_URL:?CKAN_SITE_URL not set}
+      # Database
+      CKAN_SQLALCHEMY_URL: "postgresql://${CKAN_DB_USERNAME}:${CKAN_DB_PASSWORD}@${CKAN_DB_HOST}:${CKAN_DB_PORT}/${CKAN_DB_NAME}"
+      # Datastore
+      CKAN_DATASTORE_WRITE_URL: "postgresql://${DATASTORE_DB_RW_USERNAME}:${DATASTORE_DB_RW_PASSWORD}@${DATASTORE_DB_HOST}:${DATASTORE_DB_PORT}/${DATASTORE_DB_NAME}"
+      CKAN_DATASTORE_READ_URL: "postgresql://${DATASTORE_DB_RO_USERNAME}:${DATASTORE_DB_RO_PASSWORD}@${DATASTORE_DB_HOST}:${DATASTORE_DB_PORT}/${DATASTORE_DB_NAME}"
+      # Datapusher
+      CKAN_DATAPUSHER_URL: ${CKAN_DATAPUSHER_URL:?CKAN_DATAPUSHER_URL not set}
+      # Solr
+      CKAN_SOLR_URL: ${CKAN_SOLR_URL:?CKAN_SOLR_URL not set}
+      # Redis
+      CKAN_REDIS_URL: ${CKAN_REDIS_URL:?CKAN_REDIS_URL not set}
+      # Storage path
+      CKAN_STORAGE_PATH: "${CKAN_STORAGE_PATH:?CKAN_STORAGE_PATH not set}"
+    env_file:
+      - ckan.env
+    depends_on:
+      - sddi-base
+      - db
+      - redis
+      - solr
+      # db:
+      #   condition: service_healthy
+      # redis:
+      #   condition: service_healthy
+      # solr:
+      #   condition: service_healthy
+    ports:
+      - 5000:5000
+
+  # Solr ----------------------------------------------------------------------
+  solr:
+    container_name: ${SOLR_CONTAINER_NAME}
+    hostname: solr
+    image: ckan/ckan-solr:${SOLR_IMAGE_VERSION}
+    volumes:
+      - solr_data:/var/solr
+    networks:
+      - backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO", "/dev/null", "http://localhost:8983/solr/"]
+    environment:
+      TZ: ${TZ:?TZ not set}
+
+  # Redis ---------------------------------------------------------------------
+  redis:
+    container_name: ${REDIS_CONTAINER_NAME}
+    hostname: redis
+    image: redis:${REDIS_VERSION}
+    networks:
+      - backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "-e", "QUIT"]
+    environment:
+      TZ: ${TZ:?TZ not set}
+
+  # Datapusher ----------------------------------------------------------------
+  datapusher:
+    container_name: ${DATAPUSHER_CONTAINER_NAME}
+    hostname: datapusher
+    image: ckan/ckan-base-datapusher:${DATAPUSHER_VERSION}
+    build:
+      context: datapusher
+      args:
+        DATAPUSHER_VERSION: ${DATAPUSHER_VERSION}
+    networks:
+      - backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO", "/dev/null", "http://localhost:8800"]
+    depends_on:
+      - db
+    environment:
+      TZ: ${TZ:?TZ not set}
+      DATAPUSHER_MAX_CONTENT_LENGTH: ${DATAPUSHER_MAX_CONTENT_LENGTH:?DATAPUSHER_MAX_CONTENT_LENGTH not set}
+      DATAPUSHER_CHUNK_SIZE: ${DATAPUSHER_CHUNK_SIZE:?DATAPUSHER_CHUNK_SIZE not set}
+      DATAPUSHER_CHUNK_INSERT_ROWS: ${DATAPUSHER_CHUNK_INSERT_ROWS:?DATAPUSHER_CHUNK_INSERT_ROWS not set}
+      DATAPUSHER_DOWNLOAD_TIMEOUT: ${DATAPUSHER_DOWNLOAD_TIMEOUT:?DATAPUSHER_DOWNLOAD_TIMEOUT not set}
+      DATAPUSHER_SSL_VERIFY: ${DATAPUSHER_SSL_VERIFY:?DATAPUSHER_SSL_VERIFY not set}
+      DATAPUSHER_REWRITE_RESOURCES: ${DATAPUSHER_REWRITE_RESOURCES:?DATAPUSHER_REWRITE_RESOURCES not set}
+      DATAPUSHER_REWRITE_URL: ${DATAPUSHER_REWRITE_URL:?DATAPUSHER_REWRITE_URL not set}
+      DATAPUSHER_SQLALCHEMY_DATABASE_URI: postgres://${DATAPUSHER_DB_USERNAME}:${DATAPUSHER_DB_PASSWORD}@${DATAPUSHER_DB_HOST}:${DATAPUSHER_DB_PORT}/${DATAPUSHER_DB_NAME}
