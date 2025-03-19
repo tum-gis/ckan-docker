@@ -49,7 +49,7 @@ RUN set -ex && \
 
 # ckanext-spatial #############################################################
 ENV CKANEXT_SPATIAL_GITHUB_URL="https://github.com/ckan/ckanext-spatial"
-ENV CKANEXT_SPATIAL_VERSION="v2.2.0"
+ENV CKANEXT_SPATIAL_VERSION="v2.3.0"
 
 RUN set -ex && \
   curl -o /wheels/ckanext-spatial-requirements.txt \
@@ -73,7 +73,7 @@ RUN set -ex && \
 ARG CKANEXT_SECURITY_VERSION="0.0.1"
 ENV CKANEXT_SECURITY_VERSION=${CKANEXT_SECURITY_VERSION}
 ENV CKANEXT_SECURITY_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-security"
-    
+
 RUN set -ex && \
     curl -o /wheels/ckanext-security-requirements.txt \
         https://raw.githubusercontent.com/MarijaKnezevic/ckanext-security/${CKANEXT_SECURITY_VERSION}/requirements.txt && \
