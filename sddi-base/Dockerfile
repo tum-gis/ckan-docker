@@ -47,7 +47,7 @@ RUN set -ex && \
 # ckanext-scheming ############################################################
 ARG CKANEXT_SCHEMING_VERSION="27035f4"
 ENV CKANEXT_SCHEMING_VERSION=${CKANEXT_SCHEMING_VERSION}
-ENV CKANEXT_SCHEMING_GITHUB_URL="https://github.com//ckan/ckanext-scheming"
+ENV CKANEXT_SCHEMING_GITHUB_URL="https://github.com/ckan/ckanext-scheming"
 
 RUN set -ex && \
   pip wheel --wheel-dir=/wheels \
