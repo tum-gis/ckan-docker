@@ -66,7 +66,7 @@ RUN set -ex && \
         git+${CKANEXT_GEOVIEW_GITHUB_URL}.git@${CKANEXT_GEOVIEW_VERSION}#egg=ckanext-geoview
 
 # ckanext-clamav ############################################################
-ARG CKANEXT_CLAMAV_VERSION="a1d23ac"
+ARG CKANEXT_CLAMAV_VERSION="v1.1.0"
 ENV CKANEXT_CLAMAV_VERSION=${CKANEXT_CLAMAV_VERSION}
 ENV CKANEXT_CLAMAV_GITHUB_URL="https://github.com/DataShades/ckanext-clamav"
 
