@@ -167,7 +167,7 @@ are alway pinned to a stable release number or commit hash.
 
 | Extension | Version | `sddi-base` |`sddi` | Description |
 |---|---|:---:|:---:|:---|
-| [`ckanext-hierarchy`](https://github.com/ckan/ckanext-hierarchy ) | `abb4e2d` | :heavy_check_mark: | :heavy_check_mark: | Allows to organize organizations and groups in a hierarchy tree (nested groups/orgs). |
+| [`ckanext-hierarchy`](https://github.com/ckan/ckanext-hierarchy ) | `v1.2.2` | :heavy_check_mark: | :heavy_check_mark: | Allows to organize organizations and groups in a hierarchy tree (nested groups/orgs). |
 | [`ckanext-scheming` ](https://github.com/ckan/ckanext-scheming ) | `27035f4` |:heavy_check_mark: | :heavy_check_mark: |  Configure and share CKAN dataset metadata forms. |
 | [`ckanext-geoview` ](https://github.com/ckan/ckanext-geoview) | `v0.2.2` |:heavy_check_mark: |:heavy_check_mark: |  Configure and share CKAN dataset metadata forms. |
 | [`ckanext-clamav` ](https://github.com/mutantsan/ckanext-clamav) | `a1d23ac` |:heavy_check_mark: | :heavy_check_mark: |CKAN extension that integrates ClamAV antivirus scanning to ensure the security of uploaded files by automatically checking them for malware.|

@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y \
 RUN pip install -U markupsafe==2.0.1 sqlalchemy==1.4.41
 
 # ckanext-hierarchy ###########################################################
-ARG CKANEXT_HIERARCHY_VERSION="abb4e2d"
+ARG CKANEXT_HIERARCHY_VERSION="v1.2.2"
 ENV CKANEXT_HIERARCHY_VERSION=${CKANEXT_HIERARCHY_VERSION}
 
 RUN set -ex && \
@@ -161,7 +161,7 @@ RUN set -ex && \
 RUN set -ex && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-clamav
 
-# ckanext-dcat ##########################################################
+# ckanext-dcat ################################################################
 RUN set -ex && \
   pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-dcat-requirements.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-dcat
