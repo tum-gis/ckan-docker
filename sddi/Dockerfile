@@ -175,7 +175,7 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.brute_force_key = user_name" && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.disable_password_reset_override = true" && \
   ckan config-tool "${CKAN_INI}" "ckanext.security.enable_totp = true" && \
-  ckan config-tool "${CKAN_INI}" "ckanext.dcat.enable_content_negotiation = True" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.dcat.enable_content_negotiation = true" && \
   ckan config-tool "${CKAN_INI}" "PERMANENT_SESSION_LIFETIME = 600"
 
 # Remove wheels
