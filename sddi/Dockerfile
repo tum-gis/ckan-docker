@@ -88,7 +88,6 @@ FROM ${BASEIMAGE_REPOSITORY}:${BASEIMAGE_VERSION}
 
 ENV CKAN_DIR=${SRC_DIR}/ckan
 ENV DATA_DIR=/srv/app/data
-ENV CKAN_INI=${APP_DIR}/production.ini
 ENV UWSGI_HARAKIRI=50
 
 USER root
@@ -156,7 +155,7 @@ ENV CKAN__PLUGINS "envvars image_view text_view webpage_view datastore \
   clamav"
 
 RUN set -ex && \
-  ckan generate config ${APP_DIR}/production.ini
+  ckan generate config ${CKAN_INI}
 
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \

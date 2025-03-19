@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libxslt-dev
 
-RUN pip install -U markupsafe==2.0.1 sqlalchemy==1.4.41
+# RUN pip install -U markupsafe==2.0.1 sqlalchemy==1.4.41
 
 # ckanext-hierarchy ###########################################################
 ARG CKANEXT_HIERARCHY_VERSION="v1.2.2"
@@ -96,7 +96,6 @@ FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as runtime
 
 ENV CKAN_DIR=${SRC_DIR}/ckan
 ENV DATA_DIR=/srv/app/data
-ENV CKAN_INI=${APP_DIR}/production.ini
 ENV UWSGI_HARAKIRI=50
 
 USER root
@@ -176,7 +175,7 @@ ENV CKAN__PLUGINS "envvars image_view text_view webpage_view datastore \
   clamav"
 
 RUN set -ex && \
-  ckan generate config ${APP_DIR}/production.ini
+  ckan generate config ${CKAN_INI}
 
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
