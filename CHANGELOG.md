@@ -9,31 +9,36 @@ For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 ## [3.0.0] - 2025-02-05
 
 ### Added
--  `ckanext-envvars`, `ckanext-security`, `ckanext-scheme-sddi`, `ckanext-theme-sddi`, `ckanext-heroslideradmin`. Further details can be found in the changelog file for each plugin.
+
+- `ckanext-envvars`, `ckanext-security`, `ckanext-scheme-sddi`, `ckanext-theme-sddi`, `ckanext-heroslideradmin`. Further details can be found in the changelog file for each plugin.
 
 ### Changed
+
 - Migration from CKAN version 2.9.9. to CKAN 2.11.1
   - A CKAN base `ckan/ckan-base:2.11.1` image is used as the build stage image
 - Updating the following extensions: `ckanext-hierarchy`,`ckanext-relation`, `ckanext-scheming`, `ckanext datesearch`, `ckanext-spatial`, `ckanext-geoview`, `ckanext-clamav`, `ckanext-dcat`. Further details can be found in the changelog file for each plugin.
 - `sddi-base` image is re-organized accordingly to [#65](https://github.com/tum-gis/ckan-docker/issues/65)
 
 ### Removed
+
 - `sddi-social` image accordingly to [#66](https://github.com/tum-gis/ckan-docker/issues/66)
 - Some plugins are being dropped because they are either supported directly by CKAN or merged with other plugins: `ckanext-grouphierarchy-sddi` , `ckanext-composite`, `ckanext-repeating`, `ckanext-password-policy`
 
 ## [2.1.2] - 2024-04-17
+
 ### Added
+
 - Variable that defines after how many seconds of user inactivity the user is logged out `who.timeout = 1800`
 
 ### Fixed
+
 - Various `ckanext-grouphierarchy-sddi` updates and fixing of styling bugs. See [CHANGELOG](https://github.com/tum-gis/ckanext-grouphierarchy-sddi/releases/tag/1.1.4) for changes.
   - Removed "Remember me" button on the login page
   - Fixing the missing variables for personalization of the main page
   - Repair the view of the dataset added by the organization on the main page
-  - 
-## [2.1.1] - 2024-04-17
-## [2.1.0] - 2024-04-17
+
 ## [2.0.1] - 2023-11-07
+
 ### Added
 
 - Expanding the Dataset Spatial Extend preview. tum-gis/ckan-docker#52
