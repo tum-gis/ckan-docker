@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libxslt-dev
 
-# RUN pip install -U markupsafe==2.0.1 sqlalchemy==1.4.41
+RUN pip install -U markupsafe==2.0.1 sqlalchemy==1.4.41
 
 # ckanext-hierarchy ###########################################################
 ARG CKANEXT_HIERARCHY_VERSION="v1.2.2"
