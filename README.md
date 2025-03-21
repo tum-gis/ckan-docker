@@ -47,7 +47,6 @@ See [packages](https://github.com/orgs/tum-gis/packages?repo_name=ckan-docker) f
 - [:inbox\_tray: Image flavor overview](#inbox_tray-image-flavor-overview)
   - [`sddi-base`](#sddi-base)
   - [`sddi`](#sddi)
-  - [`sddi-social`](#sddi-social)
 - [:1234: Image versioning](#1234-image-versioning)
   - [Development image versions](#development-image-versions)
   - [CKAN and CKAN extension versions](#ckan-and-ckan-extension-versions)
@@ -71,7 +70,6 @@ exists in this repository, where the image can be pulled.
 ```bash
 docker pull ghcr.io/tum-gis/ckan-sddi-base
 docker pull ghcr.io/tum-gis/ckan-sddi
-docker pull ghcr.io/tum-gis/ckan-sddi-social
 
 ```
 
@@ -95,15 +93,6 @@ This is the image most people will usually want.
 ghcr.io/tum-gis/ckan-sddi
 ```
 
-### `sddi-social`
-
-`sddi` + optional CKAN extension for social media features, that may require staff
-for moderation of social media content.
-
-```text
-ghcr.io/tum-gis/ckan-sddi-social
-```
-
 ## :1234: Image versioning
 
 The images in this repo are versioned and tagged according to the
@@ -115,7 +104,6 @@ All available tags are listed in the packages of each image:
 
 - [`sddi-base`](https://github.com/tum-gis/ckan-docker/pkgs/container/ckan-sddi-base)
 - [`sddi`](https://github.com/tum-gis/ckan-docker/pkgs/container/ckan-sddi)
-- [`sddi-social`](https://github.com/tum-gis/ckan-docker/pkgs/container/ckan-sddi-social)
 
 ### Development image versions
 
@@ -153,17 +141,13 @@ For instance, for commit 19a2e64 to PR tum-gis/ckan-docker#26 following images a
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-debug`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-19a2e64`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-19a2e64-debug`
-- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26`
-- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-debug`
-- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-19a2e64`
-- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-19a2e64-debug`
 
 This registry will be cleared periodically.
 
 ### CKAN and CKAN extension versions
 
-CKAN version: `2.9.9`
-CKAN base image: `ghcr.io/keitaroinc/ckan:2.9.9-focal`
+CKAN version: `2.11.1`
+CKAN base image: `ckan/ckan-base:2.11.1`
 
 The CKAN catalog platform uses several extensions to provide the functionality
 needed for the SDDI concept. The table below lists the included extensions with
@@ -177,21 +161,20 @@ are alway pinned to a stable release number or commit hash.
 > **Note:** Version pinning is only applied for release versions. The `edge`
 > image may depend on upstream branches instead.
 
-| Extension | Version | `sddi-base` | `sddi` | `sddi-social` | Description |
-|---|---|:---:|:---:|:---:|---|
-| [`scheming`](https://github.com/MarijaKnezevic/ckanext-scheming) | `f98daec` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Configure and share CKAN dataset metadata forms. |
-| [`hierarchy`](https://github.com/ckan/ckanext-hierarchy) | `v1.2.0` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Allows to organize organizations and groups in a hierarchy tree (nested groups/orgs). |
-| [`grouphierarchysddi`](https://github.com/tum-gis/ckanext-grouphierarchy-sddi) |  `1.1.4` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Extends `hierarchy` with pre-defined groups and topics of the SDDI concept. |
-| [`relation`](https://github.com/tum-gis/ckanext-relation-sddi) | `1.0.3` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Enables to create and visualize different types of relations (*realated_to*, *depends_on*, *part_of*) between catalog entries. |
-| [`spatial`](https://github.com/MarijaKnezevic/ckanext-spatial) | `c2118b9` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Provides the ability to search for datasets according to a given spatial extent. |
-| [`datesearch`](https://github.com/MarijaKnezevic/ckanext-datesearch) | `1.0.2` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | Provides the ability to search for datasets according to a given time frame. The search includes all datasets, in which the time of validity overlaps in at least one second with the search time frame. |
-| [`repeating`](https://github.com/MarijaKnezevic/ckanext-repeating) | `1.0.0` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | This extension provides a way to store repeating fields in CKAN datasets, resources, organizations and groups. |
-| [`composite`](https://github.com/EnviDat/ckanext-composite) | `1e6d7bb` | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | The extension allows to store structured dataset metadata, single or multiple fields. Only one level of subfields is possible. The subfields can be basic text, date type or dropboxes. |
-| [`restricted`](https://github.com/MarijaKnezevic/ckanext-restricted) | `1.0.0` |  | :heavy_check_mark: | :heavy_check_mark: | CKAN extension to restrict the accessibility to the resources of a dataset. This way the package metadata is accesible but not the data itself (resource). The resource access restriction level can be individualy defined for every package. |
-| [`dcat`](https://github.com/ckan/ckanext-dcat) | `v1.4.0` |  | :heavy_check_mark: | :heavy_check_mark: | Allow CKAN to expose and consume metadata from other catalogs using RDF documents serialized using DCAT. |
-| [`geoview`](https://github.com/ckan/ckanext-geoview) | `v0.0.20` |  | :heavy_check_mark: | :heavy_check_mark: | This extension contains view plugins to display geospatial files and services in CKAN. |
-| [`disqus`](https://github.com/ckan/ckanext-disqus) |  |  |  | :heavy_check_mark: | The Disqus extension allows site visitors to comment on individual packages using an AJAX-based commenting system. The downsides of this plugin are that comments are not stored locally and user information is not shared between CKAN and the commenting system. |
-| [`password_policy`](https://github.com/keitaroinc/ckanext-password-policy) | `5618dc9`|:heavy_check_mark:  |:heavy_check_mark:| :heavy_check_mark: | CKAN extension that adds password policy for all the users. |
+| Extension | Version | `sddi-base` |`sddi` | Description |
+|---|---|:---:|:---:|:---|
+| [`ckanext-hierarchy`](https://github.com/ckan/ckanext-hierarchy ) | `v1.2.2` | :heavy_check_mark: | :heavy_check_mark: | Allows to organize organizations and groups in a hierarchy tree (nested groups/orgs). |
+| [`ckanext-scheming` ](https://github.com/ckan/ckanext-scheming ) | `27035f4` |:heavy_check_mark: | :heavy_check_mark: |  Configure and share CKAN dataset metadata forms. |
+| [`ckanext-geoview` ](https://github.com/ckan/ckanext-geoview) | `v0.2.2` |:heavy_check_mark: |:heavy_check_mark: |  Configure and share CKAN dataset metadata forms. |
+| [`ckanext-clamav` ](https://github.com/mutantsan/ckanext-clamav) | `a1d23ac` |:heavy_check_mark: | :heavy_check_mark: |CKAN extension that integrates ClamAV antivirus scanning to ensure the security of uploaded files by automatically checking them for malware.|
+| [`ckanext-dcat` ](https://github.com/ckan/ckanext-dcat ) | `v1.5.1` |:heavy_check_mark: | :heavy_check_mark: |Allow CKAN to expose and consume metadata from other catalogs using RDF documents serialized using DCAT.|
+| [`ckanext-relation-sddi`](https://github.com/tum-gis/ckanext-relation-sddi ) | `1.1.0` | | :heavy_check_mark: | Enables to create and visualize different types of relations (*realated_to*, *depends_on*, *part_of*) between catalog entries. |
+| [`ckanext-datesearch`](https://github.com/MarijaKnezevic/ckanext-datesearch) | `1.1.0`|| :heavy_check_mark: | Provides the ability to search for datasets according to a given time frame. The search includes all datasets, in which the time of validity overlaps in at least one second with the search time frame. |
+| [`ckanext-spatial`](https://github.com/ckan/ckanext-spatial) | `v2.3.0` | |:heavy_check_mark: | Enables geospatial capabilities to CKAN instance. |
+| [`ckanext-scheme-sddi`](https://github.com/MarijaKnezevic/ckanext-scheme-sddi) | `0.0.1` || :heavy_check_mark: | This plugin is extending CKAN schema definition, validation, and custom field support accordingly to SDDI needs. |
+| [`ckanext-theme-sddi`](https://github.com/MarijaKnezevic/ckanext-theme-sddi) | `0.0.4` | |:heavy_check_mark: | This plugin is customizing the look of SDDI CKAN instance with theme management capabilities for improved branding and user needs.|
+| [`ckanext-security` ](https://github.com/MarijaKnezevic/ckanext-security) | `0.0.1` || :heavy_check_mark: | CKAN extension that enhances data access control. In the SDDI context, context is used to define the maximum number of failed logon attempts and to automatically log off after a period of inactivity.|
+| [`ckanext-heroslideradmin` ](https://github.com/dathere/ckanext-heroslideradmin) | `4b60e00` | |:heavy_check_mark: |  CKAN extension that enables the management of a hero slider on your CKAN site, allowing for dynamic display of featured content and improved visual engagement.|
 
 ## :rocket: Usage
 
@@ -324,8 +307,7 @@ to the SDDI concepts, tools, documentations, education, and funding:
   [eit Climate-KIC](https://www.climate-kic.org/) (SDDI research project)
   for funding the work on SDDI concepts and implementation.
 
-- [Tome Petrovski](https://github.com/TomeCirun) :raised_hands: for professional support
-  with CKAN and CKAN extension development.
+- [Tome Petrovski](https://github.com/TomeCirun), [Konstantin Sivakov](https://github.com/tino097), [Ilche Bedelovski](https://github.com/ilchebedelovski) and [Aleksandra Lazoroska](https://github.com/aleksandralazoroska):raised_hands: for professional support with CKAN and CKAN extension development.
 
 - [KEITARO](https://www.keitaro.com/) for their [CKAN Docker images](https://github.com/keitaroinc/docker-ckan)
   and [CKAN Helm chart](https://github.com/keitaroinc/ckan-helm) that inspired this work.
