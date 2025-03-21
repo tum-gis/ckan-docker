@@ -141,10 +141,6 @@ For instance, for commit 19a2e64 to PR tum-gis/ckan-docker#26 following images a
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-debug`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-19a2e64`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-19a2e64-debug`
-- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26`
-- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-debug`
-- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-19a2e64`
-- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-19a2e64-debug`
 
 This registry will be cleared periodically.
 
