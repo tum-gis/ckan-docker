@@ -155,6 +155,9 @@ ENV CKAN__PLUGINS "envvars image_view text_view webpage_view datastore \
 RUN set -ex && \
   ckan generate config ${CKAN_INI}
 
+# Copy init scripts and additional files
+COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
+
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
   ckan config-tool "${CKAN_INI}" "ckan.spatial.srid = 4326" && \

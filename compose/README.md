@@ -20,3 +20,15 @@ de45d9f92af7   sddi-base:1.0.0                     "/srv/app/start_ckan…"   5 
 ```
 
 CKAN should be running at `CKAN_SITE_URL=` [http://localhost:5000/](http://localhost:5000/).
+
+
+## How to create groups and organisations:
+Predefined groups and organizations are stored in the init_data.json file and can be installed by running  [01_create_groups.sh](../sddi/initScripts/01_create_groups.sh).
+1. Access the Running Container `docker exec -it ckan-sddi-ckan-1 bash`
+2. Locate the script `ls -l /srv/app/docker-afterinit.d/` and the answer should be simmilar as following
+```
+ckan@18e5ae7817a0:~$ ls -l /srv/app/docker-afterinit.d/
+total 4
+-rwxr-xr-x 1 ckan ckan-sys 207 Mar 25 16:28 01_create_groups.sh
+```
+3. Run the Script `bash /srv/app/docker-afterinit.d/01_create_groups.sh`
