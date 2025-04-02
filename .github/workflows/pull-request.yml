@@ -153,7 +153,7 @@ jobs:
           labels: ${{ steps.meta-sddi-debug.outputs.labels }}
           build-args: |
             BASEIMAGE_REPOSITORY=${{ env.REGISTRY }}/tum-gis/ckan-sddi-dev
-            BASEIMAGE_VERSION=sddi-base-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}
+            BASEIMAGE_VERSION=sddi-pr-${{github.event.number}}-${{ steps.short-sha.outputs.sha }}
       -
         name: Print image names
         run: |
