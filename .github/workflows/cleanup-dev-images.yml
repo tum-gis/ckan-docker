@@ -1,58 +1,39 @@
-name: Cleanup dev images of merged PRs
-
+name: Cleanup Pull Request Images
 on:
-  schedule:
-    - cron: "0 2 * * *" # Runs daily at 2 AM UTC
-  workflow_dispatch: # Allows manual triggering
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+    inputs:
+      pr-number:
+        description: 'Pull Request Number'
+        required: true
+        default: '0'
 
 env:
-  IMAGE_NAME: ckan-sddi-dev
-  IMAGE_OWNER: ${{ github.repository_owner }}
+  PACKAGE_NAME: ckan-sddi-dev
+  PACKAGE_REPO: ${{ github.repository_owner }}
 
 jobs:
-  cleanup-ghcr:
+  ghcr-cleanup-image:
+    if: github.event_name == 'pull_request'
+    name: ghcr cleanup action
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - name: Delete image
+        uses: dataaxiom/ghcr-cleanup-action@v1
+        with:
+          delete-tags: "*pr-${{github.event.pull_request.number}}*"
+          repository: ${{ env.PACKAGE_NAME }}
+          package: ${{ env.PACKAGE_REPO }}
 
-      - name: Get Image Tags from GHCR
-        run: |
-          GHCR_API="https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/tags/list"
-          TAGS=$(curl -s -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" "$GHCR_API" | jq -r '.tags[]')
-          echo "$TAGS" > tags_list.txt
-
-      - name: Identify Merged PRs
-        run: |
-          MAPPED_TAGS=()
-          while read -r TAG; do
-            if [[ $TAG =~ ^[a-zA-Z0-9]+-pr-(\d+)(?:-[a-f0-9]+)?$ ]]; then
-              PR_NUMBER=${BASH_REMATCH[1]}
-              RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER")
-              MERGED=$(echo "$RESPONSE" | jq -r '.merged')
-              if [[ "$MERGED" == "true" ]]; then
-                MAPPED_TAGS+=("$TAG")
-              fi
-            fi
-          done < tags_list.txt
-          printf "%s\n" "${MAPPED_TAGS[@]}" > delete_tags.txt
-          echo "Images to be deleted:" && cat delete_tags.txt
-
-      - name: Delete Merged PR Images
-        if: ${{ always() }}
-        run: |
-          if [ -s delete_tags.txt ]; then
-            echo "Deleting the following images:" && cat delete_tags.txt
-            while read -r TAG; do
-              DIGEST=$(curl -s -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" \
-                -H "Accept: application/vnd.oci.image.manifest.v1+json" \
-                "https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/manifests/$TAG" | jq -r '.config.digest')
-              if [ "$DIGEST" != "null" ]; then
-                GHCR_DELETE_URL="https://ghcr.io/v2/$IMAGE_OWNER/$IMAGE_NAME/manifests/$DIGEST"
-                curl -X DELETE -H "Authorization: Bearer $(echo ${{ secrets.GITHUB_TOKEN }} | base64)" "$GHCR_DELETE_URL"
-              fi
-            done < delete_tags.txt
-          else
-            echo "No images to delete."
-          fi
+  ghcr-cleanup-image-manual:
+    if: github.event_name == 'workflow_dispatch'
+    name: ghcr cleanup action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete image
+        uses: dataaxiom/ghcr-cleanup-action@v1
+        with:
+          delete-tags: "*pr-${{ inputs.pr-number }}*"
+          repository: ${{ env.PACKAGE_NAME }}
+          package: ${{ env.PACKAGE_REPO }}
