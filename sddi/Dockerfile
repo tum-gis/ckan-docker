@@ -157,6 +157,31 @@ ENV CKAN__PLUGINS "envvars image_view text_view webpage_view datastore \
 RUN set -ex && \
   ckan generate config ${CKAN_INI}
 
+# CKAN dev tools ######################################################
+# https://raw.githubusercontent.com/ckan/ckan/ckan-2.11.1/dev-requirements.txt
+RUN pip install \
+  beautifulsoup4==4.12.3 \
+  cookiecutter==2.6.0 \
+  coveralls \
+  Faker==26.0.0 \
+  factory-boy==3.3.0 \
+  flask-debugtoolbar==0.15.1 \
+  freezegun==1.5.1 \
+  ipdb==0.13.13 \
+  pip-tools==7.4.1 \
+  Pillow==10.4.0 \
+  responses==0.25.3 \
+  sphinx-rtd-theme==2.0.0 \
+  sphinx==7.3.7 \
+  toml==0.10.2 \
+  towncrier==23.11.0 \
+  pytest==8.2.2 \
+  pytest-cov==5.0.0 \
+  pytest-factoryboy==2.7.0 \
+  pytest-freezegun==0.4.2 \
+  pytest-rerunfailures==14.0 \
+  pytest-split==0.9.0
+
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
   ckan config-tool "${CKAN_INI}" "ckan.spatial.srid = 4326" && \
