@@ -6,6 +6,11 @@ on:
       - sddi-base/**
       - sddi/**
   workflow_dispatch:
+    inputs:
+      pr-number:
+        description: 'Pull Request Number'
+        required: true
+        default: '0'
 
 env:
   REGISTRY: ghcr.io
