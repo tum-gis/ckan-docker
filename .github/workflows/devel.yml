@@ -46,7 +46,8 @@ jobs:
           labels: |
             maintainer=Chair of Geoinformatics, Technical University of Munich (TUM)
             org.opencontainers.image.vendor=Chair of Geoinformatics, Technical University of Munich (TUM)
-            org.opencontainers.image.title=ckan-sddi-docker
+            org.opencontainers.image.title=ckan-sddi-base-docker-devel
+            org.opencontainers.image.documentation=https://github.com/tum-gis/ckan-docker
 
       - name: Build and publish ${{ env.REGISTRY }}/tum-gis/ckan-${{ matrix.context }}:devel
         uses: docker/build-push-action@v6
@@ -69,7 +70,7 @@ jobs:
           labels: |
             maintainer=Chair of Geoinformatics, Technical University of Munich (TUM)
             org.opencontainers.image.vendor=Chair of Geoinformatics, Technical University of Munich (TUM)
-            org.opencontainers.image.title=ckan-sddi-docker
+            org.opencontainers.image.title=ckan-sddi-base-docker-devel-debug
 
       - name: Build and publish ${{ env.REGISTRY }}/tum-gis/ckan-${{ matrix.context }}:devel-debug
         uses: docker/build-push-action@v6
