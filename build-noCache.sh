@@ -40,4 +40,3 @@ docker build . \
   -t "$IMAGE_REPOSITORY/ckan-sddi:${IMAGE_TAG}-debug"
 
 printf "\n\n"
-

@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
     libxslt-dev
 
 # ckanext-hierarchy ###########################################################
-ARG CKANEXT_HIERARCHY_VERSION="abb4e2d"
+ARG CKANEXT_HIERARCHY_VERSION="v1.2.2"
 ENV CKANEXT_HIERARCHY_VERSION=${CKANEXT_HIERARCHY_VERSION}
 
 RUN set -ex && \

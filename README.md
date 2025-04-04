@@ -141,10 +141,6 @@ For instance, for commit 19a2e64 to PR tum-gis/ckan-docker#26 following images a
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-debug`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-19a2e64`
 - `ghcr.io/tum-gis/ckan-sddi-dev:sddi-pr-26-19a2e64-debug`
-- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26`
-- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-debug`
-- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-19a2e64`
-- `ghcr.io/tum-gis/ckan-sddi-dev:sddi-social-pr-26-19a2e64-debug`
 
 This registry will be cleared periodically.
 
@@ -167,14 +163,14 @@ are alway pinned to a stable release number or commit hash.
 
 | Extension | Version | `sddi-base` |`sddi` | Description |
 |---|---|:---:|:---:|:---|
-| [`ckanext-hierarchy`](https://github.com/ckan/ckanext-hierarchy ) | `abb4e2d` | :heavy_check_mark: | :heavy_check_mark: | Allows to organize organizations and groups in a hierarchy tree (nested groups/orgs). |
+| [`ckanext-hierarchy`](https://github.com/ckan/ckanext-hierarchy ) | `v1.2.2` | :heavy_check_mark: | :heavy_check_mark: | Allows to organize organizations and groups in a hierarchy tree (nested groups/orgs). |
 | [`ckanext-scheming` ](https://github.com/ckan/ckanext-scheming ) | `27035f4` |:heavy_check_mark: | :heavy_check_mark: |  Configure and share CKAN dataset metadata forms. |
 | [`ckanext-geoview` ](https://github.com/ckan/ckanext-geoview) | `v0.2.2` |:heavy_check_mark: |:heavy_check_mark: |  Configure and share CKAN dataset metadata forms. |
 | [`ckanext-clamav` ](https://github.com/mutantsan/ckanext-clamav) | `a1d23ac` |:heavy_check_mark: | :heavy_check_mark: |CKAN extension that integrates ClamAV antivirus scanning to ensure the security of uploaded files by automatically checking them for malware.|
 | [`ckanext-dcat` ](https://github.com/ckan/ckanext-dcat ) | `v1.5.1` |:heavy_check_mark: | :heavy_check_mark: |Allow CKAN to expose and consume metadata from other catalogs using RDF documents serialized using DCAT.|
 | [`ckanext-relation-sddi`](https://github.com/tum-gis/ckanext-relation-sddi ) | `1.1.0` | | :heavy_check_mark: | Enables to create and visualize different types of relations (*realated_to*, *depends_on*, *part_of*) between catalog entries. |
 | [`ckanext-datesearch`](https://github.com/MarijaKnezevic/ckanext-datesearch) | `1.1.0`|| :heavy_check_mark: | Provides the ability to search for datasets according to a given time frame. The search includes all datasets, in which the time of validity overlaps in at least one second with the search time frame. |
-| [`ckanext-spatial`](https://github.com/ckan/ckanext-spatial) | `v2.2.0` | |:heavy_check_mark: | Enables geospatial capabilities to CKAN instance. |
+| [`ckanext-spatial`](https://github.com/ckan/ckanext-spatial) | `v2.3.0` | |:heavy_check_mark: | Enables geospatial capabilities to CKAN instance. |
 | [`ckanext-scheme-sddi`](https://github.com/MarijaKnezevic/ckanext-scheme-sddi) | `0.0.1` || :heavy_check_mark: | This plugin is extending CKAN schema definition, validation, and custom field support accordingly to SDDI needs. |
 | [`ckanext-theme-sddi`](https://github.com/MarijaKnezevic/ckanext-theme-sddi) | `0.0.4` | |:heavy_check_mark: | This plugin is customizing the look of SDDI CKAN instance with theme management capabilities for improved branding and user needs.|
 | [`ckanext-security` ](https://github.com/MarijaKnezevic/ckanext-security) | `0.0.1` || :heavy_check_mark: | CKAN extension that enhances data access control. In the SDDI context, context is used to define the maximum number of failed logon attempts and to automatically log off after a period of inactivity.|

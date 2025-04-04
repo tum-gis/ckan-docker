@@ -47,7 +47,7 @@ RUN set -ex && \
 
 # ckanext-spatial #############################################################
 ENV CKANEXT_SPATIAL_GITHUB_URL="https://github.com/ckan/ckanext-spatial"
-ENV CKANEXT_SPATIAL_VERSION="v2.2.0"
+ENV CKANEXT_SPATIAL_VERSION="v2.3.0"
 
 RUN set -ex && \
   curl -o /wheels/ckanext-spatial-requirements.txt \
@@ -68,16 +68,16 @@ RUN set -ex && \
         git+${CKANEXT_THEME_SDDI_GITHUB_URL}.git@${CKANEXT_THEME_SDDI_VERSION}#egg=ckanext-theme-sddi
 
 # # ckanext-security ######################################################
-# ARG CKANEXT_SECURITY_VERSION="0.0.1"
-# ENV CKANEXT_SECURITY_VERSION=${CKANEXT_SECURITY_VERSION}
-# ENV CKANEXT_SECURITY_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-security"
+ARG CKANEXT_SECURITY_VERSION="0.0.1"
+ENV CKANEXT_SECURITY_VERSION=${CKANEXT_SECURITY_VERSION}
+ENV CKANEXT_SECURITY_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-security"
     
-# RUN set -ex && \
-#     curl -o /wheels/ckanext-security-requirements.txt \
-#         https://raw.githubusercontent.com/MarijaKnezevic/ckanext-security/${CKANEXT_SECURITY_VERSION}/requirements.txt && \
-#     pip install -r /wheels/ckanext-security-requirements.txt && \
-#     pip wheel --wheel-dir=/wheels \
-#         git+${CKANEXT_SECURITY_GITHUB_URL}.git@${CKANEXT_SECURITY_VERSION}#egg=ckanext-security
+RUN set -ex && \
+    curl -o /wheels/ckanext-security-requirements.txt \
+        https://raw.githubusercontent.com/MarijaKnezevic/ckanext-security/${CKANEXT_SECURITY_VERSION}/requirements.txt && \
+    pip install -r /wheels/ckanext-security-requirements.txt && \
+    pip wheel --wheel-dir=/wheels \
+        git+${CKANEXT_SECURITY_GITHUB_URL}.git@${CKANEXT_SECURITY_VERSION}#egg=ckanext-security
 
 ###############################################################################
 # Runtime stage
@@ -132,14 +132,14 @@ RUN set -ex && \
   pip install -e "git+https://github.com/dathere/ckanext-heroslideradmin.git@4b60e00#egg=ckanext-heroslideradmin"
 
 # # ckanext-security ######################################################
-# RUN set -ex && \
-#   pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-security-requirements.txt && \
-#   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-security
+RUN set -ex && \
+  pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-security-requirements.txt && \
+  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-security
 
 ENV CKAN__PLUGINS "envvars image_view text_view webpage_view datastore \
   tracking \
   activity \
-  # security \
+  security \
   hierarchy_display hierarchy_form \
   relation \
   spatial_metadata spatial_query \
@@ -156,7 +156,7 @@ RUN set -ex && \
   ckan generate config ${CKAN_INI}
 
 # Copy init scripts and additional files
-COPY --chown=ckan:ckan initScripts/ ${APP_DIR}/docker-afterinit.d
+COPY --chown=ckan-ckan initScripts/* /docker-entrypoint.d/
 
 RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckan.plugins = ${CKAN__PLUGINS}" && \
@@ -170,12 +170,15 @@ RUN set -ex && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.type = custom" && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.custom.url = https://tile.openstreetmap.de/{z}/{x}/{y}.png" && \
   ckan config-tool "${CKAN_INI}" "ckanext.spatial.common_map.attribution = <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors." && \
-  # ckan config-tool "${CKAN_INI}" "ckanext.security.lock_timeout = 900" && \
-  # ckan config-tool "${CKAN_INI}" "ckanext.security.login_max_count = 3" && \
-  # ckan config-tool "${CKAN_INI}" "ckanext.security.brute_force_key = user_name" && \
-  # ckan config-tool "${CKAN_INI}" "ckanext.security.disable_password_reset_override = true" && \
-  # ckan config-tool "${CKAN_INI}" "ckanext.security.enable_totp = true" && \
-  # ckan config-tool "${CKAN_INI}" "ckanext.dcat.enable_content_negotiation = True" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.security.redis.host = redis" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.security.redis.port = 6379" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.security.redis.db = 1" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.security.lock_timeout = 900" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.security.login_max_count = 3" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.security.brute_force_key = user_name" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.security.disable_password_reset_override = true" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.security.enable_totp = false" && \
+  ckan config-tool "${CKAN_INI}" "ckanext.dcat.enable_content_negotiation = True" && \
   ckan config-tool "${CKAN_INI}" "PERMANENT_SESSION_LIFETIME = 600"
 
 # Remove wheels
