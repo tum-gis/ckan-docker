@@ -22,10 +22,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Log in to the Github Container Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -33,20 +33,22 @@ jobs:
 
       - name: Extract metadata (tags, labels) for docker image
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: |
             ${{ env.REGISTRY }}/tum-gis/ckan-${{ matrix.context }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
           labels: |
             maintainer=Chair of Geoinformatics, Technical University of Munich (TUM)
             org.opencontainers.image.vendor=Chair of Geoinformatics, Technical University of Munich (TUM)
             org.opencontainers.image.title=ckan-sddi-docker
+            org.opencontainers.image.documentation=https://github.com/tum-gis/ckan-docker
 
       - name: Build and publish ${{ env.REGISTRY }}/tum-gis/ckan-${{ matrix.context }}
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.context }}
           push: true
@@ -57,7 +59,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for debug docker image
         id: meta-debug
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           flavor:
             latest=true,suffix=-debug,onlatest=true
@@ -66,13 +68,15 @@ jobs:
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
           labels: |
             maintainer=Chair of Geoinformatics, Technical University of Munich (TUM)
             org.opencontainers.image.vendor=Chair of Geoinformatics, Technical University of Munich (TUM)
-            org.opencontainers.image.title=ckan-sddi-docker
+            org.opencontainers.image.title=ckan-sddi-docker-debug
+            org.opencontainers.image.documentation=https://github.com/tum-gis/ckan-docker
 
       - name: Build and publish ${{ env.REGISTRY }}/tum-gis/ckan-${{ matrix.context }}-debug
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.context }}/Dockerfile.debug
