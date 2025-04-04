@@ -1,9 +1,9 @@
 ###############################################################################
 # Extbuild stage
 ###############################################################################
-ARG CKAN_VERSION_BUILD_STAGE=2.11.1
+ARG CKAN_VERSION=2.11.1
 
-FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
+FROM ckan/ckan-base:${CKAN_VERSION} AS extbuild
 
 USER root
 
@@ -90,7 +90,7 @@ RUN set -ex && \
 ###############################################################################
 # Runtime stage
 ###############################################################################
-FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as runtime
+FROM ckan/ckan-base:${CKAN_VERSION} AS runtime
 
 ENV CKAN_DIR=${SRC_DIR}/ckan
 ENV DATA_DIR=/srv/app/data
