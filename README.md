@@ -146,8 +146,8 @@ This registry will be cleared periodically.
 
 ### CKAN and CKAN extension versions
 
-CKAN version: `2.11.1`
-CKAN base image: `ckan/ckan-base:2.11.1`
+CKAN version: `2.11.2`
+CKAN base image: `ckan/ckan-base:2.11.2`
 
 The CKAN catalog platform uses several extensions to provide the functionality
 needed for the SDDI concept. The table below lists the included extensions with
