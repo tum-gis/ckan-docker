@@ -31,8 +31,8 @@ docker build . \
 
 # sddi:TAG-debug
 docker build . \
-  --build-arg "BASEIMAGE_REPOSITORY=$IMAGE_REPOSITORY/ckan-sddi-base" \
-  --build-arg BASEIMAGE_VERSION=${IMAGE_TAG}-debug \
+  --build-arg "BASEIMAGE_REPOSITORY=$IMAGE_REPOSITORY/ckan-sddi" \
+  --build-arg BASEIMAGE_VERSION=${IMAGE_TAG} \
   -t "$IMAGE_REPOSITORY/ckan-sddi:${IMAGE_TAG}-debug"
 
 printf "\n\n"
