@@ -35,13 +35,6 @@ RUN set -ex && \
   curl -o /wheels/ckanext-hierarchy.txt https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKANEXT_HIERARCHY_VERSION}/requirements.txt && \
   ls -lah /wheels
 
-# ckanext-envvars #############################################################
-ARG CKANEXT_ENVVARS_VERSION="v0.0.6"
-ENV CKANEXT_ENVVARS_VERSION=${CKANEXT_ENVVARS_VERSION}
-
-RUN set -ex && \
-  pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-envvars.git@${CKANEXT_ENVVARS_VERSION}#egg=ckanext-envvars
-
 # ckanext-scheming ############################################################
 ARG CKANEXT_SCHEMING_VERSION="27035f4"
 ENV CKANEXT_SCHEMING_VERSION=${CKANEXT_SCHEMING_VERSION}
@@ -141,10 +134,6 @@ WORKDIR ${CKAN_DIR}
 RUN set -ex && \
   pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-hierarchy.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-hierarchy
-
-# ckanext-envvars ############################################################
-RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-envvars
 
 # ckanext-scheming ############################################################
 RUN set -ex && \
