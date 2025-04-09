@@ -3,9 +3,9 @@
 ###############################################################################
 ARG BASEIMAGE_REPOSITORY=ghcr.io/tum-gis/ckan-sddi-base
 ARG BASEIMAGE_VERSION=latest
-ARG CKAN_VERSION_BUILD_STAGE=2.11.1
+ARG CKAN_VERSION=2.11.2
 
-FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
+FROM ckan/ckan-base:${CKAN_VERSION} AS extbuild
 
 USER root
 
@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y \
 RUN pip install -U markupsafe==2.0.1 sqlalchemy==1.4.41
 
 # ckanext-relation ############################################################
-ARG CKANEXT_RELATION_VERSION="1.1.0"
+ARG CKANEXT_RELATION_VERSION="1.1.1"
 ENV CKANEXT_RELATION_VERSION=${CKANEXT_RELATION_VERSION}
 
 RUN set -ex && \
@@ -84,7 +84,7 @@ RUN set -ex && \
 ###############################################################################
 # Runtime stage
 ###############################################################################
-FROM ${BASEIMAGE_REPOSITORY}:${BASEIMAGE_VERSION}
+FROM ${BASEIMAGE_REPOSITORY}:${BASEIMAGE_VERSION} AS runtime
 
 ENV CKAN_DIR=${SRC_DIR}/ckan
 ENV DATA_DIR=/srv/app/data

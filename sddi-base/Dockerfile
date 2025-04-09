@@ -1,9 +1,9 @@
 ###############################################################################
 # Extbuild stage
 ###############################################################################
-ARG CKAN_VERSION_BUILD_STAGE=2.11.1
+ARG CKAN_VERSION=2.11.2
 
-FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as extbuild
+FROM ckan/ckan-base:${CKAN_VERSION} AS extbuild
 
 USER root
 
@@ -34,13 +34,6 @@ RUN set -ex && \
   pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-hierarchy.git@${CKANEXT_HIERARCHY_VERSION}#egg=ckanext-hierarchy && \
   curl -o /wheels/ckanext-hierarchy.txt https://raw.githubusercontent.com/ckan/ckanext-hierarchy/${CKANEXT_HIERARCHY_VERSION}/requirements.txt && \
   ls -lah /wheels
-
-# ckanext-envvars #############################################################
-ARG CKANEXT_ENVVARS_VERSION="v0.0.6"
-ENV CKANEXT_ENVVARS_VERSION=${CKANEXT_ENVVARS_VERSION}
-
-RUN set -ex && \
-  pip wheel --wheel-dir=/wheels git+https://github.com/ckan/ckanext-envvars.git@${CKANEXT_ENVVARS_VERSION}#egg=ckanext-envvars
 
 # ckanext-scheming ############################################################
 ARG CKANEXT_SCHEMING_VERSION="27035f4"
@@ -90,7 +83,7 @@ RUN set -ex && \
 ###############################################################################
 # Runtime stage
 ###############################################################################
-FROM ckan/ckan-base:${CKAN_VERSION_BUILD_STAGE} as runtime
+FROM ckan/ckan-base:${CKAN_VERSION} AS runtime
 
 ENV CKAN_DIR=${SRC_DIR}/ckan
 ENV DATA_DIR=/srv/app/data
@@ -141,10 +134,6 @@ WORKDIR ${CKAN_DIR}
 RUN set -ex && \
   pip install --find-links=${APP_DIR}/ext_wheels -r ${APP_DIR}/ext_wheels/ckanext-hierarchy.txt && \
   pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-hierarchy
-
-# ckanext-envvars ############################################################
-RUN set -ex && \
-  pip install --no-index --find-links=${APP_DIR}/ext_wheels ckanext-envvars
 
 # ckanext-scheming ############################################################
 RUN set -ex && \
