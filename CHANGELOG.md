@@ -11,6 +11,7 @@ For releases `< 1.0.0` minor version steps may indicate breaking changes too.
 ### Changed
 
 - Bump CKAN version `2.11.1` -> `2.11.2`
+- Bump `ckanext-relation` `1.1.0` -> `1.1.1`
 
 ### Remove
 
