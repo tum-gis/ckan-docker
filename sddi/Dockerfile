@@ -21,9 +21,16 @@ RUN apt-get update && apt-get install -y \
     libpcre3 \
     libffi-dev \
     libxml2-dev \
-    libxslt-dev
+    libxslt-dev \
+    patch
 
 RUN pip install -U markupsafe==2.0.1 sqlalchemy==1.4.41
+
+# Patch ckan_start.sh for CSP headers #########################################
+# Copy patches
+COPY patches ${APP_DIR}/patches
+RUN set -ex && \
+  patch -p1 ${APP_DIR}/start_ckan.sh < ${APP_DIR}/patches/01-start_ckan_csp_header.patch
 
 # ckanext-relation ############################################################
 ARG CKANEXT_RELATION_VERSION="1.1.1"
@@ -101,6 +108,9 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Get artifacts from build stages
 COPY --from=extbuild /wheels ${APP_DIR}/ext_wheels
+
+# Copy patched start_ckan.sh
+COPY --from=extbuild ${APP_DIR}/start_ckan.sh ${APP_DIR}/start_ckan.sh
 
 RUN chown -R ckan:ckan-sys ${APP_DIR}
 
