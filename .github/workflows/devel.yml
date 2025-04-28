@@ -25,6 +25,11 @@ jobs:
       packages: write
 
     steps:
+      - name: set lower case owner name
+        run: |
+          echo "OWNER_LC=${OWNER,,}" >>${GITHUB_ENV}
+        env:
+          OWNER: "${{ github.repository_owner }}"
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -40,7 +45,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ env.REGISTRY }}/tum-gis/ckan-${{ matrix.context }}
+            ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/ckan-${{ matrix.context }}
           tags: |
             type=ref,enable=true,event=branch
           labels: |
@@ -49,7 +54,7 @@ jobs:
             org.opencontainers.image.title=ckan-sddi-base-docker-devel
             org.opencontainers.image.documentation=https://github.com/tum-gis/ckan-docker
 
-      - name: Build and publish ${{ env.REGISTRY }}/tum-gis/ckan-${{ matrix.context }}:devel
+      - name: Build and publish ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/ckan-${{ matrix.context }}:devel
         uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.context }}
@@ -64,7 +69,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ env.REGISTRY }}/tum-gis/ckan-${{ matrix.context }}
+            ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/ckan-${{ matrix.context }}
           tags: |
             type=ref,enable=true,event=branch,suffix=-debug
           labels: |
@@ -72,7 +77,7 @@ jobs:
             org.opencontainers.image.vendor=Chair of Geoinformatics, Technical University of Munich (TUM)
             org.opencontainers.image.title=ckan-sddi-base-docker-devel-debug
 
-      - name: Build and publish ${{ env.REGISTRY }}/tum-gis/ckan-${{ matrix.context }}:devel-debug
+      - name: Build and publish ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/ckan-${{ matrix.context }}:devel-debug
         uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.context }}
