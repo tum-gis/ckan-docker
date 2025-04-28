@@ -6,14 +6,14 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ckan
 
 jobs:
   build-and-push-images:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        context: ['sddi-base', 'sddi']
+        context: ["sddi-base", "sddi"]
       fail-fast: true
       max-parallel: 1
     permissions:
@@ -21,6 +21,11 @@ jobs:
       packages: write
 
     steps:
+      - name: set lower case owner name
+        run: |
+          echo "OWNER_LC=${OWNER,,}" >>${GITHUB_ENV}
+        env:
+          OWNER: "${{ github.repository_owner }}"
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -36,7 +41,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ env.REGISTRY }}/tum-gis/ckan-${{ matrix.context }}
+            ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}-${{ matrix.context }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
@@ -47,7 +52,7 @@ jobs:
             org.opencontainers.image.title=ckan-sddi-docker
             org.opencontainers.image.documentation=https://github.com/tum-gis/ckan-docker
 
-      - name: Build and publish ${{ env.REGISTRY }}/tum-gis/ckan-${{ matrix.context }}
+      - name: Build and publish ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}-${{ matrix.context }}
         uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.context }}
@@ -61,10 +66,9 @@ jobs:
         id: meta-debug
         uses: docker/metadata-action@v5
         with:
-          flavor:
-            latest=true,suffix=-debug,onlatest=true
+          flavor: latest=true,suffix=-debug,onlatest=true
           images: |
-            ${{ env.REGISTRY }}/tum-gis/ckan-${{ matrix.context }}
+            ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}-${{ matrix.context }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
@@ -75,7 +79,7 @@ jobs:
             org.opencontainers.image.title=ckan-sddi-docker-debug
             org.opencontainers.image.documentation=https://github.com/tum-gis/ckan-docker
 
-      - name: Build and publish ${{ env.REGISTRY }}/tum-gis/ckan-${{ matrix.context }}-debug
+      - name: Build and publish ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}-${{ matrix.context }}-debug
         uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.context }}

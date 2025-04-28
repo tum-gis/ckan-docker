@@ -10,14 +10,14 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ckan
 
 jobs:
   build-and-push-images:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        context: ['sddi-base', 'sddi']
+        context: ["sddi-base", "sddi"]
       fail-fast: true
       max-parallel: 1
     permissions:
@@ -45,7 +45,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/ckan-${{ matrix.context }}
+            ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}-${{ matrix.context }}
           tags: |
             type=ref,enable=true,event=branch
           labels: |
@@ -54,7 +54,7 @@ jobs:
             org.opencontainers.image.title=ckan-sddi-base-docker-devel
             org.opencontainers.image.documentation=https://github.com/tum-gis/ckan-docker
 
-      - name: Build and publish ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/ckan-${{ matrix.context }}:devel
+      - name: Build and publish ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}-${{ matrix.context }}:devel
         uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.context }}
@@ -69,7 +69,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/ckan-${{ matrix.context }}
+            ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}-${{ matrix.context }}
           tags: |
             type=ref,enable=true,event=branch,suffix=-debug
           labels: |
@@ -77,7 +77,7 @@ jobs:
             org.opencontainers.image.vendor=Chair of Geoinformatics, Technical University of Munich (TUM)
             org.opencontainers.image.title=ckan-sddi-base-docker-devel-debug
 
-      - name: Build and publish ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/ckan-${{ matrix.context }}:devel-debug
+      - name: Build and publish ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/${{ env.IMAGE_NAME }}-${{ matrix.context }}:devel-debug
         uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.context }}

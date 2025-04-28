@@ -21,3 +21,17 @@
   # ...
   # ...
   ```
+
+2. Adapt context names
+
+  ```yml
+  strategy:
+  matrix:
+    context: ['sddi-base', 'sddi']
+  fail-fast: true
+  max-parallel: 1
+  ``
+
+3. Adapt `IMAGE_NAME`
+
+Name will be composed of  ${{ env.REGISTRY }}/${{ env.OWNER_LC }}/ckan-${{ matrix.context }}
