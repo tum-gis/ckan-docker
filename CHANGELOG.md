@@ -275,7 +275,8 @@ for production environments.**
 
 ### Known issues
 
-[Unreleased]: https://github.com/tum-gis/ckan-docker/compare/3.1.0...HEAD
+[Unreleased]: https://github.com/tum-gis/ckan-docker/compare/3.1.1...HEAD
+[3.1.1]: https://github.com/tum-gis/ckan-docker/compare/3.1.0...3.1.1
 [3.1.0]: https://github.com/tum-gis/ckan-docker/compare/3.0.1...3.1.0
 [3.0.1]: https://github.com/tum-gis/ckan-docker/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/tum-gis/ckan-docker/compare/2.1.2...3.0.0
