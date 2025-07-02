@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y \
 RUN pip install -U markupsafe==2.0.1 sqlalchemy==1.4.41
 
 # ckanext-relation ############################################################
-ARG CKANEXT_RELATION_VERSION="1.1.1"
+ARG CKANEXT_RELATION_VERSION="1.1.2"
 ENV CKANEXT_RELATION_VERSION=${CKANEXT_RELATION_VERSION}
 
 RUN set -ex && \
