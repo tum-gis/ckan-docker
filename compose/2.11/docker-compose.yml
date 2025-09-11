@@ -1,4 +1,3 @@
-version: "3.8"
 name: ckan-sddi
 
 volumes:
@@ -18,15 +17,7 @@ services:
       context: ../../sddi-base
       no_cache: true
       pull: true
-  # sddi-base-debug:
-  #   image: sddi-base:${CKAN_IMAGE_VERSION}-debug
-  #   build:
-  #     context: ../../sddi-base
-  #     dockerfile: Dockerfile.debug
-  #     no_cache: true
-  #     # pull: true
-  #   depends_on:
-  #     - sddi-base
+
 
   sddi:
     image: sddi:${CKAN_IMAGE_VERSION}
@@ -38,45 +29,13 @@ services:
         BASEIMAGE_VERSION: ${CKAN_IMAGE_VERSION}
     depends_on:
       - sddi-base
-  # sddi-debug:
-  #   image: sddi:${CKAN_IMAGE_VERSION}-debug
-  #   build:
-  #     context: ../../sddi
-  #     dockerfile: Dockerfile.debug
-  #     no_cache: true
-  #     args:
-  #       BASEIMAGE_REPOSITORY: sddi-base
-  #       BASEIMAGE_VERSION: ${CKAN_IMAGE_VERSION}
-  #   depends_on:
-  #     - sddi-base
-  # sddi-social:
-  #   image: sddi-social:${CKAN_IMAGE_VERSION}
-  #   build:
-  #     context: ../../sddi-social
-  #     no_cache: true
-  #     args:
-  #       BASEIMAGE_REPOSITORY: sddi
-  #       BASEIMAGE_VERSION: ${CKAN_IMAGE_VERSION}
-  #   depends_on:
-  #     - sddi
-  # sddi-social-debug:
-  #   image: sddi-social:${CKAN_IMAGE_VERSION}-debug
-  #   build:
-  #     context: ../../sddi-social
-  #     dockerfile: Dockerfile.debug
-  #     no_cache: true
-  #     args:
-  #       BASEIMAGE_REPOSITORY: sddi
-  #       BASEIMAGE_VERSION: ${CKAN_IMAGE_VERSION}
-  #   depends_on:
-  #     - sddi
 
   # Caddy ---------------------------------------------------------------------
   # CKAN ----------------------------------------------------------------------
   # PostGIS -------------------------------------------------------------------
   db:
-    container_name: ${POSTGIS_CONTAINER_NAME}
-    image: postgis/postgis:${POSTGIS_VERSION:?POSTGIS_VERSION not set}
+    container_name: ${POSTGIS_CONTAINER_NAME:-db}
+    image: postgis/postgis:${POSTGIS_VERSION}
     restart: unless-stopped
     networks:
       backend:
@@ -86,23 +45,18 @@ services:
       - 5432:5432
     volumes:
       - pg_data:/var/lib/postgresql/data
-      - ./postgis/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+      - ./postgis/init:/docker-entrypoint-initdb.d 
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U ${CKAN_DB_USERNAME:?CKAN_DB_USERNAME not set} -d ${CKAN_DB_NAME:?CKAN_DB_NAME not set}",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 5s
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
     environment:
-      TZ: ${TZ:?TZ not set}
+      TZ: ${TZ}
       PGDATA: /var/lib/postgresql/data/db
-      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB not set}
-      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER not set}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD not set}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       CKAN_DB_NAME: ${CKAN_DB_NAME:?CKAN_DB_NAME not set}
       CKAN_DB_USERNAME: ${CKAN_DB_USERNAME:?CKAN_DB_USERNAME not set}
       CKAN_DB_PASSWORD: ${CKAN_DB_PASSWORD:?CKAN_DB_PASSWORD not set}
