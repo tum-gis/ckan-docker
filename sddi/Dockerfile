@@ -58,7 +58,7 @@ RUN set -ex && \
     git+${CKANEXT_SPATIAL_GITHUB_URL}.git@${CKANEXT_SPATIAL_VERSION}#egg=ckanext-spatial
 
 # ckanext-theme-sddi #############################################################
-ARG CKANEXT_THEME_SDDI_VERSION="0.0.4"
+ARG CKANEXT_THEME_SDDI_VERSION="0.0.4-twin4clim"
 ENV CKANEXT_THEME_SDDI_VERSION=${CKANEXT_THEME_SDDI_VERSION}
 ENV CKANEXT_THEME_SDDI_GITHUB_URL="https://github.com/MarijaKnezevic/ckanext-theme-sddi"
 
